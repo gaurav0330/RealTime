@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>NOC Application - Fire Department</title>
+    </head>
+<body>
+    <!-- Include the same header and sidebar as dashboard.html -->
+    <header class="bg-red-800 text-white py-4 px-6 flex items-center justify-between">
+        <!-- Left Section: Logo and Text -->
+        <div class="flex items-center">
+            <img src="../images/logo.jpg" alt="Gov Logo" class="h-12 mr-4">
+            <div>
+                <h1 class="text-2xl font-semibold">Government of India</h1>
+                <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+            </div>
+        </div>
+        
+        <!-- Right Section: Assessor Dashboard Text and Login Button -->
+        <div class="flex items-center space-x-6">
+            <p class="text-lg font-semibold">Assessor's Dashboard</p>
+            <button 
+                class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" 
+                onclick="window.location.href='login.html'">
+                Logout
+            </button>
+        </div>
+    </header>
+    
+    <!-- Main Container with max-width and padding -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center space-x-4">
+                <button onclick="history.back()" class="text-red-600 hover:text-red-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                </button>
+                <h2 class="text-2xl font-bold text-gray-900">Application Details</h2>
+            </div>
+            <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
+                Status: Under Review
+            </span>
+        </div>
+
+        <!-- Application ID and Basic Details Card -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <p class="text-sm text-gray-600">Application ID</p>
+                    <p class="text-lg font-semibold">NOC-2024-001</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Submission Date</p>
+                    <p class="text-lg font-semibold">15 March 2024</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Application Type</p>
+                    <p class="text-lg font-semibold">New NOC</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Sections -->
+        <div class="space-y-6">
+            <!-- Personal Information Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">1. Personal Information</h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Applicant Name -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Applicant Name</p>
+                                    <p class="text-base font-medium mt-1">John Doe</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Email Address</p>
+                                    <p class="text-base font-medium mt-1">john.doe@example.com</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Phone Number</p>
+                                    <p class="text-base font-medium mt-1">+971 50 123 4567</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Emirates ID -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Emirates ID</p>
+                                    <p class="text-base font-medium mt-1">784-1234-5678901-1</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Details Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">2. Property Details</h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Building Type -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Building Type</p>
+                                    <p class="text-base font-medium mt-1">Commercial</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Property Area -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Property Area (sq ft)</p>
+                                    <p class="text-base font-medium mt-1">5000</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Building Height -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Building Height (meters)</p>
+                                    <p class="text-base font-medium mt-1">45</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Number of Floors -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Number of Floors</p>
+                                    <p class="text-base font-medium mt-1">12</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Property Address -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Property Address</p>
+                                    <p class="text-base font-medium mt-1">123 Sheikh Zayed Road, Dubai, UAE</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Property Usage -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">Property Usage</p>
+                                    <p class="text-base font-medium mt-1">Office Space</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Verification Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">3. Document Verification</h3>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <!-- Emirates ID Document -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-4">
+                                    <div>
+                                        <p class="font-medium">Emirates ID</p>
+                                        <a href="../images/hero1.jpg" class="text-sm text-red-600 hover:text-red-800 flex items-center mt-1">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            View Document
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <textarea placeholder="Add verification comments..." 
+                                class="mt-3 w-full border rounded-md px-3 py-2 text-sm"></textarea>
+                        </div>
+
+                        <!-- Building Layout Plan -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-4">
+                                    <div>
+                                        <p class="font-medium">Building Layout Plan</p>
+                                        <a href="#" class="text-sm text-red-600 hover:text-red-800 flex items-center mt-1">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            View Document
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <textarea placeholder="Add verification comments..." 
+                                class="mt-3 w-full border rounded-md px-3 py-2 text-sm"></textarea>
+                        </div>
+
+                        <!-- Fire Safety Equipment Certificates -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-4">
+                                    <div>
+                                        <p class="font-medium">Fire Safety Equipment Certificates</p>
+                                        <a href="#" class="text-sm text-red-600 hover:text-red-800 flex items-center mt-1">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            View Document
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <textarea placeholder="Add verification comments..." 
+                                class="mt-3 w-full border rounded-md px-3 py-2 text-sm"></textarea>
+                        </div>
+
+                        <!-- Appliances Installation Certificates -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-4">
+                                    <div>
+                                        <p class="font-medium">Appliances Installation Certificates</p>
+                                        <a href="#" class="text-sm text-red-600 hover:text-red-800 flex items-center mt-1">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            View Document
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <textarea placeholder="Add verification comments..." 
+                                class="mt-3 w-full border rounded-md px-3 py-2 text-sm"></textarea>
+                        </div>
+
+                        <!-- Trade License -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-4">
+                                    <div>
+                                        <p class="font-medium">Trade License</p>
+                                        <a href="#" class="text-sm text-red-600 hover:text-red-800 flex items-center mt-1">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            View Document
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox text-red-600 h-4 w-4">
+                                        <span class="ml-2 text-sm">Reviewed</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <textarea placeholder="Add verification comments..." 
+                                class="mt-3 w-full border rounded-md px-3 py-2 text-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Assessment Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Final Assessment</h3>
+                </div>
+                <div class="p-6">
+                    <textarea rows="4" 
+                        class="w-full border rounded-md p-3 mb-4"
+                        placeholder="Enter your overall assessment notes..."></textarea>
+                    <div class="flex justify-end space-x-4">
+                        <button class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Save Draft
+                        </button>
+                        <button class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                            Submit Approval
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add necessary JavaScript for handling actions
+    </script>
+</body>
+</html>

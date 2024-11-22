@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-blue-900 text-white py-4 px-6 flex justify-between items-center shadow-md">
+        <div class="flex items-center">
+            <img src="https://via.placeholder.com/50" alt="Government Logo" class="h-12 mr-4">
+            <div>
+                <h1 class="text-2xl font-bold">Government Fire Department</h1>
+                <p class="text-sm">Document Verification Portal</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar with Logout at Bottom -->
+        <div class="w-64 bg-gray-800 text-white min-h-screen flex flex-col">
+            <nav class="flex-grow">
+                <ul>
+                    <li class="mb-2">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-700 rounded transition">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-700 rounded transition">
+                            Document Verification
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-700 rounded transition">
+                            Inspection Scheduling
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-700 rounded transition">
+                            Reports
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Logout Button at Bottom -->
+            <div class="p-4 mt-auto">
+                <button onclick="logout()" class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded transition duration-300 flex items-center justify-center">
+                   
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <!-- Statistics Boxes -->
+            <div class="grid grid-cols-4 gap-6 mb-8">
+                <div class="bg-white shadow-md rounded-lg p-6 text-center">
+                    <div class="text-gray-500 mb-2">Total Applications</div>
+                    <div class="text-3xl font-bold text-blue-600">120</div>
+                    <div class="text-sm text-green-600 mt-1">+5 this week</div>
+                </div>
+                <div class="bg-white shadow-md rounded-lg p-6 text-center">
+                    <div class="text-gray-500 mb-2">Pending Approvals</div>
+                    <div class="text-3xl font-bold text-yellow-600">35</div>
+                    <div class="text-sm text-red-600 mt-1">Urgent: 12</div>
+                </div>
+                <div class="bg-white shadow-md rounded-lg p-6 text-center">
+                    <div class="text-gray-500 mb-2">Scheduled Inspections</div>
+                    <div class="text-3xl font-bold text-green-600">12</div>
+                    <div class="text-sm text-blue-600 mt-1">Next: 3 days</div>
+                </div>
+                <div class="bg-white shadow-md rounded-lg p-6 text-center">
+                    <div class="text-gray-500 mb-2">Completed Reports</div>
+                    <div class="text-3xl font-bold text-purple-600">73</div>
+                    <div class="text-sm text-green-600 mt-1">+8 this month</div>
+                </div>
+            </div>
+
+            <!-- Applicant Info -->
+            <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">Applicant Details</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <p><strong>Name:</strong> John Doe</p>
+                    <p><strong>Address:</strong> 123 Main Street, Fire Town</p>
+                    <p><strong>Contact:</strong> +91 9876543210</p>
+                    <p><strong>Application Date:</strong> 15 Nov 2024</p>
+                </div>
+            </div>
+
+            <!-- Document Verification Table -->
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-3 text-left">Document Type</th>
+                            <th class="px-4 py-3 text-left">File</th>
+                            <th class="px-4 py-3 text-center">Status</th>
+                            <th class="px-4 py-3 text-center">Verification</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentTable">
+                        <tr>
+                            <td class="px-4 py-3">Approved Building Layout Plan</td>
+                            <td class="px-4 py-3">
+                                <a href="#" class="text-blue-600 hover:underline">layout.pdf</a>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="status-label not-verified">Not Verified</span>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center space-x-2">
+                                    <button onclick="verifyDocument(this, true)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                        Verify
+                                    </button>
+                                    <button onclick="verifyDocument(this, false)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                                        Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">Ownership Proof</td>
+                            <td class="px-4 py-3">
+                                <a href="#" class="text-blue-600 hover:underline">ownership.pdf</a>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="status-label not-verified">Not Verified</span>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center space-x-2">
+                                    <button onclick="verifyDocument(this, true)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                        Verify
+                                    </button>
+                                    <button onclick="verifyDocument(this, false)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                                        Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">Fire Safety Compliance Certificate</td>
+                            <td class="px-4 py-3">
+                                <a href="#" class="text-blue-600 hover:underline">fire_compliance.pdf</a>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="status-label not-verified">Not Verified</span>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center space-x-2">
+                                    <button onclick="verifyDocument(this, true)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                        Verify
+                                    </button>
+                                    <button onclick="verifyDocument(this, false)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                                        Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">Electricity Layout Diagram</td>
+                            <td class="px-4 py-3">
+                                <a href="#" class="text-blue-600 hover:underline">electricity.pdf</a>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="status-label not-verified">Not Verified</span>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center space-x-2">
+                                    <button onclick="verifyDocument(this, true)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                        Verify
+                                    </button>
+                                    <button onclick="verifyDocument(this, false)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                                        Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">Emergency Evacuation Plan</td>
+                            <td class="px-4 py-3">
+                                <a href="#" class="text-blue-600 hover:underline">evacuation.pdf</a>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="status-label not-verified">Not Verified</span>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex justify-center space-x-2">
+                                    <button onclick="verifyDocument(this, true)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                        Verify
+                                    </button>
+                                    <button onclick="verifyDocument(this, false)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                                        Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex justify-between">
+                <button id="proceedBtn" disabled onclick="proceedToPayment()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded disabled:opacity-50">
+                    Proceed to Payment
+                </button>
+                <button id="resubmitBtn" onclick="requestResubmission()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded">
+                    Request Resubmission
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let verificationStatus = {
+            'Approved Building Layout Plan': false,
+            'Ownership Proof': false,
+            'Fire Safety Compliance Certificate': false,
+            'Electricity Layout Diagram': false,
+            'Emergency Evacuation Plan': false
+        };
+
+        function verifyDocument(button, isVerified) {
+            const row = button.closest('tr');
+            const documentName = row.querySelector('td:first-child').textContent;
+            const statusLabel = row.querySelector('.status-label');
+
+            verificationStatus[documentName] = isVerified;
+
+            if (isVerified) {
+                statusLabel.textContent = 'Verified';
+                statusLabel.classList.remove('not-verified');
+                statusLabel.classList.add('verified');
+            } else {
+                statusLabel.textContent = 'Rejected';
+                statusLabel.classList.remove('verified');
+                statusLabel.classList.add('not-verified');
+            }
+
+            updateActionButtons();
+        }
+
+        function updateActionButtons() {
+            const allVerified = Object.values(verificationStatus).every(status => status === true);
+            const proceedBtn = document.getElementById('proceedBtn');
+            const resubmitBtn = document.getElementById('resubmitBtn');
+
+            proceedBtn.disabled = !allVerified;
+            resubmitBtn.disabled = allVerified;
+        }
+
+        function proceedToPayment() {
+            if(confirm('Are you sure you want to proceed to payment?')) {
+                alert('Proceeding to payment...');
+                // Add actual payment navigation logic
+            }
+        }
+
+        function requestResubmission() {
+            if(confirm('Are you sure you want to request resubmission?')) {
+                alert('Generating resubmission request...');
+                // Add logic to send resubmission request
+            }
+        }
+
+        function logout() {
+            if(confirm('Are you sure you want to logout?')) {
+                alert('Logging out...');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+
+    <style>
+        .status-label {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .verified {
+            background-color: #48bb78;  /* Green */
+            color: white;
+        }
+        .not-verified {
+            background-color: #f56565;  /* Red */
+            color: white;
+        }
+    </style>
+</body>
+</html>

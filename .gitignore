@@ -1,0 +1,40 @@
+# Node modules
+node_modules/
+
+# Build output
+/build/
+dist/
+
+# Logs
+*.log
+
+# Dependency directories
+/.pnp/
+/.pnp.js
+
+# IDE and editor folders
+.idea/
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# npm package-lock file
+package-lock.json
+
+# Yarn lock file
+yarn.lock
+
+# React Native
+.expo/
+
+# TypeScript
+*.tsbuildinfo

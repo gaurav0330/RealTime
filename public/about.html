@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>About - Fire Department</title>
+</head>
+<body class="bg-yellow-50">
+    <!-- Header (Same as home page) -->
+    <header class="bg-red-700 text-white">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <div class="flex items-center space-x-4">
+                <img src="../images/logo.jpg" alt="Fire Department Logo" class="h-12">
+                <div>
+                    <h1 class="text-2xl font-bold">Fire Department</h1>
+                    <h2 class="text-sm">Government of India</h2>
+                </div>
+            </div>
+            <div class="space-x-4">
+                <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick="window.location.href='login.html'">Login</button>
+                <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick="window.location.href='signup.html'">Register</button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="bg-red-800 text-white py-3">
+            <div class="container mx-auto flex justify-center space-x-8">
+                <a href="home.html" class="hover:text-yellow-400 transition">Home</a>
+                <a href="about.html" class="hover:text-yellow-400 transition font-bold text-yellow-400">About</a>
+                <a href="#services" class="hover:text-yellow-400 transition">Services</a>
+                <a href="#contact" class="hover:text-yellow-400 transition">Contact</a>
+                <a href="#apply-noc" class="hover:text-yellow-400 transition">Apply for NOC</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Enhanced Hero Section with Parallax Effect -->
+    <style>
+        .parallax-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/fire-station.jpg');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 400px;
+        }
+
+        .news-card {
+            transition: transform 0.3s ease;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <!-- Enhanced Hero Section -->
+    <div class="parallax-section flex items-center justify-center text-white">
+        <div class="text-center">
+            <h1 class="text-5xl font-bold mb-4">About Delhi Fire Service</h1>
+            <p class="text-xl">Serving the National Capital Since 1942</p>
+        </div>
+    </div>
+
+    <!-- Quick Stats Section -->
+    <div class="container mx-auto px-4 -mt-16 relative z-10 mb-12">
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="stat-card bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-red-600">
+                <div class="text-3xl font-bold text-red-700 mb-2">80+</div>
+                <div class="text-gray-600">Years of Service</div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-red-600">
+                <div class="text-3xl font-bold text-red-700 mb-2">61</div>
+                <div class="text-gray-600">Fire Stations</div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-red-600">
+                <div class="text-3xl font-bold text-red-700 mb-2">2500+</div>
+                <div class="text-gray-600">Personnel</div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-red-600">
+                <div class="text-3xl font-bold text-red-700 mb-2">30K+</div>
+                <div class="text-gray-600">Annual Responses</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest News Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-red-700 mb-8 text-center">Latest Updates</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="news-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="../images/news1.jpg" alt="News 1" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-sm text-red-600 font-semibold">March 15, 2024</span>
+                        <h3 class="text-xl font-bold mb-2">New Fire Station in Dwarka</h3>
+                        <p class="text-gray-600">State-of-the-art facility inaugurated in Dwarka Sector 16 to enhance emergency response...</p>
+                        <a href="#" class="inline-block mt-4 text-red-600 hover:text-red-700">Read More →</a>
+                    </div>
+                </div>
+                <div class="news-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="../images/news2.jpg" alt="News 2" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-sm text-red-600 font-semibold">March 10, 2024</span>
+                        <h3 class="text-xl font-bold mb-2">Fire Safety Week in Delhi</h3>
+                        <p class="text-gray-600">DFS conducts awareness programs across Delhi NCR during Fire Safety Week...</p>
+                        <a href="#" class="inline-block mt-4 text-red-600 hover:text-red-700">Read More →</a>
+                    </div>
+                </div>
+                <div class="news-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="../images/news3.jpg" alt="News 3" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-sm text-red-600 font-semibold">March 5, 2024</span>
+                        <h3 class="text-xl font-bold mb-2">Modern Equipment Addition</h3>
+                        <p class="text-gray-600">DFS adds 50 new fire tenders and specialized equipment for high-rise operations...</p>
+                        <a href="#" class="inline-block mt-4 text-red-600 hover:text-red-700">Read More →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Timeline -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-red-700 mb-8 text-center">Our Journey</h2>
+            <div class="relative">
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-red-200"></div>
+                <div class="space-y-12">
+                    <div class="relative">
+                        <div class="ml-auto w-1/2 pl-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">1942</h3>
+                                <p>Establishment of Delhi Fire Service under British Rule</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="relative">
+                        <div class="mr-auto w-1/2 pr-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">1947</h3>
+                                <p>Post-independence restructuring and expansion of fire services</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="ml-auto w-1/2 pl-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">1957</h3>
+                                <p>First modernization phase with introduction of water tenders</p>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="relative">
+                        <div class="mr-auto w-1/2 pr-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">1962</h3>
+                                <p>Establishment of Fire Training School at Rohini</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="ml-auto w-1/2 pl-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">1985</h3>
+                                <p>Introduction of Delhi Fire Prevention and Fire Safety Act</p>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div class="relative">
+                        <div class="mr-auto w-1/2 pr-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">1990</h3>
+                                <p>Establishment of specialized high-rise firefighting unit</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="ml-auto w-1/2 pl-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">2000</h3>
+                                <p>Introduction of computerized control room and GPS-enabled response system</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="mr-auto w-1/2 pr-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">2010</h3>
+                                <p>Implementation of modern fire safety regulations for Delhi NCR</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="ml-auto w-1/2 pl-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">2015</h3>
+                                <p>Launch of mobile fire stations and motorcycle-based first responders</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="mr-auto w-1/2 pr-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">2020</h3>
+                                <p>Integration of AI and drone technology for fire monitoring and response</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="ml-auto w-1/2 pl-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-600 hover:shadow-xl transition-shadow">
+                                <h3 class="font-bold text-red-700">2024</h3>
+                                <p>Expansion to 61 fire stations and implementation of smart firefighting systems</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="bg-red-50 p-8 rounded-lg border-l-4 border-red-600 shadow-lg">
+                    <h3 class="text-2xl font-bold text-red-700 mb-6">Our Mission</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-red-600 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>To protect life and property in Delhi NCR through prevention and emergency response</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-red-600 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>To ensure fire safety compliance in the national capital</span>
+                        </li>
+                        <!-- Add more mission points -->
+                    </ul>
+                </div>
+                <!-- Similar structure for Vision section -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+        <!-- History Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-red-700 mb-6">Our History</h2>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <p class="mb-4">The Maharashtra Fire Service has been serving the state since its establishment under the Maharashtra Fire Prevention and Life Safety Measures Act, 2006. It operates as a crucial emergency response organization dedicated to protecting citizens and property from fire-related incidents.</p>
+                <p>The service has evolved from its humble beginnings to become one of India's most advanced fire fighting forces, incorporating modern technology and best practices in fire safety and prevention.</p>
+            </div>
+        </section>
+
+        <!-- Key Responsibilities -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-red-700 mb-6">Key Responsibilities</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-bold text-red-700 mb-3">Emergency Response</h3>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Fire fighting operations</li>
+                        <li>Rescue operations</li>
+                        <li>Disaster management</li>
+                        <li>Emergency medical response</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-bold text-red-700 mb-3">Fire Prevention</h3>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Building inspections</li>
+                        <li>Fire safety audits</li>
+                        <li>NOC issuance</li>
+                        <li>Safety compliance monitoring</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-bold text-red-700 mb-3">Community Services</h3>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Public awareness programs</li>
+                        <li>Training workshops</li>
+                        <li>School safety programs</li>
+                        <li>Community outreach</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leadership -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-red-700 mb-6">Our Leadership</h2>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <p class="mb-4">The Maharashtra Fire Service is led by the Director of Maharashtra Fire Services, supported by a team of experienced fire officers and administrative staff. Our leadership team brings decades of combined experience in fire fighting, disaster management, and public safety.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Enhanced Footer with Social Media Links -->
+    <footer class="bg-red-700 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-yellow-400">Home</a></li>
+                        <li><a href="#" class="hover:text-yellow-400">Services</a></li>
+                        <li><a href="#" class="hover:text-yellow-400">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- ... other footer columns ... -->
+            </div>
+            <div class="border-t border-red-600 pt-8 text-center">
+                <div class="flex justify-center space-x-6 mb-4">
+                    <!-- Social Media Icons -->
+                    <a href="#" class="hover:text-yellow-400">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="hover:text-yellow-400">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="hover:text-yellow-400">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+                <p>&copy; 2024 Maharashtra Fire Service. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFO NOC Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/4.1.5/signature_pad.umd.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header - Simplified -->
+    <header class="bg-blue-900 text-white py-3 px-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <img src="/api/placeholder/40/40" alt="Logo" class="h-8 mr-3">
+            <h1 class="text-xl font-bold">Fire NOC Portal</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="text-sm">Dr. Sarah Wilson</span>
+            <img src="/api/placeholder/32/32" alt="Profile" class="h-8 w-8 rounded-full">
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Simplified Sidebar -->
+        <div class="w-56 bg-gray-800 text-white min-h-screen">
+            <nav class="py-4">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="block px-4 py-2 bg-blue-600 hover:bg-blue-700">NOC Applications</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-700">Inspections</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-700">Approved NOCs</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-700">Analytics</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="p-4 mt-auto">
+                <button onclick="logout()" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 p-6">
+            <!-- Status Overview Cards -->
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <div class="text-gray-600">New Applications</div>
+                    <div class="text-2xl font-bold text-blue-600">15</div>
+                    <div class="text-sm text-blue-600">Awaiting Review</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <div class="text-gray-600">Under Inspection</div>
+                    <div class="text-2xl font-bold text-orange-600">8</div>
+                    <div class="text-sm text-orange-600">In Progress</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <div class="text-gray-600">Ready for Approval</div>
+                    <div class="text-2xl font-bold text-green-600">5</div>
+                    <div class="text-sm text-green-600">Inspection Complete</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <div class="text-gray-600">Pending Documents</div>
+                    <div class="text-2xl font-bold text-red-600">3</div>
+                    <div class="text-sm text-red-600">Additional Info Needed</div>
+                </div>
+            </div>
+
+            <!-- Applications List Section -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold">Pending Applications</h2>
+                    <div class="flex gap-3">
+                        <select id="filterCategory" class="border rounded-lg px-3 py-2">
+                            <option value="all">All Categories</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="residential">Residential</option>
+                            <option value="industrial">Industrial</option>
+                        </select>
+                        <input 
+                            type="text" 
+                            placeholder="Search applications..." 
+                            class="border rounded-lg px-3 py-2 w-64"
+                        >
+                    </div>
+                </div>
+
+                <!-- Applications Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="applicationsGrid">
+                    <!-- Application cards will be populated via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Preview Modal -->
+    <div id="previewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg w-3/4 h-5/6 flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-xl font-semibold">Application Preview</h3>
+                <button onclick="closePreviewModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal Content -->
+            <div class="flex-1 overflow-auto p-6" id="previewContent">
+                <div class="space-y-8">
+                    <!-- Application ID and Status -->
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-semibold" id="applicationId"></h3>
+                            <p class="text-sm text-gray-600" id="applicationDate"></p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-sm font-medium" id="applicationStatus"></span>
+                    </div>
+
+                    <!-- Applicant Details -->
+                    <div class="border-b pb-6">
+                        <h4 class="text-lg font-medium mb-4">1. Applicant Details</h4>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-sm text-gray-600">Applicant Name</p>
+                                <p class="font-medium" id="applicantName"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Contact Number</p>
+                                <p class="font-medium" id="contactNumber"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Email Address</p>
+                                <p class="font-medium" id="email"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Correspondence Address</p>
+                                <p class="font-medium" id="correspondenceAddress"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Building Details -->
+                    <div class="border-b pb-6">
+                        <h4 class="text-lg font-medium mb-4">2. Building Details</h4>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-sm text-gray-600">Building Name</p>
+                                <p class="font-medium" id="buildingName"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Building Type</p>
+                                <p class="font-medium" id="buildingType"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Building Address</p>
+                                <p class="font-medium" id="buildingAddress"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Total Area</p>
+                                <p class="font-medium" id="totalArea"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Number of Floors</p>
+                                <p class="font-medium" id="numFloors"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Year of Construction</p>
+                                <p class="font-medium" id="constructionYear"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fire Safety Equipment -->
+                    <div class="border-b pb-6">
+                        <h4 class="text-lg font-medium mb-4">3. Fire Safety Equipment</h4>
+                        <div class="grid grid-cols-2 gap-4" id="fireSafetyEquipment">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Emergency Provisions -->
+                    <div class="border-b pb-6">
+                        <h4 class="text-lg font-medium mb-4">4. Emergency Provisions</h4>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-sm text-gray-600">Number of Fire Exits</p>
+                                <p class="font-medium" id="fireExits"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Number of Staircases</p>
+                                <p class="font-medium" id="staircases"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Staircase Width</p>
+                                <p class="font-medium" id="staircaseWidth"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Overhead Water Tank Capacity</p>
+                                <p class="font-medium" id="overheadTankCapacity"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Underground Water Tank Capacity</p>
+                                <p class="font-medium" id="undergroundTankCapacity"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Access Details -->
+                    <div class="border-b pb-6">
+                        <h4 class="text-lg font-medium mb-4">5. Access Details</h4>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-sm text-gray-600">Distance from Main Road</p>
+                                <p class="font-medium" id="distanceFromRoad"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Open Spaces</p>
+                                <p class="font-medium" id="openSpaces"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded Documents -->
+                    <div class="border-b pb-6">
+                        <h4 class="text-lg font-medium mb-4">6. Uploaded Documents</h4>
+                        <div class="space-y-4" id="uploadedDocuments">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="border-t p-4 flex justify-end gap-3">
+                <button onclick="closePreviewModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+                    Close
+                </button>
+                <button onclick="proceedToReview()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Proceed to Review
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample applications data
+        const applications = [
+            {
+                id: 'NOC-2024-1234',
+                applicant: 'John Smith',
+                buildingType: 'Commercial Complex',
+                category: 'Shopping Mall',
+                location: '123 Business District',
+                submittedDate: '2024-03-15',
+                status: 'New Application',
+                documents: 12,
+                area: '5000 sq.ft'
+            },
+            // Add more sample applications...
+        ];
+
+        // Initialize applications grid
+        function initializeApplicationsGrid() {
+            const grid = document.getElementById('applicationsGrid');
+            applications.forEach(app => {
+                const card = createApplicationCard(app);
+                grid.appendChild(card);
+            });
+        }
+
+        // Create application card
+        function createApplicationCard(app) {
+            const div = document.createElement('div');
+            div.className = 'bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow';
+            div.innerHTML = `
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-medium text-lg">${app.id}</h3>
+                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                        ${app.status}
+                    </span>
+                </div>
+                <div class="space-y-2 mb-4">
+                    <p class="text-sm"><span class="text-gray-600">Applicant:</span> ${app.applicant}</p>
+                    <p class="text-sm"><span class="text-gray-600">Building Type:</span> ${app.buildingType}</p>
+                    <p class="text-sm"><span class="text-gray-600">Location:</span> ${app.location}</p>
+                    <p class="text-sm"><span class="text-gray-600">Submitted:</span> ${app.submittedDate}</p>
+                    <p class="text-sm"><span class="text-gray-600">Documents:</span> ${app.documents} files</p>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button onclick="previewApplication('${app.id}')" 
+                            class="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50">
+                        Preview
+                    </button>
+                    <button onclick="reviewApplication('${app.id}')"
+                            class="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Review
+                    </button>
+                </div>
+            `;
+            return div;
+        }
+
+        // Preview application
+        function previewApplication(id) {
+            const modal = document.getElementById('previewModal');
+            const content = document.getElementById('previewContent');
+            
+            // Fetch application details and populate preview
+            const application = applications.find(app => app.id === id);
+            
+            populatePreviewContent(application);
+            
+            modal.classList.remove('hidden');
+        }
+
+        // Close preview modal
+        function closePreviewModal() {
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+
+        // Proceed to detailed review
+        function proceedToReview() {
+            // Navigate to detailed review page
+            // window.location.href = `/application-review/${currentApplicationId}`;
+        }
+
+        // Review application
+        function reviewApplication(id) {
+            window.location.href = `/application-review/${id}`;
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            initializeApplicationsGrid();
+        };
+
+        // Function to populate the preview content
+        function populatePreviewContent(applicationData) {
+            // Basic Details
+            document.getElementById('applicationId').textContent = applicationData.id;
+            document.getElementById('applicationDate').textContent = applicationData.submittedDate;
+            document.getElementById('applicationStatus').textContent = applicationData.status;
+            
+            // Applicant Details
+            document.getElementById('applicantName').textContent = applicationData.applicantName;
+            document.getElementById('contactNumber').textContent = applicationData.contactNumber;
+            document.getElementById('email').textContent = applicationData.email;
+            document.getElementById('correspondenceAddress').textContent = applicationData.correspondenceAddress;
+            
+            // Building Details
+            document.getElementById('buildingName').textContent = applicationData.buildingName;
+            document.getElementById('buildingType').textContent = applicationData.buildingType;
+            document.getElementById('buildingAddress').textContent = applicationData.buildingAddress;
+            document.getElementById('totalArea').textContent = `${applicationData.totalArea} sq. ft.`;
+            document.getElementById('numFloors').textContent = applicationData.numFloors;
+            document.getElementById('constructionYear').textContent = applicationData.constructionYear;
+
+            // Fire Safety Equipment
+            const equipmentContainer = document.getElementById('fireSafetyEquipment');
+            equipmentContainer.innerHTML = '';
+            const safetyEquipment = [
+                { name: 'Fire Extinguishers', field: 'fireExtinguishers' },
+                { name: 'Smoke Detectors', field: 'smokeDetectors' },
+                { name: 'Fire Alarms', field: 'fireAlarms' },
+                { name: 'Fire Sprinklers', field: 'fireSprinklers' },
+                { name: 'Emergency Exit Lights', field: 'emergencyExitLights' }
+            ];
+
+            safetyEquipment.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center space-x-2';
+                div.innerHTML = `
+                    <svg class="w-5 h-5 ${applicationData[item.field] ? 'text-green-500' : 'text-red-500'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="${applicationData[item.field] ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}" />
+                    </svg>
+                    <span>${item.name}</span>
+                `;
+                equipmentContainer.appendChild(div);
+            });
+
+            // Emergency Provisions
+            document.getElementById('fireExits').textContent = applicationData.fireExits;
+            document.getElementById('staircases').textContent = applicationData.staircases;
+            document.getElementById('staircaseWidth').textContent = `${applicationData.staircaseWidth} meters`;
+            document.getElementById('overheadTankCapacity').textContent = `${applicationData.overheadTankCapacity} liters`;
+            document.getElementById('undergroundTankCapacity').textContent = `${applicationData.undergroundTankCapacity} liters`;
+
+            // Access Details
+            document.getElementById('distanceFromRoad').textContent = `${applicationData.distanceFromRoad} meters`;
+            document.getElementById('openSpaces').textContent = applicationData.openSpaces;
+
+            // Uploaded Documents
+            const documentsContainer = document.getElementById('uploadedDocuments');
+            documentsContainer.innerHTML = '';
+            const documents = [
+                { name: 'Ownership Proof', field: 'ownershipProof' },
+                { name: 'Identity Proof', field: 'identityProof' },
+                { name: 'Building Plan', field: 'buildingPlan' },
+                { name: 'Fire System Installation Certificate', field: 'installationCertificate' },
+                { name: 'Maintenance Certificates', field: 'maintenanceCertificates' }
+            ];
+
+            documents.forEach(doc => {
+                if (applicationData[doc.field]) {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded';
+                    div.innerHTML = `
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            ${doc.name}
+                        </span>
+                        <button onclick="viewDocument('${doc.field}')" 
+                                class="text-blue-600 hover:text-blue-800">
+                            View
+                        </button>
+                    `;
+                    documentsContainer.appendChild(div);
+                }
+            });
+        }
+
+        // Function to view document
+        function viewDocument(documentField) {
+            // Implement document viewer logic
+            console.log(`Viewing document: ${documentField}`);
+        }
+
+        // Function to fetch and display application data
+        async function fetchApplicationDetails(id) {
+            try {
+                // Replace with actual API call
+                const response = await fetch(`/api/applications/${id}`);
+                const data = await response.json();
+                populatePreviewContent(data);
+            } catch (error) {
+                console.error('Error fetching application details:', error);
+                // Handle error appropriately
+            }
+        }
+    </script>
+    </body>
+    </html>

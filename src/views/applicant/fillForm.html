@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Fire Department - Apply for NOC</title>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Top Header -->
+  <header class="bg-red-700 text-white">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <div class="flex items-center space-x-4">
+        <img src="img/logo.png" class="h-12">
+        <div>
+          <h1 class="text-2xl font-bold">Fire Department</h1>
+          <h2 class="text-sm">Government of India</h2>
+        </div>
+      </div>
+      <div class="space-x-4">
+        <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick=window.location.href='login.html'>Login</button>
+        <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick=window.location.href='signup.html'>Register</button>
+      </div>
+    </div>
+    
+    <!-- Simplified Navigation -->
+    <nav class="bg-red-800 text-white py-3">
+      <div class="container mx-auto flex justify-center space-x-8">
+        <a href="../home/home.html" class="hover:text-yellow-400 transition">Home</a>
+        <a href="#about" class="hover:text-yellow-400 transition">About</a>
+        <a href="#services" class="hover:text-yellow-400 transition">Services</a>
+        <a href="#contact" class="hover:text-yellow-400 transition">Contact</a>
+        <a href="#apply-noc" class="hover:text-yellow-400 transition">Apply for NOC</a>
+      </div>
+    </nav>
+  </header>
+
+
+  
+  <!-- NOC Application Form (First Page) -->
+  <section id="noc-form" class="py-8 form-section">
+    <div class="container mx-auto px-4 max-w-5xl">
+      <!-- Progress Bar -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-indigo-600 font-medium">Application Progress</span>
+          <span class="text-sm font-medium text-indigo-600">Step 1 of 2</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div class="bg-indigo-600 h-2.5 rounded-full" style="width: 50%"></div>
+        </div>
+      </div>
+
+      <!-- Form Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Form Header -->
+        <div class="bg-indigo-600 p-6 text-white">
+          <h2 class="text-2xl font-bold">NOC Application Form</h2>
+          <p class="text-indigo-100 mt-1">Please fill in all the required details carefully</p>
+        </div>
+
+        <form id="nocForm" name="nocForm" class="p-6 space-y-8">
+          <!-- Personal Information Section -->
+          <div class="space-y-6">
+            <div class="flex items-center space-x-2 text-lg font-semibold text-gray-700">
+              <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <h3>Personal Information</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label for="applicantName" class="block text-sm font-medium text-gray-700">Full Name *</label>
+                <input type="text" id="applicantName" name="applicantName" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                  placeholder="Enter your full name" required>
+                <span id="applicantNameError" class="hidden text-sm text-red-500">Please enter your name</span>
+              </div>
+
+              <div class="space-y-2">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email Address *</label>
+                <input type="email" id="email" name="email" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                  placeholder="your.email@gmail.com" required>
+                <span id="emailError" class="hidden text-sm text-red-500">Please enter a valid Gmail address</span>
+              </div>
+
+              <div class="space-y-2">
+                <label for="organization" class="block text-sm font-medium text-gray-700">Organization Name *</label>
+                <input type="text" id="organization" name="organization" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                  placeholder="Enter organization name" required>
+              </div>
+
+              <div class="space-y-2">
+                <label for="contactNumber" class="block text-sm font-medium text-gray-700">Contact Number *</label>
+                <input type="tel" id="contactNumber" name="contactNumber" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                  placeholder="10-digit mobile number" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Property Details Section -->
+          <div class="space-y-6 pt-6 border-t">
+            <div class="flex items-center space-x-2 text-lg font-semibold text-gray-700">
+              <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <h3>Property Details</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label for="houseNumber" class="block text-sm font-medium text-gray-700">House/Building Number *</label>
+                <input type="text" id="houseNumber" name="houseNumber" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                  placeholder="Enter house/building number" required>
+              </div>
+
+              <div class="space-y-2">
+                <label for="propertyAddress" class="block text-sm font-medium text-gray-700">Complete Address *</label>
+                <input type="text" id="propertyAddress" name="propertyAddress" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                  placeholder="Enter complete address" required>
+              </div>
+
+              <div class="space-y-2">
+                <label for="aadharNumber" class="block text-sm font-medium text-gray-700">Aadhar Number *</label>
+                <input type="text" id="aadharNumber" name="aadharNumber" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                  placeholder="12-digit Aadhar number" required>
+              </div>
+
+              <div class="space-y-2">
+                <label for="areaSize" class="block text-sm font-medium text-gray-700">Area Size *</label>
+                <input type="text" id="areaSize" name="areaSize" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                  placeholder="e.g., 1000 sq ft" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fire Safety Equipment Section -->
+          <div class="space-y-6 pt-6 border-t">
+            <div class="flex items-center space-x-2 text-lg font-semibold text-gray-700">
+              <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+              </svg>
+              <h3>Fire Safety Equipment</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                <input type="checkbox" id="fireExtinguisher" name="fireExtinguisher" class="h-5 w-5 text-indigo-600">
+                <span class="ml-3 text-gray-700">Fire Extinguisher</span>
+              </label>
+
+              <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                <input type="checkbox" id="fireAlarm" name="fireAlarm" class="h-5 w-5 text-indigo-600">
+                <span class="ml-3 text-gray-700">Fire Alarm System</span>
+              </label>
+
+              <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                <input type="checkbox" id="sprinklerSystem" name="sprinklerSystem" class="h-5 w-5 text-indigo-600">
+                <span class="ml-3 text-gray-700">Sprinkler System</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Document Upload Section -->
+          <div class="space-y-6 pt-6 border-t">
+            <div class="flex items-center space-x-2 text-lg font-semibold text-gray-700">
+              <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              <h3>Document Upload</h3>
+            </div>
+
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+              <input type="file" id="documents" name="documents" class="hidden" multiple>
+              <label for="documents" class="cursor-pointer">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <p class="mt-1 text-sm text-gray-600">Click to upload or drag and drop</p>
+                <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG up to 10MB</p>
+              </label>
+              <div id="filePreview" class="mt-4"></div>
+            </div>
+          </div>
+
+          <!-- Terms and Submit Section -->
+          <div class="space-y-6 pt-6 border-t">
+            <label class="flex items-center space-x-3">
+              <input type="checkbox" id="acceptTerms" name="acceptTerms" class="h-5 w-5 text-indigo-600 rounded">
+              <span class="text-sm text-gray-700">I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-500">Terms and Conditions</a></span>
+            </label>
+
+            <div class="flex justify-end space-x-4">
+              <button type="button" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                Save Draft
+              </button>
+              <button type="button" onclick="confirmSubmit(event)" 
+                class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Submit Application
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Confirmation Page -->
+  <section id="confirm-section" class="py-16 form-section" style="display: none;">
+    <div class="container mx-auto px-4">
+      <div class="bg-white p-8 shadow-lg rounded-lg">
+        <h2 class="text-3xl font-bold mb-6">Confirm Your Details</h2>
+        <div id="confirmationDetails"></div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-center mt-5">
+          <button type="button" onclick="submitForm()" 
+            class="px-6 py-2.5 text-sm uppercase font-semibold bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+            Submit Application
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto text-center">
+      <p>&copy; 2024 Government of India. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    function confirmSubmit(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Hide all error messages initially
+      document.querySelectorAll('.error-message').forEach(function(error) {
+        error.style.display = 'none';
+      });
+
+      let isValid = true;
+
+      // Validate input fields
+      const email = document.getElementById('email').value;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      if (!emailRegex.test(email)) {
+        document.getElementById('emailError').style.display = 'block';
+        isValid = false;
+      }
+
+      const contactNumber = document.getElementById('contactNumber').value;
+      const contactNumberRegex = /^[0-9]{10}$/;
+      if (!contactNumberRegex.test(contactNumber)) {
+        document.getElementById('contactNumberError').style.display = 'block';
+        isValid = false;
+      }
+
+      const aadharNumber = document.getElementById('aadharNumber').value;
+      const aadharRegex = /^[0-9]{12}$/;
+      if (!aadharRegex.test(aadharNumber)) {
+        document.getElementById('aadharNumberError').style.display = 'block';
+        isValid = false;
+      }
+
+      const areaSize = document.getElementById('areaSize').value;
+      if (!areaSize) {
+        document.getElementById('areaSizeError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Fire safety equipment validation
+      const fireExtinguisher = document.getElementById('fireExtinguisher').checked;
+      const fireAlarm = document.getElementById('fireAlarm').checked;
+      const sprinklerSystem = document.getElementById('sprinklerSystem').checked;
+      if (!fireExtinguisher && !fireAlarm && !sprinklerSystem) {
+        document.getElementById('fireSafetyError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Check if Terms are accepted
+      const acceptTerms = document.getElementById('acceptTerms').checked;
+      if (!acceptTerms) {
+        document.getElementById('termsError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validate file upload
+      const documents = document.getElementById('documents').files;
+      if (documents.length === 0) {
+        document.getElementById('documentError').style.display = 'block';
+        isValid = false;
+      }
+
+      if (isValid) {
+        // Proceed to confirmation page
+        document.getElementById('noc-form').style.display = 'none';
+        document.getElementById('confirm-section').style.display = 'block';
+
+        const confirmationDetails = `
+          <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-md">
+            <p><strong>Applicant Name:</strong> ${document.getElementById('applicantName').value}</p>
+            <p><strong>Email Address:</strong> ${document.getElementById('email').value}</p>
+            <p><strong>Organization Name:</strong> ${document.getElementById('organization').value}</p>
+            <p><strong>Contact Number:</strong> ${document.getElementById('contactNumber').value}</p>
+            <p><strong>House Number:</strong> ${document.getElementById('houseNumber').value}</p>
+            <p><strong>Property Address:</strong> ${document.getElementById('propertyAddress').value}</p>
+            <p><strong>Aadhar Number:</strong> ${document.getElementById('aadharNumber').value}</p>
+            <p><strong>Area Size:</strong> ${document.getElementById('areaSize').value} sq. ft.</p>
+            <p><strong>Fire Safety Equipment:</strong> ${fireExtinguisher ? 'Fire Extinguisher' : ''} ${fireAlarm ? 'Fire Alarm' : ''} ${sprinklerSystem ? 'Sprinkler System' : ''}</p>
+          </div>
+        `;
+        document.getElementById('confirmationDetails').innerHTML = confirmationDetails;
+      }
+    }
+
+    function submitForm() {
+      // Simulate form submission and refresh the page
+      alert('Form Submitted Successfully!');
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>

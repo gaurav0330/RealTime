@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Government Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Additional Custom Styles */
+    .header-bg {
+      background: linear-gradient(90deg, #003366, #00509e);
+    }
+    .active-tab {
+      border-bottom: 4px solid #1d4ed8;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Header -->
+  <header class="bg-red-700 text-white">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <div class="flex items-center space-x-4">
+        <img src="../images/logo.jpg" class="h-12">
+        <div>
+          <h1 class="text-2xl font-bold">Fire Department</h1>
+          <h2 class="text-sm">Government of India</h2>
+        </div>
+      </div>
+      <div class="space-x-4">
+        <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick=window.location.href='login.html'>Logout</button>
+   
+      </div>
+    </div>
+    
+    <!-- Simplified Navigation -->
+    <nav class="bg-red-800 text-white py-3">
+      <div class="container mx-auto flex justify-center space-x-8">
+        <a href="../home/home.html" class="hover:text-yellow-400 transition">Home</a>
+        <a href="#conta" class="hover:text-yellow-400 transition">CheckStatus</a>
+        <a href="#about" class="hover:text-yellow-400 transition">Contact</a>
+        
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg flex flex-col justify-between">
+      <div>
+        <!-- User Profile Section -->
+        <div class="p-6 text-center border-b">
+          <img src="https://via.placeholder.com/80" alt="User Avatar" class="w-20 h-20 rounded-full mx-auto mb-3">
+          <h3 class="text-lg font-semibold text-gray-800">John Doe</h3>
+          <p class="text-sm text-gray-500">Active User</p>
+        </div>
+        <!-- Navigation Links -->
+        <nav class="mt-6 space-y-2">
+          <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Dashboard</a>
+          <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Applications</a>
+          <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Profile</a>
+          <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Settings</a>
+        </nav>
+      </div>
+      <!-- Logout Button -->
+      <button class="bg-red-500 hover:bg-red-600 text-white text-lg py-3 w-full">
+        Logout
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-gray-50 p-6">
+      <!-- Welcome Section -->
+      <div class="mb-6">
+        <h2 class="text-3xl font-semibold text-gray-800">Welcome, John Doe</h2>
+        <p class="text-gray-600">Track your application status and updates below.</p>
+      </div>
+
+      <!-- User Status Card -->
+      <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">NOC Application Status</h3>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-blue-100 p-4 rounded-lg text-center">
+            <h4 class="text-lg font-semibold text-blue-900">Submitted</h4>
+            <p class="text-gray-600">March 15, 2023</p>
+          </div>
+          <div class="bg-yellow-100 p-4 rounded-lg text-center">
+            <h4 class="text-lg font-semibold text-yellow-900">In Review</h4>
+            <p class="text-gray-600">Expected: March 20, 2023</p>
+          </div>
+          <div class="bg-green-100 p-4 rounded-lg text-center">
+            <h4 class="text-lg font-semibold text-green-900">Approved</h4>
+            <p class="text-gray-600">March 25, 2023</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Activity Section -->
+      <section class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex space-x-6 border-b pb-3">
+          <button data-tab="activity" class="tab-link active-tab px-4 py-2 text-gray-700 text-lg font-semibold">
+            Activity
+          </button>
+          <button data-tab="payments" class="tab-link px-4 py-2 text-gray-700 text-lg font-semibold">
+            Payments
+          </button>
+          <button data-tab="documents" class="tab-link px-4 py-2 text-gray-700 text-lg font-semibold">
+            Documents
+          </button>
+        </div>
+        <div id="activity" class="tab-content mt-4">
+          <ul class="space-y-2">
+            <li class="text-gray-700">✅ Submitted NOC Application - March 15, 2023</li>
+            <li class="text-gray-700">❌ Pending Payment for Review - March 17, 2023</li>
+            <li class="text-gray-700">✅ Approval Granted - March 25, 2023</li>
+          </ul>
+        </div>
+        <div id="payments" class="tab-content mt-4 hidden">
+          <ul class="space-y-2">
+            <li class="text-gray-700">💵 Paid ₹500 for Application - March 10, 2023</li>
+          </ul>
+        </div>
+        <div id="documents" class="tab-content mt-4 hidden">
+          <ul class="space-y-2">
+            <li class="text-gray-700">📄 NOC Certificate.pdf - <a href="#" class="text-blue-500 hover:underline">Download</a></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const tabs = document.querySelectorAll('.tab-link');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active-tab'));
+        contents.forEach(c => c.classList.add('hidden'));
+
+        tab.classList.add('active-tab');
+        document.getElementById(tab.getAttribute('data-tab')).classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>
