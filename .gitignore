@@ -38,3 +38,9 @@ yarn.lock
 
 # TypeScript
 *.tsbuildinfo
+
+
+.env
+
+
+src/config/firebase-adminsdk.json
