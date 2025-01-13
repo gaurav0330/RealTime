@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessor Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* Custom Styles for Red Theme */
+        .header-bg {
+            background: #DC2626; /* Red background */
+        }
+        .sidebar-bg {
+            background: #FEE2E2; /* Light red background */
+        }
+        .text-red-theme {
+            color: #DC2626; /* Red text */
+        }
+        .bg-red-theme {
+            background-color: #DC2626; /* Red background */
+        }
+        .hover-bg-red-theme:hover {
+            background-color: #B91C1C; /* Darker red on hover */
+        }
+    </style>
+</head>
+ <!-- Header -->
+ <header class="bg-red-800 text-white py-4 px-6 flex items-center justify-between">
+    <div class="flex items-center">
+        <img src="../images/logo.jpg" alt="Gov Logo" class="h-12 mr-4">
+        <div>
+            <h1 class="text-2xl font-semibold">Government of India</h1>
+            <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+        </div>
+    </div>
+    
+    <div class="flex items-center space-x-6">
+        <p class="text-lg font-semibold">Assessor's Dashboard</p>
+        <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" 
+                onclick="window.location.href='login.html'">
+            Logout
+        </button>
+    </div>
+</header>
+
+<body class="bg-gray-50">
+    <div class="flex h-screen">
+       <!-- Sidebar -->
+<aside class="w-64 sidebar-bg border-r border-gray-200">
+    <div class="p-6">
+        <h2 class="text-xl font-semibold text-red-theme">Fire NOC Portal</h2>
+    </div>
+    <nav class="mt-2">
+        <a href="./dashboard.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-red-50">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            Dashboard
+        </a>
+        <a href="./provisional.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-red-50 bg-red-100">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            Provisional Applications
+        </a>
+        <a href="./renewal-dashboard.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-red-50">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            Renewal Applications
+        </a>
+       
+        <button onclick="logout()" class="w-full flex items-center px-6 py-3 text-gray-600 hover:bg-red-50">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Logout
+        </button>
+    </nav>
+</aside>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Bar -->
+            <header class="header-bg border-b border-gray-200">
+                <div class="px-6 py-4 flex items-center justify-between">
+                    <h1 class="text-xl font-semibold text-white">Assessor Dashboard</h1>
+                    <div class="flex items-center">
+                        <span class="text-sm text-white">State:</span>
+                        <span id="assessorState" class="ml-2 text-sm font-medium text-white">Loading...</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-auto p-6">
+                <!-- Filter Section -->
+                <div class="mb-4 flex space-x-4">
+                    <select id="statusFilter" class="px-4 py-2 border rounded-lg">
+                        <option value="">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="In Review">In Review</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="In Inspection Phase">In Inspection Phase</option>
+                    </select>
+                    <input type="text" id="cityFilter" placeholder="Filter by City" class="px-4 py-2 border rounded-lg">
+                    <button onclick="applyFilters()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Apply Filters</button>
+                </div>
+
+                <!-- Error Message Container -->
+                <div id="errorContainer" class="mb-4"></div>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="text-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-700 mx-auto"></div>
+                    <p class="mt-4 text-sm text-gray-600">Loading applications...</p>
+                </div>
+
+                <!-- Table Container -->
+                <div id="tableContainer" class="bg-white rounded-lg shadow">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="bg-red-50">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Applicant Name
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Building Name
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        City
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Submission Date
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicationsTable" class="bg-white divide-y divide-gray-200">
+                                <!-- Applications will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check auth and load applications
+            if (checkAuth()) {
+                loadApplications();
+            }
+        });
+
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
+
+        // Function to load applications
+        async function loadApplications() {
+            const loadingState = document.getElementById('loadingState');
+            const tableContainer = document.getElementById('tableContainer');
+            const errorContainer = document.getElementById('errorContainer');
+            
+            // Show loading state, hide table
+            if (loadingState) loadingState.style.display = 'block';
+            if (tableContainer) tableContainer.style.display = 'none';
+            if (errorContainer) errorContainer.innerHTML = '';
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('/api/assessor/local-authority-applications', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load applications');
+                }
+
+                // Update state info
+                const stateElement = document.getElementById('assessorState');
+                if (stateElement && data.assessorState) {
+                    stateElement.textContent = data.assessorState;
+                }
+
+                const applicationsTable = document.getElementById('applicationsTable');
+                if (!applicationsTable) {
+                    throw new Error('Applications table element not found');
+                }
+
+                if (!data.applications || data.applications.length === 0) {
+                    applicationsTable.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                No applications found for your state
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    applicationsTable.innerHTML = data.applications.map(app => `
+                        <tr class="hover:bg-red-50">
+                            <td class="px-6 py-4">${app.applicantName || 'N/A'}</td>
+                            <td class="px-6 py-4">${app.buildingName || 'N/A'}</td>
+                            <td class="px-6 py-4">${app.city || 'N/A'}</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(app.status)}">
+                                    ${app.status || 'Pending'}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">${formatDate(app.submissionDate)}</td>
+                            <td class="px-6 py-4">
+                                <button onclick="viewApplication('${app.id}')"
+                                        class="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                showError('Failed to load applications. Please try again.');
+            } finally {
+                if (loadingState) loadingState.style.display = 'none';
+                if (tableContainer) tableContainer.style.display = 'block';
+            }
+        }
+
+        // Function to apply filters
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const cityFilter = document.getElementById('cityFilter').value.toLowerCase();
+
+            const applicationsTable = document.getElementById('applicationsTable');
+            const rows = applicationsTable.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const statusCell = rows[i].getElementsByTagName('td')[3];
+                const cityCell = rows[i].getElementsByTagName('td')[2];
+
+                if (statusCell && cityCell) {
+                    const statusText = statusCell.textContent || statusCell.innerText;
+                    const cityText = cityCell.textContent || cityCell.innerText;
+
+                    if ((statusFilter === "" || statusText === statusFilter) &&
+                        (cityFilter === "" || cityText.toLowerCase().includes(cityFilter))) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Helper function to show error messages
+        function showError(message) {
+            Swal.fire({
+                title: 'Error',
+                text: message,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#DC2626',
+                background: '#fff',
+                customClass: {
+                    title: 'text-red-600 font-semibold',
+                    htmlContainer: 'text-gray-700',
+                    confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg',
+                    popup: 'rounded-lg shadow-xl border border-gray-200'
+                }
+            });
+        }
+
+        // Helper function to format dates
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Helper function to get status colors
+        function getStatusColor(status) {
+            const colors = {
+                'Pending': 'bg-yellow-100 text-yellow-800',
+                'In Review': 'bg-blue-100 text-blue-800',
+                'Accepted': 'bg-green-100 text-green-800',
+                'Rejected': 'bg-red-100 text-red-800',
+                'In Inspection Phase': 'bg-purple-100 text-purple-800'
+            };
+            return colors[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Function to view application details
+        function viewApplication(id) {
+            try {
+                if (!id) {
+                    showError('Invalid application ID');
+                    return;
+                }
+                
+                // Navigate to the application-details page with the application ID
+                window.location.href = `application-details.html?id=${id}`;
+                
+            } catch (error) {
+                console.error('Error viewing application:', error);
+                showError('Failed to open application details');
+            }
+        }
+
+        // Update the loading state to match the theme
+        function showLoading(message = 'Loading...') {
+            Swal.fire({
+                title: message,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                background: '#fff',
+                confirmButtonColor: '#DC2626',
+                customClass: {
+                    title: 'text-gray-800',
+                    popup: 'rounded-lg shadow-xl'
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

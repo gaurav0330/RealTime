@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire NOC Certificate Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui@4/material-ui.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        #signaturePad {
+            border: 2px dashed #e53e3e;
+            width: 100%;
+            height: 150px;
+            cursor: crosshair;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="container mx-auto">
+        <h1 class="text-3xl font-bold text-center text-red-700 mb-6">Fire NOC Certificate Generator</h1>
+        <form id="nocForm" class="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto">
+            <!-- Simplified form fields -->
+            <div class="mb-4">
+                <label for="applicantName" class="block text-gray-700 font-bold mb-2">Applicant Name:</label>
+                <input type="text" id="applicantName" readonly class="w-full px-4 py-2 border rounded-lg bg-gray-50">
+            </div>
+
+            <div class="mb-4">
+                <label for="buildingName" class="block text-gray-700 font-bold mb-2">Building Name:</label>
+                <input type="text" id="buildingName" readonly class="w-full px-4 py-2 border rounded-lg bg-gray-50">
+            </div>
+
+            <div class="mb-4">
+                <label for="buildingType" class="block text-gray-700 font-bold mb-2">Building Type:</label>
+                <input type="text" id="buildingType" readonly class="w-full px-4 py-2 border rounded-lg bg-gray-50">
+            </div>
+
+            <!-- Add Issuance Date input -->
+            <div class="mb-4">
+                <label for="issuanceDate" class="block text-gray-700 font-bold mb-2">Issuance Date:</label>
+                <input type="date" 
+                       id="issuanceDate" 
+                       required 
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400">
+            </div>
+
+            <!-- Validity Period input -->
+            <div class="mb-4">
+                <label for="validityPeriod" class="block text-gray-700 font-bold mb-2">Validity Period (in Years):</label>
+                <input type="number" 
+                       id="validityPeriod" 
+                       min="1" 
+                       max="5" 
+                       value="1" 
+                       required 
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400">
+                <p class="text-sm text-gray-600 mt-1">Enter validity period between 1-5 years</p>
+            </div>
+
+            <!-- Digital Signature -->
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Digital Signature:</label>
+                <canvas id="signaturePad" class="bg-white"></canvas>
+                <button type="button" onclick="clearSignature()" class="mt-2 bg-gray-500 hover:bg-gray-600 text-white font-bold py-1 px-4 rounded-lg">
+                    Clear Signature
+                </button>
+            </div>
+
+            <button type="button" onclick="generateCertificate()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                Generate Certificate
+            </button>
+        </form>
+
+        <!-- Certificate Display Section -->
+        <div id="certificate" class="hidden bg-white shadow-lg rounded-lg p-8 mt-8 max-w-4xl mx-auto border-t-8 border-red-700">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold text-red-700 mb-4">Fire Safety NOC Certificate</h2>
+                <p class="text-gray-600 mb-6">Certificate Number: <span id="approvalNumber" class="font-bold text-gray-800"></span></p>
+            </div>
+
+            <div id="certificateContent" class="text-gray-800 text-lg leading-relaxed space-y-4">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+
+            <div class="mt-8 flex justify-between items-end">
+                <div>
+                    <p class="font-bold">Date of Issue</p>
+                    <p id="issueDate" class="text-gray-600"></p>
+                </div>
+                <div class="text-right">
+                    <p class="font-bold">Digital Signature</p>
+                    <img id="signatureImage" alt="Digital Signature" class="mt-2 h-20">
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <button onclick="downloadCertificate()" 
+                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Download Certificate
+                </button>
+            </div>
+
+            <div class="mt-4 flex justify-center">
+                <button onclick="uploadCertificate()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg flex items-center gap-2 ml-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    Upload Certificate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let applicationData = null;
+        // Updated fetch application details function
+        async function fetchApplicationDetails() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const applicationId = urlParams.get('id');
+                
+                if (!applicationId) {
+                    throw new Error('Application ID is missing');
+                }
+
+                const response = await fetch(`http://localhost:5000/api/cfo/application/${applicationId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch application details');
+                }
+
+                const data = await response.json();
+                if (!data) {
+                    throw new Error('No data received from server');
+                }
+
+                console.log('Raw API Response:', data); // Debug log to see the actual data structure
+                applicationData = data;
+                
+                // Debug log to verify the data we're using
+                console.log('Application Data being used:', data);
+                
+                populateFormFields(data);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error loading application details: ' + error.message);
+            }
+        }
+
+        // Updated populate form fields function with better error handling
+        function populateFormFields(applicationData) {
+            try {
+                console.log('testing application data', applicationData);
+                // Extracting values from the response data
+                const applicantName = applicationData.data.applicantName ; // Default value if undefined
+                const buildingName = applicationData.data.buildingName ; // Default value if undefined
+                const buildingType = applicationData.data.buildingType ; // Default value if undefined
+               
+                console.log('Extracted values:', { applicantName, buildingName, buildingType });
+
+                // Setting values to the form fields
+                document.getElementById('applicantName').value = applicantName;
+                document.getElementById('buildingName').value = buildingName;
+                document.getElementById('buildingType').value = buildingType;
+                   // You can add more fields as necessary based on the response data
+            } catch (error) {
+                console.error('Error populating form:', error);
+                alert('Error populating form fields');
+            }
+        }
+
+        // Signature pad setup
+        const signaturePad = document.getElementById('signaturePad');
+        const context = signaturePad.getContext('2d');
+        let drawing = false;
+
+        // Set canvas size properly
+        signaturePad.width = signaturePad.offsetWidth;
+        signaturePad.height = signaturePad.offsetHeight;
+
+        signaturePad.addEventListener('mousedown', startDrawing);
+        signaturePad.addEventListener('mousemove', draw);
+        signaturePad.addEventListener('mouseup', stopDrawing);
+        signaturePad.addEventListener('mouseout', stopDrawing);
+
+        function startDrawing(e) {
+            drawing = true;
+            draw(e);
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+            const rect = signaturePad.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            context.lineWidth = 2;
+            context.lineCap = 'round';
+            context.strokeStyle = '#e53e3e';
+            context.lineTo(x, y);
+            context.stroke();
+            context.beginPath();
+            context.moveTo(x, y);
+        }
+
+        function stopDrawing() {
+            drawing = false;
+            context.beginPath();
+        }
+
+        function clearSignature() {
+            context.clearRect(0, 0, signaturePad.width, signaturePad.height);
+            context.beginPath();
+        }
+
+        // Updated generate certificate function
+        function generateCertificate() {
+            if (!applicationData) {
+                alert('Application data not loaded');
+                return;
+            }
+
+            const validityPeriod = document.getElementById('validityPeriod').value;
+            const issuanceDate = document.getElementById('issuanceDate').value;
+
+            if (!validityPeriod || validityPeriod < 1 || validityPeriod > 5) {
+                alert('Please enter a valid period between 1-5 years');
+                return;
+            }
+
+            if (!issuanceDate) {
+                alert('Please select an issuance date');
+                return;
+            }
+
+            // Improved signature validation
+            const canvas = document.getElementById('signaturePad');
+            const context = canvas.getContext('2d');
+            const isSignatureEmpty = context.getImageData(0, 0, canvas.width, canvas.height).data.every(pixel => pixel === 0);
+
+            if (isSignatureEmpty) {
+                alert('Please add your signature before generating the certificate');
+                return;
+            }
+
+            // Generate certificate number
+            const approvalNumber = `NOC-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            
+            // Format issuance date
+            const issuanceDateObj = new Date(issuanceDate);
+            const formattedIssuanceDate = issuanceDateObj.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Calculate expiry date
+            const expiryDate = new Date(issuanceDate);
+            expiryDate.setFullYear(expiryDate.getFullYear() + parseInt(validityPeriod));
+            const expiryDateString = expiryDate.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Get the signature
+            const signatureDataURL = canvas.toDataURL();
+
+            // Update certificate content
+            document.getElementById('approvalNumber').innerText = approvalNumber;
+            document.getElementById('certificateContent').innerHTML = `
+                <div class="space-y-4">
+                    <p><strong>This is to certify that:</strong></p>
+                    <p><strong>Applicant Name:</strong> ${document.getElementById('applicantName').value}</p>
+                    <p><strong>Building Name:</strong> ${document.getElementById('buildingName').value}</p>
+                    <p><strong>Building Type:</strong> ${document.getElementById('buildingType').value}</p>
+                    <p><strong>Issue Date:</strong> ${formattedIssuanceDate}</p>
+                    <p><strong>Validity Period:</strong> ${validityPeriod} Year(s)</p>
+                    <p><strong>Valid Until:</strong> ${expiryDateString}</p>
+                    <p class="mt-6">This NOC is issued subject to compliance with all fire safety norms and regulations.</p>
+                </div>
+            `;
+
+            // Set issue date
+            document.getElementById('issueDate').innerText = formattedIssuanceDate;
+            
+            // Set signature
+            document.getElementById('signatureImage').src = signatureDataURL;
+
+            // Hide form and show certificate
+            document.getElementById('nocForm').classList.add('hidden');
+            document.getElementById('certificate').classList.remove('hidden');
+        }
+
+        // Set default issuance date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('issuanceDate').value = today;
+        });
+
+        // Add this to help debug
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Window Error:', msg, 'URL:', url, 'Line:', lineNo, 'Column:', columnNo, 'Error:', error);
+            return false;
+        };
+
+        // Initialize page
+        window.onload = fetchApplicationDetails;
+
+        // Add the download certificate function
+        function downloadCertificate() {
+            // Get the certificate element
+            const certificate = document.getElementById('certificate');
+            
+            // Configure the PDF options
+            const options = {
+                margin: 1,
+                filename: `NOC_Certificate_${document.getElementById('approvalNumber').innerText}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Generate and download the PDF
+            html2pdf().from(certificate).set(options).save().catch(err => {
+                console.error('Error generating PDF:', err);
+                alert('Error generating PDF. Please try again.');
+            });
+        }
+
+      // Add this function to handle certificate upload
+      async function uploadCertificate() {
+            try {
+                const certificate = document.getElementById('certificate');
+                const approvalNumber = document.getElementById('approvalNumber').innerText;
+                const validityPeriod = document.getElementById('validityPeriod').value;
+                const issuanceDate = document.getElementById('issuanceDate').value;
+                
+                // Show loading state
+                Swal.fire({
+                    title: 'Uploading Certificate',
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Generate PDF blob
+                const options = {
+                    margin: 1,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                };
+
+                const pdfBlob = await html2pdf().from(certificate).set(options).output('blob');
+                console.log(pdfBlob);
+                // Create FormData
+                const formData = new FormData();
+                formData.append('nocFile', new File([pdfBlob], `${approvalNumber}.pdf`, { type: 'application/pdf' }));
+                formData.append('applicationId', applicationData.data.applicationId);
+                formData.append('nocNumber', approvalNumber);
+                formData.append('validityPeriod', validityPeriod);
+                formData.append('issuanceDate', issuanceDate);
+
+                // Upload to server
+                const response = await fetch('http://localhost:5000/api/cfo/generate-noc', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to upload certificate');
+                }
+
+                // Show success message
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Certificate uploaded successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    // Redirect to applications list or appropriate page
+                    window.location.href = 'application-details.html';
+                });
+
+            } catch (error) {
+                console.error('Error uploading certificate:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message || 'Failed to upload certificate',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+ </script>
+</body>
+</html>

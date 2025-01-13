@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics & Reports - Fire Department</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Reuse the same sidebar from cfodashboard.html -->
+    <div class="fixed inset-y-0 left-0 w-64 bg-red-900 text-white z-10">
+        <div class="flex flex-col h-full">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-red-800">
+                <div class="flex items-center justify-center mb-4">
+                    <img src="../images/logo.jpg" alt="Gov Logo" class="h-16">
+                </div>
+                <p class="text-sm text-center text-yellow-400">Chief Fire Officer Portal</p>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 p-4 space-y-2">
+                <a href="cfodashboard.html" class="flex items-center px-4 py-3 text-white hover:bg-red-800 rounded-lg transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Dashboard Overview
+                </a>
+
+                <a href="analytics.html" class="flex items-center px-4 py-3 bg-red-800 text-white rounded-lg transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Analytics & Reports
+                </a>
+
+                <a href="#compliance" class="flex items-center px-4 py-3 text-white hover:bg-red-800 rounded-lg transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Compliance Monitoring
+                </a>
+
+                <a href="#emergency" class="flex items-center px-4 py-3 text-white hover:bg-red-800 rounded-lg transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    Emergency Alerts
+                </a>
+            </nav>
+
+            <!-- Bottom Section -->
+            <div class="p-4 border-t border-red-800">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="h-8 w-8 rounded-full bg-yellow-400 flex items-center justify-center text-red-900 font-bold">
+                        CF
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">Chief Fire Officer</p>
+                        <p class="text-xs text-yellow-400">Fire Safety Division</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pl-64">
+        <!-- Header -->
+        <header class="bg-red-800 text-white py-4 px-6 flex items-center justify-between sticky top-0 z-20">
+            <div class="flex items-center">
+                <img src="../images/logo.jpg" alt="Gov Logo" class="h-12 mr-4">
+                <div>
+                    <h1 class="text-2xl font-semibold">Analytics & Reports</h1>
+                    <p class="text-sm font-medium">Fire Department Services</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button onclick="exportToExcel()" 
+                        class="bg-yellow-400 text-red-700 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition">
+                    Export to Excel
+                </button>
+                <button onclick="window.location.href='login.html'" 
+                        class="bg-yellow-400 text-red-700 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition">
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <!-- Filter Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Filter Applications</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div>
+                        <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-1">Application ID</label>
+                        <input type="text" 
+                               id="searchInput" 
+                               placeholder="Search by ID..." 
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+
+                    <div>
+                        <label for="statusFilter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select id="statusFilter" 
+                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="in progress">In Progress</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="priorityFilter" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                        <select id="priorityFilter" 
+                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="dateFilter" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                        <input type="date" 
+                               id="dateFilter" 
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+
+                    <div class="flex items-end">
+                        <button onclick="applyFilters()" 
+                                class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications Table -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <table id="applications-table" class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Application ID
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Priority
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Date
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- Table rows will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let applications = [];
+
+        async function fetchAllApplications() {
+            try {
+                const response = await fetch('/api/cfo/all-applications');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    applications = data.applications;
+                    populateApplicationsTable();
+                } else {
+                    throw new Error(data.message || 'Failed to fetch applications');
+                }
+            } catch (error) {
+                console.error('Error fetching applications:', error);
+                document.querySelector("#applications-table tbody").innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-red-500">
+                            Error loading applications. Please try again later.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function populateApplicationsTable(displayApps = applications) {
+            const tableBody = document.querySelector("#applications-table tbody");
+            tableBody.innerHTML = '';
+
+            displayApps.forEach(app => {
+                const row = document.createElement("tr");
+                row.className = "hover:bg-gray-50";
+
+                const priorityClass = getPriorityClass(app.priority);
+                const statusClass = getStatusClass(app.status);
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">
+                            ${app.applicationId || app.id || 'N/A'}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${priorityClass}">
+                            ${app.priority || 'Normal'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                            ${formatDate(app.submittedAt || app.createdAt || app.lastUpdated)}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${app.status || 'Pending'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="viewDetails('${app.applicationId || app.id}')"
+                                class="text-indigo-600 hover:text-indigo-900">
+                            View Details
+                        </button>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        function getPriorityClass(priority) {
+            switch(priority?.toLowerCase()) {
+                case 'high':
+                    return 'bg-red-100 text-red-800';
+                case 'medium':
+                    return 'bg-yellow-100 text-yellow-800';
+                default:
+                    return 'bg-green-100 text-green-800';
+            }
+        }
+
+        function getStatusClass(status) {
+            switch(status?.toLowerCase()) {
+                case 'approved':
+                    return 'bg-green-100 text-green-800';
+                case 'rejected':
+                    return 'bg-red-100 text-red-800';
+                case 'in progress':
+                    return 'bg-blue-100 text-blue-800';
+                default:
+                    return 'bg-yellow-100 text-yellow-800';
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value.toLowerCase();
+            const priority = document.getElementById('priorityFilter').value.toLowerCase();
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            const filteredApplications = applications.filter(app => {
+                const matchesSearch = (app.applicationId || app.id || '').toLowerCase().includes(searchTerm);
+                const matchesStatus = !status || (app.status || '').toLowerCase() === status;
+                const matchesPriority = !priority || (app.priority || '').toLowerCase() === priority;
+                const matchesDate = !dateFilter || formatDate(app.submittedAt || app.createdAt || app.lastUpdated).includes(dateFilter);
+
+                return matchesSearch && matchesStatus && matchesPriority && matchesDate;
+            });
+
+            // Create a copy of the filtered applications instead of modifying the original array
+            const displayApplications = [...filteredApplications];
+            
+            // Update the table with filtered results
+            const tableBody = document.querySelector("#applications-table tbody");
+            if (displayApplications.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                            No applications found matching the selected filters
+                        </td>
+                    </tr>
+                `;
+            } else {
+                populateApplicationsTable(displayApplications);
+            }
+        }
+
+        function viewDetails(applicationId) {
+            window.location.href = `application-details.html?id=${applicationId}`;
+        }
+
+        function exportToExcel() {
+            // Implement Excel export functionality
+            alert('Export functionality will be implemented here');
+        }
+
+        // Initialize on page load
+        window.onload = () => {
+            fetchAllApplications();
+            
+            // Add event listeners for all filters
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            document.getElementById('priorityFilter').addEventListener('change', applyFilters);
+            document.getElementById('dateFilter').addEventListener('change', applyFilters);
+        };
+    </script>
+</body>
+</html> 

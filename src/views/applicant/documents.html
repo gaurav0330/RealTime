@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Government Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .bg-faint {
+      background-color: #f3f4f6;
+    }
+    .text-faint {
+      color: #6b7280;
+    }
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    .button {
+      background-color: #10b981;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .button:hover {
+      background-color: #16a34a;
+    }
+    .slider {
+      display: none;
+      overflow: hidden;
+    }
+    .slider.active {
+      display: block;
+    }
+    /* New styles for document items */
+    .document-item {
+      border: 1px solid #e5e7eb; /* Light gray border */
+      border-radius: 8px; /* Rounded corners */
+      padding: 12px; /* Padding inside the item */
+      background-color: white; /* White background */
+      transition: box-shadow 0.2s ease; /* Transition for shadow effect */
+    }
+    .document-item:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow on hover */
+    }
+  </style>
+</head>
+<body class="font-sans bg-faint">
+
+  <!-- Header -->
+  <header class="bg-blue-900 text-white py-4 px-6 flex items-center">
+    <img src="https://via.placeholder.com/50x50" alt="Gov Logo" class="h-12 mr-4">
+    <div>
+      <h1 class="text-2xl font-semibold">Government of India</h1>
+      <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+    </div>
+  </header>
+
+  <div class="flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg p-6">
+        <nav class="mb-4">
+            <ul class="space-y-2">
+                <div>
+                    <!-- Order and Circular Section -->
+                    <button id="order-btn-1" class="block w-full text-left py-2 px-4 bg-blue-100 text-blue-600 rounded">
+                      Order and Circular
+                    </button>
+                    <div id="order-slider-1" class="slider mt-2 pl-4 space-y-2">
+                      <a href="#" class="block py-1 px-4 hover:bg-blue-50 rounded">Centralized Important Schemes</a>
+                      <a href="#" class="block py-1 px-4 hover:bg-blue-50 rounded">Gazette Notification</a>
+                      <a href="#" class="block py-1 px-4 hover:bg-blue-50 rounded">Forms</a>
+                      <a href="#" class="block py-1 px-4 hover:bg-blue-50 rounded">Ease of Doing Business FAQ</a>
+                    </div>
+                  </div>
+                  <div class="mt-4">
+                    <!-- Check Eligibility Section -->
+                    <a href="eligibility.html" id="order-btn-2" class="block w-full text-left py-2 px-4 bg-blue-100 text-blue-600 rounded mb-4">
+                      Check Eligibility
+                    </a>
+                    <div id="order-slider-2" class="slider mt-2 pl-4 space-y-2"></div>
+                  
+                    <!-- Document Checklist Section -->
+                    
+                  </div>
+                  
+            </ul>
+        </nav>  
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-faint p-6" id="documentList">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Forms</h2>
+
+      <!-- Forms List -->
+      <ul class="space-y-4">
+        <li class="document-item flex justify-between items-center">
+          <span>FORM J: Application for Renewal of Fire Safety Certificate</span>
+          <a href="#" class="button">Download</a>
+        </li>
+        <li class="document-item flex justify-between items-center">
+          <span>FORM K: Declaration by Owner-Occupier</span>
+          <a href="#" class="button">Download</a>
+        </li>
+        <li class="document-item flex justify-between items-center">
+          <span>FORM T: Application for Changes in Fire Report</span>
+          <a href="#" class="button">Download</a>
+        </li>
+        <li class="document-item flex justify-between items-center">
+          <span>FORM A: Certificate of Appointment</span>
+          <a href="#" class="button">Download</a>
+        </li>
+        <li class="document-item flex justify-between items-center">
+          <span>FORM B: Application for Stand-by Duty</span>
+          <a href="#" class="button">Download</a>
+        </li>
+        <li class="document-item flex justify-between items-center">
+          <span>FORM D: Declaration by Erector of a Pandal</span>
+          <a href="#" class="button">Download</a>
+        </li>
+        <li class="document-item flex justify-between items-center">
+          <span>FORM G: Notice for Claiming Seized Goods</span>
+          <a href="#" class="button">Download</a>
+        </li>
+        <li class="document-item flex justify-between items-center">
+          <span>FORM I: Application for Grant of Fire Safety</span>
+          <a href="#" class="button">Download</a>
+        </li>
+      </ul>
+
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('order-btn').addEventListener('click', function() {
+      const orderSlider = document.getElementById('order-slider');
+      orderSlider.classList.toggle('active');
+    });
+  </script>
+
+</body>
+</html>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Government Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     /* Additional Custom Styles */
     .header-bg {
@@ -13,10 +14,32 @@
     .active-tab {
       border-bottom: 4px solid #1d4ed8;
     }
+    /* Add this to your existing styles */
+    .step-item.completed .step-number {
+        display: none;
+    }
+    .step-item.completed .step-check {
+        display: block;
+    }
+    .step-item.completed div {
+        border-color: #10B981;
+        color: #10B981;
+    }
+    .step-item.active div {
+        border-color: #3B82F6;
+        color: #3B82F6;
+    }
+    #pdfModal {
+        display: none;
+    }
+    
+    #pdfModal.show {
+        display: block;
+    }
   </style>
 </head>
 <body class="bg-gray-100 font-sans">
-
+  
   <!-- Header -->
   <header class="bg-red-700 text-white">
     <div class="container mx-auto flex justify-between items-center p-4">
@@ -27,19 +50,27 @@
           <h2 class="text-sm">Government of India</h2>
         </div>
       </div>
-      <div class="space-x-4">
-        <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick=window.location.href='login.html'>Logout</button>
+      <div class="flex items-center space-x-4">
+        <button id="notificationBtn" class="bg-white text-red-700 p-2 rounded-lg hover:bg-gray-100 transition flex items-center justify-center">
+            <div class="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <span id="notificationBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+            </div>
+        </button>
+        <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick="logout()">Logout</button>
    
       </div>
     </div>
-    
     <!-- Simplified Navigation -->
     <nav class="bg-red-800 text-white py-3">
       <div class="container mx-auto flex justify-center space-x-8">
-        <a href="../home/home.html" class="hover:text-yellow-400 transition">Home</a>
-        <a href="#conta" class="hover:text-yellow-400 transition">CheckStatus</a>
-        <a href="#about" class="hover:text-yellow-400 transition">Contact</a>
-        
+        <a href="/public/home.html" class="hover:text-yellow-400 transition">Home</a>
+        <a href="documents.html" class="hover:text-yellow-400 transition">Check Eligibility</a>
+        <a href="emergency.html" class="hover:text-yellow-400 transition">Emergency Application</a>
+        <!-- <a href="fire-alarm-system.html" class="hover:text-yellow-400 transition">Fire Alarm System</a>  -->
+        <a href="test.html" class="hover:text-yellow-400 transition">Verify Document </a> 
       </div>
     </nav>
   </header>
@@ -53,12 +84,13 @@
         <!-- User Profile Section -->
         <div class="p-6 text-center border-b">
           <img src="https://via.placeholder.com/80" alt="User Avatar" class="w-20 h-20 rounded-full mx-auto mb-3">
-          <h3 class="text-lg font-semibold text-gray-800">John Doe</h3>
+          <h3 class="text-lg font-semibold text-gray-800">parth gayakwad</h3>
           <p class="text-sm text-gray-500">Active User</p>
         </div>
         <!-- Navigation Links -->
         <nav class="mt-6 space-y-2">
           <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Dashboard</a>
+          <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Apply for NOC</a>
           <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Applications</a>
           <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Profile</a>
           <a href="#" class="block px-4 py-2 hover:bg-blue-100 text-gray-700">Settings</a>
@@ -72,36 +104,57 @@
 
     <!-- Main Content -->
     <main class="flex-1 bg-gray-50 p-6">
-      <!-- Welcome Section -->
-      <div class="mb-6">
-        <h2 class="text-3xl font-semibold text-gray-800">Welcome, John Doe</h2>
-        <p class="text-gray-600">Track your application status and updates below.</p>
+      <!-- Welcome Section with Apply Button -->
+      <div class="mb-6 flex justify-between items-center">
+        <div>
+          <h2 class="text-3xl font-semibold text-gray-800">Welcome, <span id="userName">Parth</span></h2>
+          <p class="text-gray-600">Track your application status and updates below.</p>
+        </div>
+        <!-- Button Container -->
+        <div class="flex items-center space-x-2">
+            <div id="renewalButtonContainer" class="mt-4 hidden">
+                <button 
+                    id="renewalButton" 
+                    class="bg-yellow-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg flex items-center space-x-2 transition-all duration-300 transform hover:scale-105"
+                    onclick="renewNOC()"
+                >
+                    Renew NOC
+                </button>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button 
+                    onclick="checkAndRedirectToNOCForm()" 
+                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg flex items-center space-x-2 transition-all duration-300 transform hover:scale-105"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>Apply for NOC</span>
+                </button>
+                
+                <button 
+                    onclick="applyForBuildingPlanApproval()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg flex items-center space-x-2 transition-all duration-300 transform hover:scale-105"
+                >
+                    Apply for Building Plan Approval
+                </button>
+            </div>
+        </div>
       </div>
 
       <!-- User Status Card -->
       <section class="bg-white p-6 rounded-lg shadow-md mb-6">
         <h3 class="text-xl font-bold text-gray-800 mb-4">NOC Application Status</h3>
-        <div class="grid grid-cols-3 gap-4">
-          <div class="bg-blue-100 p-4 rounded-lg text-center">
-            <h4 class="text-lg font-semibold text-blue-900">Submitted</h4>
-            <p class="text-gray-600">March 15, 2023</p>
-          </div>
-          <div class="bg-yellow-100 p-4 rounded-lg text-center">
-            <h4 class="text-lg font-semibold text-yellow-900">In Review</h4>
-            <p class="text-gray-600">Expected: March 20, 2023</p>
-          </div>
-          <div class="bg-green-100 p-4 rounded-lg text-center">
-            <h4 class="text-lg font-semibold text-green-900">Approved</h4>
-            <p class="text-gray-600">March 25, 2023</p>
-          </div>
+        <div class="grid grid-cols-3 gap-4" id="applicationStatusGrid">
+            <!-- Status cards will be populated dynamically -->
         </div>
       </section>
 
       <!-- Activity Section -->
       <section class="bg-white p-6 rounded-lg shadow-md">
         <div class="flex space-x-6 border-b pb-3">
-          <button data-tab="activity" class="tab-link active-tab px-4 py-2 text-gray-700 text-lg font-semibold">
-            Activity
+          <button data-tab="applications" class="tab-link active-tab px-4 py-2 text-gray-700 text-lg font-semibold">
+            Applications
           </button>
           <button data-tab="payments" class="tab-link px-4 py-2 text-gray-700 text-lg font-semibold">
             Payments
@@ -110,13 +163,27 @@
             Documents
           </button>
         </div>
-        <div id="activity" class="tab-content mt-4">
-          <ul class="space-y-2">
-            <li class="text-gray-700">✅ Submitted NOC Application - March 15, 2023</li>
-            <li class="text-gray-700">❌ Pending Payment for Review - March 17, 2023</li>
-            <li class="text-gray-700">✅ Approval Granted - March 25, 2023</li>
-          </ul>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden py-8 text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-700 mx-auto"></div>
+          <p class="mt-4 text-gray-600">Loading applications...</p>
         </div>
+
+        <!-- Applications List -->
+        <div id="applications" class="tab-content mt-4">
+          <div id="applicationsList" class="space-y-4">
+            <!-- Applications will be inserted here -->
+          </div>
+          <div id="noApplications" class="hidden text-center py-8">
+            <p class="text-gray-600">No applications found.</p>
+            <button onclick="showApplicationOptions()" 
+                    class="mt-4 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700">
+                Submit New Application
+            </button>
+          </div>
+        </div>
+
         <div id="payments" class="tab-content mt-4 hidden">
           <ul class="space-y-2">
             <li class="text-gray-700">💵 Paid ₹500 for Application - March 10, 2023</li>
@@ -131,20 +198,1040 @@
     </main>
   </div>
 
-  <!-- JavaScript -->
+  <!-- Application Tracking Modal -->
+  <div id="trackingModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Application Status Tracking</h3>
+            <button onclick="closeTrackingModal()" class="text-gray-600 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Stepper -->
+        <div class="relative">
+            <!-- Progress Bar -->
+            <div class="w-full h-1 bg-gray-200 absolute top-1/2 transform -translate-y-1/2">
+                <div id="progressBar" class="h-1 bg-green-500 transition-all duration-500"></div>
+            </div>
+
+            <!-- Steps -->
+            <div class="relative flex justify-between">
+                <div class="step-item">
+                    <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center relative z-10">
+                        <span class="step-number">1</span>
+                        <span class="step-check hidden">✓</span>
+                    </div>
+                    <p class="text-sm mt-2">Application<br>Submitted</p>
+                </div>
+                <div class="step-item">
+                    <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center relative z-10">
+                        <span class="step-number">2</span>
+                        <span class="step-check hidden">✓</span>
+                    </div>
+                    <p class="text-sm mt-2">Assessor<br>Review</p>
+                </div>
+                <div class="step-item">
+                    <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center relative z-10">
+                        <span class="step-number">3</span>
+                        <span class="step-check hidden">✓</span>
+                    </div>
+                    <p class="text-sm mt-2">Fire Officer<br>Review</p>
+                </div>
+                <div class="step-item">
+                    <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center relative z-10">
+                        <span class="step-number">4</span>
+                        <span class="step-check hidden">✓</span>
+                    </div>
+                    <p class="text-sm mt-2">NOC<br>Issued</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Details -->
+        <div id="statusDetails" class="mt-8 p-4 bg-gray-50 rounded-lg">
+            <p class="text-sm text-gray-600">Current Status: <span id="currentStatus" class="font-semibold">Loading...</span></p>
+            <p class="text-sm text-gray-600 mt-2">Last Updated: <span id="lastUpdated" class="font-semibold">Loading...</span></p>
+            <p class="text-sm text-gray-600 mt-2">Remarks: <span id="statusRemarks" class="italic">Loading...</span></p>
+        </div>
+    </div>
+  </div>
+
+  <!-- Notifications Modal -->
+  <div id="notificationsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Notifications</h3>
+            <button onclick="closeNotificationsModal()" class="text-gray-600 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div id="notificationsList" class="max-h-96 overflow-y-auto">
+            <!-- Notifications will be populated here -->
+        </div>
+    </div>
+  </div>
+
+  <!-- Add this button in the appropriate section of your HTML -->
+  <div id="renewalButtonContainer" class="mt-4 hidden">
+      <button 
+          id="renewalButton" 
+          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onclick="renewNOC()"
+      >
+          Renew NOC
+      </button>
+  </div>
+
   <script>
-    const tabs = document.querySelectorAll('.tab-link');
-    const contents = document.querySelectorAll('.tab-content');
+    let userData = null; // To store user data globally
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active-tab'));
-        contents.forEach(c => c.classList.add('hidden'));
-
-        tab.classList.add('active-tab');
-        document.getElementById(tab.getAttribute('data-tab')).classList.remove('hidden');
-      });
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Fetch user profile first
+        await fetchUserProfile();
+        
+        // Initialize tabs
+        initializeTabs();
+        
+        // Fetch and display applications
+        await fetchApplications();
+        
+        // Add notification button click handler
+        document.getElementById('notificationBtn').addEventListener('click', showNotifications);
+        
+        // Fetch notifications on page load
+        await fetchNotifications();
     });
-  </script>
+
+    // Add this new function to fetch user profile
+    async function fetchUserProfile() {
+        try {
+            // Get token from localStorage
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+
+            const response = await fetch("http://localhost:5000/api/auth/profile", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to fetch profile");
+            }
+
+            userData = await response.json();
+            console.log("User Profile:", userData);
+            
+            // Update the UI with the fetched user data
+            updateUIWithUserData();
+
+        } catch (error) {
+            console.error("Error fetching profile:", error.message);
+            Swal.fire({
+                title: 'Error',
+                text: 'Unable to load profile data. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#DC2626'
+            });
+        }
+    }
+
+    // Add this function to update UI with user data
+    function updateUIWithUserData() {
+        if (!userData) return;
+
+        // Update welcome message with user's name
+        document.getElementById('userName').textContent = userData.name || 'Guest';
+
+        // Update sidebar profile
+        const sidebarProfile = document.querySelector('.p-6.text-center.border-b');
+        sidebarProfile.innerHTML = `
+            <img src="${userData.photoURL || 'https://via.placeholder.com/80'}" 
+                 alt="User Avatar" 
+                 class="w-20 h-20 rounded-full mx-auto mb-3">
+            <h3 class="text-lg font-semibold text-gray-800">${userData.name}</h3>
+            <p class="text-sm text-gray-500">${userData.role}</p>
+            ${userData.email ? `<p class="text-xs text-gray-400 mt-1">${userData.email}</p>` : ''}
+        `;
+
+        // Update additional profile information if available
+        if (userData.role === 'agency') {
+            sidebarProfile.innerHTML += `
+                <p class="text-xs text-gray-500 mt-2">Company: ${userData.companyName}</p>
+            `;
+        } else if (userData.role === 'assessor' || userData.role === 'chief-fire-officer') {
+            sidebarProfile.innerHTML += `
+                <p class="text-xs text-gray-500 mt-2">Badge: ${userData.badgeNumber}</p>
+                <p class="text-xs text-gray-500">Dept: ${userData.department}</p>
+            `;
+        } else if (userData.role === 'citizen') {
+            sidebarProfile.innerHTML += `
+                <p class="text-xs text-gray-500 mt-2">ID: ${userData.nationalId}</p>
+            `;
+        }
+    }
+
+    function initializeTabs() {
+      const tabs = document.querySelectorAll('.tab-link');
+      const contents = document.querySelectorAll('.tab-content');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active-tab'));
+          contents.forEach(c => c.classList.add('hidden'));
+
+          tab.classList.add('active-tab');
+          document.getElementById(tab.getAttribute('data-tab')).classList.remove('hidden');
+        });
+      });
+    }
+
+    async function fetchApplications() {
+      const loadingState = document.getElementById('loadingState');
+      const applicationsList = document.getElementById('applicationsList');
+      const noApplications = document.getElementById('noApplications');
+
+      try {
+        loadingState.classList.remove('hidden');
+        applicationsList.innerHTML = '';
+
+        // Get token from localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '../auth/login.html';
+          return;
+        }
+
+        const response = await fetch('http://localhost:5000/api/auth/my-applications', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch applications');
+        }
+
+        const data = await response.json();
+
+        if (data.applications && data.applications.length > 0) {
+          data.applications.forEach(app => {
+            applicationsList.innerHTML += `
+              <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="font-semibold text-lg">${app.applicantName || 'Building Name Not Provided'}</h4>
+                    <p class="text-gray-600 text-sm">${app.buildingAddress || 'Address Not Provided'}</p>
+                    <p class="text-sm text-gray-500 mt-1">Application ID: ${app.id}</p>
+                  </div>
+                  <div class="flex flex-col items-end space-y-2">
+                    <span class="px-3 py-1 rounded-full text-sm ${getStatusColor(app.status)}">
+                      ${app.status || 'Pending'}
+                    </span>
+                    <button 
+                      onclick="trackApplication('${app.id}')"
+                      class="flex items-center space-x-2 text-red-600 hover:text-red-700 transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                      <span>Track Status</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="mt-3 text-sm text-gray-600">
+                  <p>Submitted: ${formatDate(app.submissionDate)}</p>
+                  <p>Type: ${app.buildingType || 'Not Specified'}</p>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          noApplications.classList.remove('hidden');
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+        applicationsList.innerHTML = `
+          <div class="text-center py-4 text-red-600">
+            ${error.message || 'Error loading applications. Please try again later.'}
+          </div>
+        `;
+      } finally {
+        loadingState.classList.add('hidden');
+      }
+    }
+
+    // Helper function for status colors
+    function getStatusColor(status) {
+      const colors = {
+        'Pending': 'bg-yellow-100 text-yellow-800',
+        'Approved': 'bg-green-100 text-green-800',
+        'Rejected': 'bg-red-100 text-red-800',
+        'In Review': 'bg-blue-100 text-blue-800'
+      };
+      return colors[status] || 'bg-gray-100 text-gray-800';
+    }
+
+    async function trackApplication(applicationId) {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+
+            document.getElementById('trackingModal').classList.remove('hidden');
+            document.getElementById('currentStatus').textContent = 'Loading...';
+            document.getElementById('lastUpdated').textContent = 'Loading...';
+            document.getElementById('statusRemarks').textContent = 'Loading...';
+
+            // Fetch user profile to get progress
+            const profileResponse = await fetch('http://localhost:5000/api/auth/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!profileResponse.ok) {
+                throw new Error('Failed to fetch profile data');
+            }
+
+            const profileData = await profileResponse.json();
+            const progress = profileData.progress || 1; // Assuming progress is a number from 1 to 4
+
+            // Update the progress bar and status details
+            updateTrackingProgress(progress, profileData);
+
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: error.message || 'Unable to fetch application status',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#DC2626'
+            });
+        }
+    }
+
+    function updateTrackingProgress(progress, profileData) {
+        const steps = document.querySelectorAll('.step-item');
+        const progressBar = document.getElementById('progressBar');
+        const currentStatus = document.getElementById('currentStatus');
+        const lastUpdated = document.getElementById('lastUpdated');
+        const statusRemarks = document.getElementById('statusRemarks');
+
+        // Reset all steps
+        steps.forEach(step => {
+            step.classList.remove('completed', 'active');
+            const number = step.querySelector('.step-number');
+            const check = step.querySelector('.step-check');
+            if (number && check) {
+                number.classList.remove('hidden');
+                check.classList.add('hidden');
+            }
+        });
+
+        // Mark completed steps
+        for (let i = 0; i < progress; i++) {
+            if (steps[i]) {
+                steps[i].classList.add('completed');
+                const number = steps[i].querySelector('.step-number');
+                const check = steps[i].querySelector('.step-check');
+                if (number && check) {
+                    number.classList.add('hidden');
+                    check.classList.remove('hidden');
+                }
+            }
+        }
+        console.log(progress);
+        // Mark current active step
+        if (steps[progress - 1]) {
+            steps[progress - 1].classList.add('active');
+        }
+
+        // Update progress bar width
+        const progressWidth = ((progress - 1) / 3) * 100; // Assuming 4 steps
+        progressBar.style.width = `${progressWidth}%`;
+
+        // Update status text and remarks
+        currentStatus.textContent = profileData.status || 'Status Unknown';
+        lastUpdated.textContent = profileData.lastUpdated ? new Date(profileData.lastUpdated).toLocaleString() : 'Not available';
+        statusRemarks.textContent = profileData.remarks || 'No remarks available';
+    }
+
+    function closeTrackingModal() {
+        document.getElementById('trackingModal').classList.add('hidden');
+        // Reset progress bar classes
+        const progressBar = document.getElementById('progressBar');
+        progressBar.classList.remove('bg-blue-500', 'bg-yellow-500', 'bg-green-500');
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return 'Date not available';
+      return new Date(dateString).toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+
+    function updateStatusCounts(applications) {
+      const counts = {
+        total: applications.length,
+        pending: applications.filter(app => app.status === 'Pending').length,
+        approved: applications.filter(app => app.status === 'Approved').length,
+        rejected: applications.filter(app => app.status === 'Rejected').length,
+        inReview: applications.filter(app => app.status === 'In Review').length
+      };
+
+      // Update the status cards
+      document.querySelector('.grid-cols-3').innerHTML = `
+        <div class="bg-blue-100 p-4 rounded-lg text-center">
+          <h4 class="text-lg font-semibold text-blue-900">Total Applications</h4>
+          <p class="text-gray-600">${counts.total}</p>
+        </div>
+        <div class="bg-yellow-100 p-4 rounded-lg text-center">
+          <h4 class="text-lg font-semibold text-yellow-900">Pending/In Review</h4>
+          <p class="text-gray-600">${counts.pending + counts.inReview}</p>
+        </div>
+        <div class="bg-green-100 p-4 rounded-lg text-center">
+          <h4 class="text-lg font-semibold text-green-900">Approved</h4>
+          <p class="text-gray-600">${counts.approved}</p>
+        </div>
+      `;
+    }
+
+    // Add this function for logout
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = '/login.html';
+    }
+
+    // Add onclick handlers to both logout buttons
+    document.querySelectorAll('button').forEach(button => {
+      if (button.textContent.trim() === 'Logout') {
+        button.onclick = logout
+      }
+    });
+
+    //check for existing pending applications before redirecting to NOC form
+    async function checkAndRedirectToNOCForm() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '../auth/login.html';
+            return;
+        }
+
+        // Show loading state
+        Swal.fire({
+            title: 'Checking application status...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const response = await fetch('http://localhost:5000/api/auth/check-noc-application', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        // Close loading state
+        Swal.close();
+
+        // If response is not ok OR canApply is true (meaning there's a pending application)
+        if (!response.ok || data.canApply) {
+            // Show error message if there's an existing application
+            Swal.fire({
+                title: 'Cannot Submit New Application',
+                text: 'You already have a pending application. Please wait for it to be processed.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#DC2626'
+            });
+            return;
+        }
+
+        // If check passes (canApply is false), redirect to NOC application form
+        window.location.href = '../applicant/noc-application.html';
+
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Unable to check application status. Please try again later.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#DC2626'
+        });
+    }
+}
+
+
+// Fetch and update notifications
+    async function fetchNotifications() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/api/auth/status', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch notifications');
+            }
+
+            const data = await response.json();
+            
+            // Update notification badge
+            const notifications = data.data.notifications || [];
+            const badge = document.getElementById('notificationBadge');
+            if (notifications.length > 0) {
+                badge.textContent = notifications.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            // Store notifications and certificate URL for displaying in modal
+            window.notifications = notifications;
+            window.certificateUrl = data.data.certificateUrl; // Store certificate URL
+
+            // If progress is 4 and certificateUrl exists, show download button in notifications
+            if (data.data.progress === 4 && data.data.certificateUrl) {
+                notifications.forEach((notification, index) => {
+                    if (notification.type === 'NOC_GENERATED') {
+                        notification.downloadButton = true;
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    }
+
+    // Show notifications modal
+    async function showNotifications() {
+        const modal = document.getElementById('notificationsModal');
+        const notificationsList = document.getElementById('notificationsList');
+        
+        notificationsList.innerHTML = '';
+        
+        if (!window.notifications || window.notifications.length === 0) {
+            notificationsList.innerHTML = `
+                <div class="text-center py-4 text-gray-500">
+                    No new notifications
+                </div>
+            `;
+        } else {
+            // Create array of notification HTML strings
+            const notificationElements = window.notifications.map((notification) => {
+                let downloadButton = '';
+                
+                if (notification.type === 'NOC_GENERATED' && notification.certificateUrl) {
+                    const fileName = notification.certificateUrl.split('/').pop();
+                    downloadButton = `
+                        <div class="mt-2">
+                            <button 
+                                onclick="downloadNOCCertificate('${fileName}')"
+                                class="inline-flex items-center px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Download NOC
+                            </button>
+                        </div>`;
+                }
+                
+                return `
+                    <div class="p-4 border-b last:border-b-0 hover:bg-gray-50">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="ml-3 w-0 flex-1">
+                                <p class="text-sm text-gray-900">${notification.message}</p>
+                                <p class="mt-1 text-sm text-gray-500">
+                                    ${new Date(notification.timestamp).toLocaleDateString()}
+                                </p>
+                                ${downloadButton}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Join all notification elements and set innerHTML
+            notificationsList.innerHTML = notificationElements.join('');
+        }
+        
+        modal.classList.remove('hidden');
+    }
+
+    // Close notifications modal
+    function closeNotificationsModal() {
+        document.getElementById('notificationsModal').classList.add('hidden');
+    }
+
+    // Add periodic notification check (every 5 minutes)
+    setInterval(fetchNotifications, 5 * 60 * 1000);
+
+    // Add this function before showNotifications
+    async function downloadNOCCertificate(fileName) {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                Swal.fire({
+                    title: 'Session Error',
+                    text: 'Please login again to continue.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Get the status which includes the certificate URL
+            const response = await fetch('http://localhost:5000/api/auth/status', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    Swal.fire({
+                        title: 'Session Expired',
+                        text: 'Please login again to continue.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+                throw new Error('Failed to fetch certificate URL');
+            }
+
+            const data = await response.json();
+            
+            // Find notification with certificate URL
+            const nocNotification = data.data?.notifications?.find(n => n.type === 'NOC_GENERATED');
+            const certificateUrl = nocNotification?.certificateUrl;
+
+            if (!certificateUrl) {
+                throw new Error('Certificate URL not found');
+            }
+
+            // Open PDF in new window
+            const newWindow = window.open(certificateUrl, '_blank');
+            
+            if (!newWindow) {
+                Swal.fire({
+                    title: 'Popup Blocked',
+                    text: 'Please allow popups to view the certificate',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Certificate opened in new tab',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: error.message || 'Error opening certificate',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    }
+
+    // Add close modal function if not already present
+    function closePdfModal() {
+        const pdfModal = document.getElementById('pdfModal');
+        if (pdfModal) {
+            pdfModal.style.display = 'none';
+        }
+    }
+
+    // Make sure closePdfModal is available globally
+    window.closePdfModal = closePdfModal;
+
+    // Add token refresh mechanism
+    let tokenRefreshInterval;
+
+    function startTokenRefresh() {
+        // Clear any existing interval
+        if (tokenRefreshInterval) {
+            clearInterval(tokenRefreshInterval);
+        }
+
+        // Refresh token every 45 minutes
+        tokenRefreshInterval = setInterval(async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+
+                const response = await fetch('http://localhost:5000/api/auth/refresh-token', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                    }
+                }
+            } catch (error) {
+                console.error('Error refreshing token:', error);
+            }
+        }, 45 * 60 * 1000); // 45 minutes
+    }
+
+    // Initialize token refresh on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        startTokenRefresh();
+    });
+
+    // Clean up on page unload
+    window.addEventListener('unload', () => {
+        if (tokenRefreshInterval) {
+            clearInterval(tokenRefreshInterval);
+        }
+    });
+
+    // Function to fetch user profile data
+    async function fetchUserProfile() {
+        try {
+            const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+            const response = await fetch('http://localhost:5000/api/auth/profile', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user profile');
+            }
+
+            const profileData = await response.json();
+            return profileData; // Return the profile data
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            Swal.fire({
+                title: 'Error',
+                text: error.message || 'Error fetching profile data',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    }
+
+    // Function to check application status and update UI
+    async function checkApplicationStatus(applicationId) {
+        const profileData = await fetchUserProfile();
+        if (profileData) {
+            // Assuming profileData.applications is an array of application objects
+            const applications = profileData.applications || []; // Replace with the actual path to applications in profile data
+
+            // Get the application by ID (assuming applicationId is passed correctly)
+            const application = applications.find(app => app.id === applicationId);
+
+            if (application) {
+                const { progress, status, lastUpdated, remarks } = application;
+                console.log(progress);
+                // Check if progress is 0, indicating rejection
+                if (progress === 0) {
+                    document.getElementById('currentStatus').innerText = 'Application Rejected';
+                    document.getElementById('lastUpdated').innerText = new Date(lastUpdated).toLocaleString();
+                    document.getElementById('statusRemarks').innerText = remarks || 'No remarks available';
+                } else {
+                    // Update the UI with the fetched data for non-rejected applications
+                    document.getElementById('currentStatus').innerText = status;
+                    document.getElementById('lastUpdated').innerText = new Date(lastUpdated).toLocaleString();
+                    document.getElementById('statusRemarks').innerText = remarks || 'No remarks available';
+                }
+
+                // Update progress bar or any other UI elements based on maximum progress
+                const progressBar = document.getElementById('progressBar');
+                if (progressBar) {
+                    progressBar.style.width = `${(progress / 4) * 100}%`; // Assuming progress is between 1 and 4
+                }
+
+                // Dynamically create the progress checklist
+                const checklist = document.getElementById('checklist');
+                checklist.innerHTML = ''; // Clear previous checklist items
+
+                const progressSteps = [
+                    { step: 1, description: 'Application Submitted' },
+                    { step: 2, description: 'Application Under Review' },
+                    { step: 3, description: 'Approval Process' },
+                    { step: 4, description: 'NOC Issued' }
+                ];
+
+                progressSteps.forEach(step => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = step.description;
+                    listItem.classList.add('text-gray-600');
+
+                    // Check if the current step is completed
+                    if (step.step <= progress) {
+                        listItem.classList.add('font-bold'); // Highlight completed steps
+                    }
+
+                    checklist.appendChild(listItem);
+                });
+            }
+        }
+    }
+
+    // Call this function when the page loads or when you need to check the application status
+    document.addEventListener('DOMContentLoaded', () => {
+        const applicationId = 'your-application-id'; // Replace with the actual application ID
+        checkApplicationStatus(applicationId);
+    });
+
+    // Function to check NOC renewal status
+    async function checkNOCRenewal() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/api/auth/check-renewal', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            // Show the renewal button if canRenew is true
+            if (data.canRenew) {
+                document.getElementById('renewalButtonContainer').classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error('Error checking NOC renewal:', error);
+        }
+    }
+
+    // Call the checkNOCRenewal function on page load
+    document.addEventListener('DOMContentLoaded', checkNOCRenewal);
+
+    function renewNOC() {
+    Swal.fire({
+        title: 'Do you want to make any changes to your previous application?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            // Redirect to renewal form with changes
+            window.location.href = '../applicant/noc-renewal.html';
+        } else {
+            try {
+                const response = await fetch('http://localhost:5000/api/noc-application/renew', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({}) // Add data if needed
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to submit renewal application');
+                }
+
+                Swal.fire({
+                    title: 'Success',
+                    text: data.message || 'NOC renewal application submitted successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message || 'Error submitting renewal application',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+    });
+}
+
+    // Add this new function to show application options
+    function showApplicationOptions() {
+        Swal.fire({
+            title: 'Select Application Type',
+            text: 'Choose between Provisional or Final application.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Final',
+            cancelButtonText: 'Provisional'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to final application page
+                window.location.href = '../applicant/noc-application.html';
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Redirect to provisional application page
+                window.location.href = '../applicant/provisionalform.html'; // Change 'file4.html' to the actual path
+            }
+        });
+    }
+
+    function applyForBuildingPlanApproval() {
+        Swal.fire({
+            title: 'Do you have Building Plan Approval?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User clicked Yes
+                Swal.fire('Great!', 'You have Building Plan Approval.', 'success');
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // User clicked No
+                window.location.href = 'local.html'; // Redirect to local.html
+            }
+        });
+    }
+ </script>
+
+  <!-- Add SweetAlert2 for better alerts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Application Tracking Modal -->
+  <div id="trackingModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Application Status Tracking</h3>
+            <button onclick="closeTrackingModal()" class="text-gray-600 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Stepper -->
+        <div class="relative">
+            <!-- Progress Bar -->
+            <div class="w-full h-1 bg-gray-200 absolute top-1/2 transform -translate-y-1/2">
+                <div id="progressBar" class="h-1 bg-green-500 transition-all duration-500"></div>
+            </div>
+
+            <!-- Steps -->
+            <div class="relative flex justify-between">
+                <div class="step-item">
+                    <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center relative z-10">
+                        <span class="step-number">1</span>
+                        <span class="step-check hidden">✓</span>
+                    </div>
+                    <p class="text-sm mt-2">Application<br>Submitted</p>
+                </div>
+                <div class="step-item">
+                    <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center relative z-10">
+                        <span class="step-number">2</span>
+                        <span class="step-check hidden">✓</span>
+                    </div>
+                    <p class="text-sm mt-2">Assessor<br>Review</p>
+                </div>
+                <div class="step-item">
+                    <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center relative z-10">
+                        <span class="step-number">3</span>
+                        <span class="step-check hidden">✓</span>
+                    </div>
+                    <p class="text-sm mt-2">Fire Officer<br>Review</p>
+                </div>
+                <div class="step-item">
+                    <div class="w-8 h-8 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center relative z-10">
+                        <span class="step-number">4</span>
+                        <span class="step-check hidden">✓</span>
+                    </div>
+                    <p class="text-sm mt-2">NOC<br>Issued</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Details -->
+        <div id="statusDetails" class="mt-8 p-4 bg-gray-50 rounded-lg">
+            <p class="text-sm text-gray-600">Current Status: <span id="currentStatus" class="font-semibold">Loading...</span></p>
+            <p class="text-sm text-gray-600 mt-2">Last Updated: <span id="lastUpdated" class="font-semibold">Loading...</span></p>
+            <p class="text-sm text-gray-600 mt-2">Remarks: <span id="statusRemarks" class="italic">Loading...</span></p>
+        </div>
+    </div>
+  </div>
+
+  <!-- Notifications Modal -->
+  <div id="notificationsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Notifications</h3>
+            <button onclick="closeNotificationsModal()" class="text-gray-600 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div id="notificationsList" class="max-h-96 overflow-y-auto">
+            <!-- Notifications will be populated here -->
+        </div>
+    </div>
+  </div>
 </body>
 </html>

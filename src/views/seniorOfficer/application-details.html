@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Application Details - Fire Department</title>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-800 text-white py-4 px-6 flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="../images/logo.jpg" alt="Gov Logo" class="h-12 mr-4">
+            <div>
+                <h1 class="text-2xl font-semibold">Government of India</h1>
+                <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center space-x-6">
+            <p class="text-lg font-semibold">CFO's Dashboard</p>
+            <button onclick="window.location.href='login.html'" 
+                    class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition">
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-white"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden max-w-6xl mx-auto px-4 py-8">
+        <!-- Back Button -->
+        <div class="mb-6">
+            <button onclick="history.back()" 
+                    class="flex items-center text-red-600 hover:text-red-800">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Dashboard
+            </button>
+        </div>
+
+        <!-- Application Details Container -->
+        <div class="bg-white rounded-lg shadow-lg p-6 space-y-8">
+            <h2 class="text-2xl font-bold mb-6">NOC Application Details</h2>
+
+            <!-- Status Section -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Application Status</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Application Status</label>
+                        <p id="status" class="mt-1 px-3 py-1 rounded-full text-sm font-semibold"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Inspection Status</label>
+                        <p id="inspectionStatus" class="mt-1 px-3 py-1 rounded-full text-sm font-semibold"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">CFO Approval Status</label>
+                        <p id="cfoApprovalStatus" class="mt-1 px-3 py-1 rounded-full text-sm font-semibold"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Basic Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Application ID</label>
+                        <p id="applicationId" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Submission Date</label>
+                        <p id="submissionDate" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Division</label>
+                        <p id="division" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applicant Information -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Applicant Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Name</label>
+                        <p id="applicantName" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Contact Number</label>
+                        <p id="contactNumber" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <p id="email" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">State</label>
+                        <p id="state" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">City</label>
+                        <p id="city" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Applicant Type</label>
+                        <p id="applicantType" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Building Details -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Building Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Building Name</label>
+                        <p id="buildingName" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Building Type</label>
+                        <p id="buildingType" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Building Height (m)</label>
+                        <p id="buildingHeight" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Number of Floors</label>
+                        <p id="numFloors" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Number of Basements</label>
+                        <p id="numBasements" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Plot Number</label>
+                        <p id="plotNumber" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Building Address</label>
+                        <p id="buildingAddress" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Landmark</label>
+                        <p id="landmark" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Max Occupancy</label>
+                        <p id="maxOccupancy" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floor Areas -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Floor Areas</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Ground Floor Area (sq m)</label>
+                        <p id="groundFloorArea" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Typical Floor Area (sq m)</label>
+                        <p id="typicalFloorArea" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Basement Area (sq m)</label>
+                        <p id="basementArea" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Total Covered Area (sq m)</label>
+                        <p id="totalCoveredArea" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fire Safety Equipment -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Fire Safety Equipment</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Fire Extinguishers Count</label>
+                        <p id="fireExtinguishersCount" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Hydrants Per Floor</label>
+                        <p id="hydrantsPerFloor" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Hose Reel Count</label>
+                        <p id="hoseReelCount" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Detector Type</label>
+                        <p id="detectorType" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Upper Floor Sprinklers</label>
+                        <p id="upperFloorSprinklers" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Basement Sprinklers</label>
+                        <p id="basementSprinklers" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Safety Features -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Safety Features</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Fire Check Door</label>
+                        <p id="fireCheckDoor" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Exit Signage</label>
+                        <p id="exitSignage" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Public Address</label>
+                        <p id="publicAddress" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Fireman Switch</label>
+                        <p id="firemanSwitch" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">MOEFA</label>
+                        <p id="moefa" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Pressurization</label>
+                        <p id="pressurization" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pump System Details -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Pump System Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Main Pump Count</label>
+                        <p id="mainPumpCount" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Main Pump Head</label>
+                        <p id="mainPumpHead" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Main Pump Discharge</label>
+                        <p id="mainPumpDischarge" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Jockey Pump Count</label>
+                        <p id="jockeyPumpCount" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Jockey Pump Head</label>
+                        <p id="jockeyPumpHead" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Jockey Pump Output</label>
+                        <p id="jockeyPumpOutput" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Section -->
+            <div class="border-b pb-4">
+                <h3 class="text-lg font-semibold mb-4">Documents</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Row 1 -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ID Proof</label>
+                        <a id="idProofUrl" href="#" target="_blank" 
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            View Document
+                        </a>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Ownership Proof</label>
+                        <a id="ownershipProofUrl" href="#" target="_blank" 
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            View Document
+                        </a>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Building Blueprint</label>
+                        <a id="buildingBlueprintUrl" href="#" target="_blank" 
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            View Document
+                        </a>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Plan Approval Certificate</label>
+                        <a id="planApprovalCertUrl" href="#" target="_blank" 
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            View Document
+                        </a>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Fire Safety Plan</label>
+                        <a id="fireSafetyPlanUrl" href="#" target="_blank" 
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            View Document
+                        </a>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Equipment Bills</label>
+                        <a id="equipmentBillsUrl" href="#" target="_blank" 
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            View Document
+                        </a>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Inspection Report</label>
+                        <a id="inspectionReportUrl" href="#" target="_blank" 
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            View Document
+                        </a>
+                    </div>
+
+                    <!-- Inspection Report (Updated)
+                    <div class="bg-gray-50 p-4 rounded-lg md:col-start-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-medium text-gray-700">Inspection Report</label>
+                            <a id="inspectionReportUrl" href="#" target="_blank" 
+                               class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                View Document
+                            </a>
+                        </div>
+                    </div> -->
+
+                </div>
+            </div>
+
+            <!-- Review Form -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4">CFO Review</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="cfoStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                        <select id="cfoStatus" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
+                            <option value="">Select Status</option>
+                            <option value="Approved">Approve</option>
+                            <option value="Rejected">Reject</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="cfoRemarks" class="block text-sm font-medium text-gray-700">Remarks</label>
+                        <textarea id="cfoRemarks" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"></textarea>
+                    </div>
+                    <div>
+                        <button id="submitButton" disabled
+                                class="w-full bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            Submit Review
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button id="generateNocButton" 
+                        class="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition hidden">
+                    Generate NOC
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        window.addEventListener('load', function() {
+            fetchApplicationDetails();
+        });
+
+        async function fetchApplicationDetails() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const applicationId = urlParams.get('id');
+                
+                if (!applicationId) {
+                    throw new Error('Application ID is missing');
+                }
+
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No authentication token found. Please login again.');
+                }
+
+                // Show loading state
+                document.getElementById('loadingState').classList.remove('hidden');
+                document.getElementById('mainContent').classList.add('hidden');
+
+                const response = await fetch(`http://localhost:5000/api/cfo/application/${applicationId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const application = result.data;
+                // console.log(application['inspectionDetails'].inspectionReportUrl);
+
+                // Safely update all elements
+                safeSetText('applicationId', application.applicationId || application.id);
+                safeSetText('submissionDate', formatDate(application.submissionDate));
+                safeSetText('status', application.status);
+                safeSetText('inspectionStatus', application.inspectionStatus);
+                safeSetText('cfoApprovalStatus', application.cfoApprovalStatus);
+                safeSetText('division', application.division);
+
+                // Applicant Information
+                safeSetText('applicantName', application.applicantName);
+                safeSetText('contactNumber', application.contactNumber);
+                safeSetText('email', application.email);
+                safeSetText('state', application.state);
+                safeSetText('city', application.city);
+                safeSetText('applicantType', application.applicantType);
+
+                // Building Details
+                safeSetText('buildingName', application.buildingName);
+                safeSetText('buildingType', application.buildingType);
+                safeSetText('buildingHeight', `${application.buildingHeight} m`);
+                safeSetText('numFloors', application.numFloors);
+                safeSetText('numBasements', application.numBasements);
+                safeSetText('plotNumber', application.plotNumber);
+                safeSetText('buildingAddress', application.buildingAddress);
+                safeSetText('landmark', application.landmark);
+                safeSetText('maxOccupancy', application.maxOccupancy);
+
+                // Floor Areas
+                safeSetText('groundFloorArea', `${application.groundFloorArea} sq m`);
+                safeSetText('typicalFloorArea', `${application.typicalFloorArea} sq m`);
+                safeSetText('basementArea', `${application.basementArea} sq m`);
+                safeSetText('totalCoveredArea', application.totalCoverdArea);
+
+                // Fire Safety Equipment
+                safeSetText('fireExtinguishersCount', application.fireExtinguishersCount);
+                safeSetText('hydrantsPerFloor', application.hydrantsPerFloor);
+                safeSetText('hoseReelCount', application.hoseReelCount);
+                safeSetText('detectorType', application.detectorType);
+                safeSetText('upperFloorSprinklers', application.upperFloorSprinklers);
+                safeSetText('basementSprinklers', application.basementSprinklers);
+
+                // Safety Features
+                safeSetText('fireCheckDoor', application.fireCheckDoor);
+                safeSetText('exitSignage', application.exitSignage);
+                safeSetText('publicAddress', application.publicAddress);
+                safeSetText('firemanSwitch', application.firemanSwitch);
+                safeSetText('moefa', application.moefa);
+                safeSetText('pressurization', application.pressurization);
+
+                // Pump System Details
+                safeSetText('mainPumpCount', application.mainPumpCount);
+                safeSetText('mainPumpHead', application.mainPumpHead);
+                safeSetText('mainPumpDischarge', application.mainPumpDischarge);
+                safeSetText('jockeyPumpCount', application.jockeyPumpCount);
+                safeSetText('jockeyPumpHead', application.jockeyPumpHead);
+                safeSetText('jockeyPumpOutput', application.jockeyPumpOutput);
+
+                // Document URLs with safe handling
+                const documents = {
+                    'idProofUrl': application.idProofUrl,
+                    'ownershipProofUrl': application.ownershipProofUrl,
+                    'buildingBlueprintUrl': application.buildingBlueprintUrl,
+                    'planApprovalCertUrl': application.planApprovalCertUrl,
+                    'fireSafetyPlanUrl': application.fireSafetyPlanUrl,
+                    'equipmentBillsUrl': application.equipmentBillsUrl,
+                    'inspectionReportUrl': application['inspectionDetails'].inspectionReportUrl
+                };
+                console.log();
+
+                // Update document links and visibility
+                Object.entries(documents).forEach(([id, url]) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.href = url || '#';
+                        // Always show the link, even if URL is not available
+                        element.style.display = 'inline-flex';
+                        if (!url) {
+                            element.classList.add('opacity-50', 'cursor-not-allowed');
+                            element.onclick = (e) => e.preventDefault();
+                        } else {
+                            element.classList.remove('opacity-50', 'cursor-not-allowed');
+                            element.onclick = null;
+                        }
+                    }
+                });
+
+                // Hide loading state and show content
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error fetching application details:', error);
+                alert('Error loading application details: ' + error.message);
+            }
+        }
+
+        // Helper function to safely set text content
+        function safeSetText(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value || 'N/A';
+            }
+        }
+
+        // Helper function to safely set href
+        function safeSetHref(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.href = value || '#';
+                element.style.display = value ? 'inline' : 'none';
+            }
+        }
+
+        // Helper function to format dates
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Form handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusSelect = document.getElementById('cfoStatus');
+            const remarksTextarea = document.getElementById('cfoRemarks');
+            const submitButton = document.getElementById('submitButton');
+            const generateNocButton = document.getElementById('generateNocButton');
+
+            if (statusSelect && remarksTextarea && submitButton && generateNocButton) {
+                statusSelect.addEventListener('change', function() {
+                    validateForm();
+                    toggleGenerateNocButton();
+                });
+                remarksTextarea.addEventListener('input', validateForm);
+                submitButton.addEventListener('click', submitReview);
+                generateNocButton.addEventListener('click', function() {
+                    const applicationId = new URLSearchParams(window.location.search).get('id');
+                    window.location.href = `generate-noc.html?id=${applicationId}`;
+                });
+            }
+        });
+
+        function validateForm() {
+            const statusSelect = document.getElementById('cfoStatus');
+            const remarksTextarea = document.getElementById('cfoRemarks');
+            const submitButton = document.getElementById('submitButton');
+
+            if (statusSelect && remarksTextarea && submitButton) {
+                const isValid = statusSelect.value && remarksTextarea.value.trim();
+                submitButton.disabled = !isValid;
+            }
+        }
+
+        async function submitReview() {
+            try {
+                const statusSelect = document.getElementById('cfoStatus');
+                const remarksTextarea = document.getElementById('cfoRemarks');
+                const submitButton = document.getElementById('submitButton');
+
+                if (!statusSelect || !remarksTextarea) {
+                    throw new Error('Required form elements not found');
+                }
+
+                const status = statusSelect.value;
+                const remarks = remarksTextarea.value;
+
+                if (!status || !remarks.trim()) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const applicationId = urlParams.get('id');
+
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="loading">Submitting...</span>';
+
+                const response = await fetch('http://localhost:5000/api/cfo/review', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        applicationId,
+                        cfoStatus: status,
+                        cfoRemarks: remarks
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Review submitted successfully');
+                    window.location.href = 'cfodashboard.html';
+                } else {
+                    throw new Error(data.message || 'Failed to submit review');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error submitting review: ' + error.message);
+                const submitButton = document.getElementById('submitButton');
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Submit Review';
+                }
+            }
+        }
+
+        function toggleGenerateNocButton() {
+            const statusSelect = document.getElementById('cfoStatus');
+            const generateNocButton = document.getElementById('generateNocButton');
+
+            if (statusSelect && generateNocButton) {
+                if (statusSelect.value === 'Approved') {
+                    generateNocButton.classList.remove('hidden');
+                } else {
+                    generateNocButton.classList.add('hidden');
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

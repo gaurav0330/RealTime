@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login with Aadhaar Autofill</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    #output {
+      white-space: pre-wrap;
+      background: #eaeaea;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen bg-red-600 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800">Welcome Back</h2>
+        <p class="text-gray-600 mt-2">Please sign in to continue</p>
+      </div>
+
+
+      <!-- Login Form -->
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label for="role" class="block text-sm font-medium text-gray-700">Select Role</label>
+          <select
+            id="role"
+            name="role"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select your role</option>
+            <option value="citizen">Citizen</option>
+            <option value="assessor">Assessor</option>
+            <option value="chief_fire_officer">Chief Fire Officer</option>
+            <option value="agency">Agency</option>
+            <option value="station_officer">Station Officer</option>
+            <option value="assistant_divisional_officer">Assistant Divisional Officer</option>
+            <option value="divisional_officer">Divisional Officer</option>
+            <option value="local_authority">Local Authority</option>
+          </select>
+        </div>
+
+
+        <!-- Aadhaar Form Section -->
+        <div id="aadhaarSection">
+          <label for="aadhaarNumber" class="block text-sm font-medium text-gray-700">Enter Aadhaar Number</label>
+          <input
+            type="text"
+            id="aadhaarNumber"
+            name="aadhaarNumber"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter your Aadhaar number"
+          />
+
+
+          <label for="aadhaarUpload" class="block text-sm font-medium text-gray-700 mt-4">Upload Aadhaar Card</label>
+          <input
+            type="file"
+            id="aadhaarUpload"
+            name="aadhaarUpload"
+            accept="image/*"
+            class="mt-1 block w-full text-gray-600"
+          />
+
+
+          <button
+            type="button"
+            id="aadhaarSubmit"
+            class="mt-4 w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none"
+          >Submit</button>
+
+
+          <div id="otpSection" class="hidden mt-4">
+            <p class="text-sm">Is this your number: <span id="phoneDisplay"></span>?</p>
+            <div class="flex justify-between">
+              <button type="button" id="otpYes" class="py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700">Yes</button>
+              <button type="button" id="otpNo" class="py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700">No</button>
+            </div>
+          </div>
+
+
+          <div id="otpInputSection" class="hidden mt-4">
+            <label for="otp" class="block text-sm font-medium text-gray-700">Enter OTP</label>
+            <input
+              type="text"
+              id="otp"
+              name="otp"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter OTP"
+            />
+            <button
+              type="button"
+              id="otpSubmit"
+              class="mt-4 w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none"
+            >Verify OTP</button>
+          </div>
+        </div>
+      </form>
+
+
+      <!-- Output Message Section -->
+      <div id="output"></div>
+
+
+      <div class="text-center mt-6">
+        <p class="text-sm text-gray-600">
+          Don't have an account?
+          <a href="signup.html" class="font-medium text-red-600 hover:text-red-500">Sign up</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    const aadhaarSubmit = document.getElementById('aadhaarSubmit');
+    const otpSection = document.getElementById('otpSection');
+    const otpYes = document.getElementById('otpYes');
+    const otpNo = document.getElementById('otpNo');
+    const otpInputSection = document.getElementById('otpInputSection');
+    const otpSubmit = document.getElementById('otpSubmit');
+    const phoneDisplay = document.getElementById('phoneDisplay');
+    const aadhaarUpload = document.getElementById('aadhaarUpload');
+    const otpInput = document.getElementById('otp'); // Reference for OTP input field
+
+
+    let extractedPhoneNumber = null; // Variable to store the extracted phone number
+
+
+    // Function to display messages
+    function displayMessage(message, isError = false) {
+      const output = document.getElementById('output');
+      if (output) {
+        output.textContent = message;
+        output.style.color = isError ? 'red' : 'green';
+      }
+    }
+
+
+    // Aadhaar Upload and Extraction
+    aadhaarSubmit.addEventListener('click', async () => {
+      const file = aadhaarUpload.files[0];
+      if (!file) {
+        alert('Please upload your Aadhaar card.');
+        return;
+      }
+
+
+      const reader = new FileReader();
+      reader.onloadend = async function () {
+        const base64Image = reader.result.split(',')[1];
+        const visionApiKey = 'AIzaSyA6s3pD0N7CVqZVQP_zvhFLlJ2mSNvV4FA';
+
+
+        const visionPayload = {
+          requests: [
+            {
+              image: {
+                content: base64Image
+              },
+              features: [
+                {
+                  type: 'TEXT_DETECTION'
+                }
+              ]
+            }
+          ]
+        };
+
+
+        try {
+          const response = await fetch(`https://vision.googleapis.com/v1/images:annotate?key=${visionApiKey}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(visionPayload)
+          });
+
+
+          const data = await response.json();
+          const detectedText = data.responses[0].textAnnotations[0].description;
+
+
+          // Extract phone number (mock implementation, refine as needed)
+          const phoneNumberMatch = detectedText.match(/\b[6-9][0-9]{9}\b/);
+          extractedPhoneNumber = phoneNumberMatch ? phoneNumberMatch[0] : null;
+
+
+          if (extractedPhoneNumber) {
+            phoneDisplay.textContent = extractedPhoneNumber; // Display extracted phone number
+            otpSection.classList.remove('hidden');
+          } else {
+            alert('Phone number not found in Aadhaar card.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error processing Aadhaar card.');
+        }
+      };
+
+
+      reader.readAsDataURL(file);
+    });
+
+
+    // OTP Send Logic (using extracted phone number)
+    otpYes.addEventListener('click', async () => {
+      if (!extractedPhoneNumber) {
+        displayMessage('Please extract a valid phone number from the Aadhaar card.', true);
+        return;
+      }
+
+
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber: extractedPhoneNumber }),
+        });
+
+
+        const result = await response.json();
+        if (response.ok) {
+          displayMessage('OTP sent successfully!');
+          otpInputSection.classList.remove('hidden');
+        } else {
+          displayMessage(result.error || 'Failed to send OTP.', true);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        displayMessage('An error occurred. Please try again.', true);
+      }
+    });
+
+
+    otpNo.addEventListener('click', () => {
+      alert('Please update your phone number in your Aadhaar details.');
+    });
+
+
+    otpSubmit.addEventListener('click', async () => {
+      const phoneNumber = extractedPhoneNumber; // Use the extracted phone number
+      const otp = otpInput.value; // Get the OTP from the input field
+
+
+      if (!otp) {
+        displayMessage('Please enter the OTP.', true);
+        return;
+      }
+
+
+      try {
+  const response = await fetch('http://localhost:5000/api/auth/verify-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phoneNumber, code: otp }),
+  });
+
+  const result = await response.json();
+
+  if (response.ok) {
+    displayMessage('OTP verified successfully!');
+
+    // Retrieve the token from the result
+  
+
+    const loginResponse = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+     
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: 'parthgayakwad77@gmail.com',
+        password: '111111',
+        role: 'citizen',
+        state: 'Delhi',
+      }),
+    });
+
+    if (loginResponse.ok) {
+      // Redirect to the dashboard after successful login
+      window.location.href = '/views/applicant/dashboard.html';
+    } else {
+      const loginError = await loginResponse.json();
+      displayMessage(loginError.error || 'Login failed.', true);
+    }
+  } else {
+    displayMessage(result.error || 'Failed to verify OTP.', true);
+  }
+} catch (error) {
+  console.error('Error:', error);
+  displayMessage('An error occurred. Please try again.', true);
+}
+
+    });
+  </script>
+
+</body>
+</html>

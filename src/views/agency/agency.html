@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fire Safety Management System - Agency Portal">
+    <title>FSMS - Agency Dashboard</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fff5f5',
+                            100: '#fed7d7',
+                            200: '#feb2b2',
+                            300: '#fc8181',
+                            400: '#f56565',
+                            500: '#e53e3e',
+                            600: '#c53030',
+                            700: '#9b2c2c',
+                            800: '#822727',
+                            900: '#63171b',
+                        },
+                        secondary: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Dropdown menu animation */
+        .dropdown-menu {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .dropdown-menu.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Table hover effect */
+        .table-row-hover:hover {
+            background-color: #f8fafc;
+            transition: background-color 0.2s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Top Header Banner -->
+    <div class="bg-primary-600 text-white px-6 py-2 text-sm text-center">
+        <span>🔥 New Fire Safety Regulations Update Available! </span>
+        <a href="#" class="underline ml-2 hover:text-primary-200">Learn More</a>
+    </div>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out bg-red-900 text-white lg:translate-x-0" role="navigation">
+            <!-- Sidebar Header -->
+            <div class="flex items-center justify-between p-4 border-b border-red-800">
+                <div class="flex items-center space-x-3">
+                    <img src="../images/logo.jpg" alt="FSMS Logo" class="w-10 h-10 rounded">
+                    <div>
+                        <h1 class="text-lg font-bold">Fire Safety</h1>
+                        <p class="text-xs text-gray-300">Management System</p>
+                    </div>
+                </div>
+                <button id="closeSidebar" class="lg:hidden text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- User Profile Section -->
+            <div class="p-4 border-b border-red-800">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-red-700 flex items-center justify-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium">Agency's Dashboard</h3>
+                        <p class="text-sm text-gray-300">Fire Department</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="mt-4 px-3">
+                <div class="space-y-1">
+                    <!-- Dashboard -->
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-white bg-red-800 rounded-lg group">
+                        <i class="fas fa-home w-5"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <!-- Applications -->
+                    <div class="space-y-1">
+                        <button class="w-full flex items-center justify-between px-4 py-3 text-white hover:bg-red-800 rounded-lg transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-file-alt w-5"></i>
+                                <span>Applications</span>
+                            </div>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </button>
+                        <div class="pl-11 space-y-1">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-red-800 rounded-lg">
+                                Pending Review
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-red-800 rounded-lg">
+                                Approved
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-red-800 rounded-lg">
+                                Rejected
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Inspections -->
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-white hover:bg-red-800 rounded-lg transition-colors">
+                        <i class="fas fa-clipboard-check w-5"></i>
+                        <span>Inspections</span>
+                    </a>
+
+                    <!-- Reports -->
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-white hover:bg-red-800 rounded-lg transition-colors">
+                        <i class="fas fa-chart-bar w-5"></i>
+                        <span>Reports</span>
+                    </a>
+
+                    <!-- Settings -->
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-white hover:bg-red-800 rounded-lg transition-colors">
+                        <i class="fas fa-cog w-5"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Bottom Section -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-red-800">
+                <div class="flex items-center justify-between">
+                    <button onclick="logout()" class="flex items-center space-x-3 text-white hover:text-gray-300 transition-colors">
+                        <i class="fas fa-sign-out-alt w-5"></i>
+                        <span>Logout</span>
+                    </button>
+                    <button class="text-white hover:text-gray-300" title="Help">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col lg:ml-64">
+            <!-- Header -->
+            <header class="bg-red-800 text-white shadow-md z-40">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <div class="flex items-center">
+                        <img src="../images/logo.jpg" alt="Gov Logo" class="h-12 mr-4">
+                        <div>
+                            <h1 class="text-2xl font-semibold">Government of India</h1>
+                            <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-6">
+                        <!-- Search -->
+                        <div class="hidden md:flex items-center">
+                            <div class="relative">
+                                <input type="text" 
+                                       placeholder="Search..." 
+                                       class="w-64 pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-300">
+                                <span class="absolute left-3 top-2.5 text-gray-300">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <button class="relative p-2 hover:bg-red-700 rounded-lg transition-colors" id="notificationBtn" aria-label="Notifications">
+                            <i class="fas fa-bell text-white"></i>
+                            <span class="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 text-red-700 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                        </button>
+
+                        <!-- Profile Section -->
+                        <div class="flex items-center space-x-6">
+                            <p class="text-lg font-semibold">Agency's Dashboard</p>
+                            <button id="logoutButton" 
+                                    class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" 
+                                    onclick="logout()">
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Breadcrumb -->
+                <div class="px-6 py-2 bg-red-700 text-white/80">
+                    <div class="flex items-center space-x-2 text-sm">
+                        <a href="#" class="hover:text-white">Home</a>
+                        <i class="fas fa-chevron-right text-xs text-white/60"></i>
+                        <span class="text-white">Dashboard</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Total Applications -->
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Total Applications</p>
+                                <h3 id="totalApplications" class="text-2xl font-bold text-gray-800">0</h3>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Applications -->
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Pending Review</p>
+                                <h3 id="pendingApplications" class="text-2xl font-bold text-gray-800">0</h3>
+                            </div>
+                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Approved Applications -->
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Approved</p>
+                                <h3 id="approvedApplications" class="text-2xl font-bold text-gray-800">0</h3>
+                            </div>
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rejected Applications -->
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Rejected</p>
+                                <h3 id="rejectedApplications" class="text-2xl font-bold text-gray-800">0</h3>
+                            </div>
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Applications Table -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold">Applications List</h2>
+                        <div class="flex space-x-2">
+                            <select id="statusFilter" class="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                                <option value="all">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                            <input type="text" 
+                                   id="searchInput" 
+                                   placeholder="Search applications..." 
+                                   class="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Application ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Application Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submission Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicationsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Table rows will be dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Loading spinner -->
+                    <div id="loadingSpinner" class="hidden flex justify-center items-center py-4">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize page
+            console.log('Page loaded, fetching applications...');
+            fetchApplications();
+
+            // Add logout functionality to the logout button
+            const logoutButton = document.querySelector('button[onclick="window.location.href=\'login.html\'"]');
+            if (logoutButton) {
+                logoutButton.onclick = (e) => {
+                    e.preventDefault();
+                    logout();
+                };
+            }
+
+            // Add event listeners for search and filter
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#applicationsTableBody tr');
+                    
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    });
+                });
+            }
+
+            const statusFilter = document.getElementById('statusFilter');
+            if (statusFilter) {
+                statusFilter.addEventListener('change', function(e) {
+                    const filterValue = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#applicationsTableBody tr');
+                    
+                    rows.forEach(row => {
+                        const statusCell = row.querySelector('td:nth-child(4)');
+                        if (statusCell) {
+                            const status = statusCell.textContent.toLowerCase();
+                            row.style.display = (filterValue === 'all' || status === filterValue) ? '' : 'none';
+                        }
+                    });
+                });
+            }
+        });
+
+        // Update the logout function
+        function logout() {
+            console.log('Logging out...');
+            localStorage.removeItem('token');
+            window.location.href = '/agency/login.html';
+        }
+
+        // Update the header logout button HTML
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize page
+            console.log('Page loaded, fetching applications...');
+            fetchApplications();
+
+            // Add logout functionality to the logout button
+            const logoutButton = document.querySelector('button[onclick="window.location.href=\'login.html\'"]');
+            if (logoutButton) {
+                logoutButton.onclick = (e) => {
+                    e.preventDefault();
+                    logout();
+                };
+            }
+
+            // Add event listeners for search and filter
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#applicationsTableBody tr');
+                    
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    });
+                });
+            }
+
+            const statusFilter = document.getElementById('statusFilter');
+            if (statusFilter) {
+                statusFilter.addEventListener('change', function(e) {
+                    const filterValue = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#applicationsTableBody tr');
+                    
+                    rows.forEach(row => {
+                        const statusCell = row.querySelector('td:nth-child(4)');
+                        if (statusCell) {
+                            const status = statusCell.textContent.toLowerCase();
+                            row.style.display = (filterValue === 'all' || status === filterValue) ? '' : 'none';
+                        }
+                    });
+                });
+            }
+        });
+
+        // Function to fetch applications
+        async function fetchApplications() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const tableBody = document.getElementById('applicationsTableBody');
+            
+            try {
+                // Get token from localStorage
+                const token = localStorage.getItem('token');
+                console.log('Token:', token ? 'Present' : 'Missing'); // Debug log
+
+                if (!token) {
+                    window.location.href = '/agency/login.html';
+                    return;
+                }
+
+                loadingSpinner.classList.remove('hidden');
+                
+                console.log('Fetching applications...'); // Debug log
+                const response = await fetch('/api/agency/applications', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Response status:', response.status); // Debug log
+
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/agency/login.html';
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('API Response:', data); // Debug log
+                
+                if (data.success) {
+                    // Update stats
+                    updateDashboardStats(data.data);
+                    
+                    // Clear existing table rows
+                    tableBody.innerHTML = '';
+                    
+                    if (!data.data || data.data.length === 0) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                    No applications found
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    // Add new rows
+                    data.data.forEach(app => {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-gray-50';
+                        
+                        const date = new Date(app.createdAt).toLocaleDateString();
+                        const statusClass = getStatusClass(app.status);
+                        
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${app.id}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">${app.applicantName || 'N/A'}</div>
+                                        <div class="text-sm text-gray-500">${app.email || 'N/A'}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${app.buildingType || 'N/A'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                                    ${app.status || 'Pending'}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${date}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="viewApplication('${app.id}')" 
+                                        class="text-red-600 hover:text-red-900 mr-3">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        `;
+                        
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    throw new Error(data.message || 'Failed to fetch applications');
+                }
+            } catch (error) {
+                console.error('Error fetching applications:', error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-red-500">
+                            ${error.message || 'Error loading applications. Please try again later.'}
+                        </td>
+                    </tr>
+                `;
+            } finally {
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+
+        // Function to update dashboard stats
+        function updateDashboardStats(applications) {
+            const stats = {
+                total: applications.length,
+                pending: applications.filter(app => app.status === 'Pending').length,
+                approved: applications.filter(app => app.status === 'Approved').length,
+                rejected: applications.filter(app => app.status === 'Rejected').length
+            };
+
+            // Update stats in the UI
+            document.getElementById('totalApplications').textContent = stats.total;
+            document.getElementById('pendingApplications').textContent = stats.pending;
+            document.getElementById('approvedApplications').textContent = stats.approved;
+            document.getElementById('rejectedApplications').textContent = stats.rejected;
+        }
+
+        // Function to view application details
+        function viewApplication(id) {
+            window.location.href = `/views/agency/application-details.html?id=${id}`;
+        }
+
+        // Helper function to get status badge class
+        function getStatusClass(status) {
+            switch (status?.toLowerCase()) {
+                case 'pending':
+                    return 'bg-yellow-100 text-yellow-800';
+                case 'approved':
+                    return 'bg-green-100 text-green-800';
+                case 'rejected':
+                    return 'bg-red-100 text-red-800';
+                default:
+                    return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const closeSidebarButton = document.getElementById('closeSidebar');
+            const showSidebarButton = document.getElementById('showSidebar');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('-translate-x-full');
+            }
+
+            closeSidebarButton?.addEventListener('click', toggleSidebar);
+            showSidebarButton?.addEventListener('click', toggleSidebar);
+
+            // Close sidebar on mobile when clicking outside
+            document.addEventListener('click', function(event) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnShowSidebarButton = showSidebarButton?.contains(event.target);
+                
+                if (!isClickInsideSidebar && !isClickOnShowSidebarButton && window.innerWidth < 1024) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.remove('-translate-x-full');
+                }
+            });
+        });
+
+        // Add active state to current page in sidebar
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll('#sidebar a');
+        
+        sidebarLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('bg-red-800');
+            }
+        });
+    </script>
+</body>
+</html>

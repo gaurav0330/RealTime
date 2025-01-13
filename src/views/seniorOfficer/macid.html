@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Role Assignment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        // Firebase App Initialization
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+        import {
+            getFirestore,
+            doc,
+            setDoc,
+            getDoc,
+            collection,
+            query,
+            where,
+            getDocs,
+            updateDoc
+        } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+
+
+        // Replace with your Firebase project config
+        const firebaseConfig = {
+            apiKey: "AIzaSyApX9zXZG140ANsm1fkbT5r_FjFIbmly6c",
+            authDomain: "instragramclone-d2c6f.firebaseapp.com",
+            projectId: "instragramclone-d2c6f",
+            storageBucket: "instragramclone-d2c6f.appspot.com",
+            messagingSenderId: "1061159564800",
+            appId: "1:1061159564800:web:f93e205642bd9bad2a4ae5",
+            measurementId: "G-7F3Z899CL3"
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+        const firestore = getFirestore(app);
+
+
+        // Expose function to global scope
+        window.handleFormSubmit = async function(event) {
+            event.preventDefault();
+           
+            const email = document.querySelector("#email").value;
+            const password = document.querySelector("#password").value;
+            const macId = document.querySelector("#macId").value;
+            const role = document.querySelector("#role").value;
+
+
+            // MAC ID Regex Validation (more flexible)
+            const macIdRegex = /^([0-9A-Fa-f]{2}){5}[0-9A-Fa-f][A-Za-z]$/i;
+            if (!macIdRegex.test(macId)) {
+                alert("Invalid MAC ID format. Use format like 50:C2:E8:00:33:7M or 50C2E800337M");
+                return;
+            }
+
+
+            // Normalize MAC ID (remove separators and convert to uppercase)
+            const normalizedMacId = macId.replace(/[.:-]/g, '').toUpperCase();
+
+
+            console.log(normalizedMacId);
+            try {
+                const assessorsRef = collection(firestore, "assessors");
+       
+              // Query to find document with matching email
+               const q = query(assessorsRef, where("email", "==", email));
+              const querySnapshot = await getDocs(q);
+
+
+              if (querySnapshot.empty) {
+            // No existing document, create a new one
+            const newDocRef = doc(assessorsRef);
+            await setDoc(newDocRef, assessorData);
+            console.log("New assessor document created");
+        } else {
+            // Document exists, update the existing document
+            querySnapshot.forEach(async (existingDoc) => {
+                const existingDocRef = doc(firestore, "assessors", existingDoc.id);
+                await updateDoc(existingDocRef, {email,
+                    password,
+                    macId: normalizedMacId,
+                    role});
+                console.log("Existing assessor document updated");
+            });
+        }
+           
+                // Add row to table
+                const tbody = document.querySelector("#assessor-assignment tbody");
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td class="py-3 px-4 border-b">${email}</td>
+                    <td class="py-3 px-4 border-b">${password}</td>
+                    <td class="py-3 px-4 border-b">${normalizedMacId}</td>
+                    <td class="py-3 px-4 border-b">${role}</td>
+                `;
+                tbody.appendChild(newRow);
+
+
+                console.log("Assessor data successfully added to Firestore!");
+                alert("Assessor data successfully added!");
+
+
+                // Clear form
+                document.querySelector("#assessor-form").reset();
+
+
+            } catch (error) {
+                console.error("Error adding assessor data:", error);
+                alert("Failed to add assessor data. Check the console for details.");
+            }
+        }
+    </script>
+</head>
+
+
+<body class="font-sans bg-faint">
+
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white py-4 px-6 flex items-center">
+        <img src="https://via.placeholder.com/50x50" alt="Gov Logo" class="h-12 mr-4">
+        <div>
+            <h1 class="text-2xl font-semibold">Government of India</h1>
+            <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+        </div>
+    </header>
+
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-blue-700 text-white min-h-screen">
+            <div class="p-4">
+                <h2 class="text-2xl font-bold mb-4">Admin Menu</h2>
+                <nav>
+                    <ul class="space-y-2">
+                        <li><a href="#dashboard" class="block px-4 py-2 rounded hover:bg-blue-600">Dashboard</a></li>
+                        <li><a href="#assessor-assignment" class="block px-4 py-2 rounded hover:bg-blue-600">Assign Assessors</a></li>
+                        <li><a href="#logout" class="block px-4 py-2 rounded hover:bg-blue-600">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="container mx-auto p-6">
+            <!-- Assessor Assignment Section -->
+            <div id="assessor-assignment" class="bg-white shadow-lg rounded-lg p-6 mb-6">
+                <h2 class="text-2xl font-bold mb-4 text-red-600">Assign Assessors</h2>
+               
+                <!-- Form to add new assessor -->
+                <form id="assessor-form" onsubmit="handleFormSubmit(event)">
+                    <div class="grid grid-cols-4 gap-4 mb-4">
+                        <input id="email" type="email" placeholder="Email" class="col-span-1 p-2 border border-gray-300 rounded" required />
+                        <input id="password" type="password" placeholder="Password" class="col-span-1 p-2 border border-gray-300 rounded" required />
+                        <input id="macId" type="text" placeholder="MAC ID" class="col-span-1 p-2 border border-gray-300 rounded" required />
+                        <select id="role" class="col-span-1 p-2 border border-gray-300 rounded">
+                            <option value="Assessor">Assessor</option>
+                            <option value="Inspector">Inspector</option>
+                            <option value="CFO">CFO</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500">Add Assessor</button>
+                </form>
+
+
+                <!-- Assessor Table -->
+                <div class="overflow-x-auto mt-6">
+                    <table class="min-w-full bg-white border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="py-3 px-4 border-b text-left">Email</th>
+                                <th class="py-3 px-4 border-b text-center">Password</th>
+                                <th class="py-3 px-4 border-b text-left">MAC ID</th>
+                                <th class="py-3 px-4 border-b text-left">Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- New rows will be added dynamically here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+
+</html>
+
+
+
+
+
+

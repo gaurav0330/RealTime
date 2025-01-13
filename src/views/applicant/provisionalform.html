@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>NOC Application - Fire Department</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-red-700 text-white">
+        <div class="container mx-auto flex justify-between items-center p-4">
+          <div class="flex items-center space-x-4">
+            <img src="../images/logo.jpg" class="h-12">
+            <div>
+              <h1 class="text-2xl font-bold">Fire Department</h1>
+              <h2 class="text-sm">Government of India</h2>
+            </div>
+          </div>
+          <div class="space-x-4">
+            <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" >Logout</button>
+       
+          </div>
+        </div>
+        
+        <!-- Simplified Navigation -->
+        <nav class="bg-red-800 text-white py-3">
+          <div class="container mx-auto flex justify-center space-x-8">
+            <a href="../home/home.html" class="hover:text-yellow-400 transition">Home</a>
+            <a href="dashboard.html" class="hover:text-yellow-400 transition">Profile</a>
+            <a href="#conta" class="hover:text-yellow-400 transition">CheckStatus</a>
+            <a href="#about" class="hover:text-yellow-400 transition">Contact</a>
+            
+          </div>
+        </nav>
+      </header>
+
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex justify-between mb-4">
+                <div class="w-1/4 text-center">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-indigo-400 text-white flex items-center justify-center mb-2" id="step1-indicator">1</div>
+                    <div class="text-sm">Applicant Details</div>
+                </div>
+                <div class="w-1/4 text-center">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-gray-300 text-white flex items-center justify-center mb-2" id="step2-indicator">2</div>
+                    <div class="text-sm">Fire Safety</div>
+                </div>
+                <div class="w-1/4 text-center">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-gray-300 text-white flex items-center justify-center mb-2" id="step3-indicator">3</div>
+                    <div class="text-sm">Declaration</div>
+                </div>
+                <div class="w-1/4 text-center">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-gray-300 text-white flex items-center justify-center mb-2" id="step4-indicator">4</div>
+                    <div class="text-sm">Preview</div>
+                </div>
+            </div>
+            <div class="relative pt-1">
+                <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                    <div class="progress-bar shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-400" style="width: 33%"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Form Container -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <form id="nocApplicationForm" class="space-y-6">
+                <!-- Step 1: Applicant and Building Details -->
+                <div id="step1" class="form-step">
+                    <h2 class="text-2xl font-bold mb-6">Applicant and Building Details</h2>
+                    
+                    <!-- Applicant Details -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Applicant Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Name of Applicant *</label>
+                                <input type="text" name="applicantName" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Contact Number *</label>
+                                <input type="tel" name="contactNumber" pattern="[0-9]{10}" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                                <input type="email" name="email" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                                <select name="state"  id="state" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                    <option value="">Select State</option>
+                                    <option value="DL">Delhi</option>
+                                    <option value="GA">Goa</option>
+                                    <option value="GJ">Gujarat</option>
+                                    <option value="HR">Haryana</option>
+                                    <option value="HP">Himachal Pradesh</option>
+                                    <option value="JK">Jammu and Kashmir</option>
+                                    <option value="JH">Jharkhand</option>
+                                    <option value="KA">Karnataka</option>
+                                    <option value="KL">Kerala</option>
+                                    <option value="LA">Ladakh</option>
+                                    <option value="LD">Lakshadweep</option>
+                                    <option value="MP">Madhya Pradesh</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="OR">Odisha</option>
+                                    <option value="PY">Puducherry</option>
+                                    <option value="PB">Punjab</option>
+                                    <option value="RJ">Rajasthan</option>
+                                    <option value="SK">Sikkim</option>
+                                    <option value="TN">Tamil Nadu</option>
+                                    <option value="TG">Telangana</option>
+                                    <option value="TR">Tripura</option>
+                                    <option value="UP">Uttar Pradesh</option>
+                                    <option value="UT">Uttarakhand</option>
+                                    <option value="WB">West Bengal</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                                <input type="text" name="city" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Applicant Type *</label>
+                                <select name="applicantType" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                    <option value="">Select Type</option>
+                                    <option value="owner">Building Owner</option>
+                                    <option value="tenant">Tenant</option>
+                                    <option value="developer">Constructor</option>
+                                    <option value="authorized">Authorized Representative</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Building Details -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Building Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Building/Premises Name *</label>
+                                <input type="text" name="buildingName" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Plot Number *</label>
+                                <input type="text" name="plotNumber" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Complete Address *</label>
+                                <textarea name="buildingAddress" required rows="2"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Landmark</label>
+                                <input type="text" name="landmark"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Building Specifications -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Building Specifications</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Type of Building *</label>
+                                <select name="buildingType" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                    <option value="">Select Type</option>
+                                    <option value="residential">Residential</option>
+                                    <option value="commercial">Commercial</option>
+                                    <option value="industrial">Industrial</option>
+                                    <option value="institutional">Institutional</option>
+                                    <option value="mixed">Mixed Use</option>
+                                    <option value="storage">Storage/Warehouse</option>
+                                    <option value="assembly">Assembly</option>
+                                    <option value="hazardous">Hazardous</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Building Height (meters) *</label>
+                                <input type="number" name="buildingHeight" required min="0" step="0.01"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Total Built-up Area (sq. meters) *</label>
+                                <input type="number" name="builtUpArea" required min="0" step="0.01"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Basements *</label>
+                                <input type="number" name="numBasements" required min="0"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Floors *</label>
+                                <input type="number" name="numFloors" required min="1"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Occupancy (persons) *</label>
+                                <input type="number" name="maxOccupancy" required min="1"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Step 2: Fire Safety Measures -->
+                <div id="step2" class="form-step hidden">
+                    <!-- Fire Equipment Section -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Fire Safety Equipment</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="col-span-2">
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <!-- Basic Fire Safety Equipment -->
+                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
+                                        <input type="checkbox" name="fireExtinguishers" class="h-5 w-5 text-indigo-400 rounded">
+                                        <span class="ml-2 text-gray-700">Fire Extinguishers</span>
+                                    </label>
+                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
+                                        <input type="checkbox" name="smokeDetectors" class="h-5 w-5 text-indigo-400 rounded">
+                                        <span class="ml-2 text-gray-700">Smoke Detectors</span>
+                                    </label>
+                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
+                                        <input type="checkbox" name="sprinklerSystem" class="h-5 w-5 text-indigo-400 rounded">
+                                        <span class="ml-2 text-gray-700">Sprinkler System</span>
+                                    </label>
+                                    
+                                    <!-- Advanced Fire Safety Equipment -->
+                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
+                                        <input type="checkbox" name="fireHydrants" class="h-5 w-5 text-indigo-400 rounded">
+                                        <span class="ml-2 text-gray-700">Fire Hydrants</span>
+                                    </label>
+                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
+                                        <input type="checkbox" name="fireAlarmSystem" class="h-5 w-5 text-indigo-400 rounded">
+                                        <span class="ml-2 text-gray-700">Fire Alarm System</span>
+                                    </label>
+                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
+                                        <input type="checkbox" name="emergencyLights" class="h-5 w-5 text-indigo-400 rounded">
+                                        <span class="ml-2 text-gray-700">Emergency Lights</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Water Supply and Storage -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Water Supply and Storage</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Underground Water Tank Capacity (Liters) *</label>
+                                <input type="number" name="undergroundTankCapacity" required min="0"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Terrace Water Tank Capacity (Liters) *</label>
+                                <input type="number" name="terraceWaterTank" required min="0"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Fire Pump Capacity (HP) *</label>
+                                <input type="number" name="firePumpCapacity" required min="0"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Fire Hydrant Points *</label>
+                                <input type="number" name="hydrantPoints" required min="0"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Emergency Evacuation -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Emergency Evacuation</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Emergency Exit Routes *</label>
+                                <input type="number" name="emergencyExits" required min="1"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Assembly Point Location *</label>
+                                <input type="text" name="assemblyPoint" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Step 3: Declaration and Compliance -->
+                <div id="step3" class="form-step hidden">
+                    <!-- Required Documents -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Required Documents</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Identity and Property Documents -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ID Proof/Address Proof *</label>
+                                <input type="file" name="idProof" required accept=".pdf,.jpg,.jpeg,.png"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Ownership Proof *</label>
+                                <input type="file" name="ownershipProof" required accept=".pdf,.jpg,.jpeg,.png"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+
+
+                            <!-- Building Related Documents -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Building Plans (Blueprint) *</label>
+                                <input type="file" name="buildingBlueprint" required accept=".pdf"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                          
+                            <!-- Fire Safety Related Documents -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Fire Safety System Plan *</label>
+                                <input type="file" name="fireSafetyPlan" required accept=".pdf"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Fire Safety Certification -->
+                  
+                    <!-- Fire Safety Compliance Declaration -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Compliance Declaration</h3>
+                        <div class="space-y-4">
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" name="buildingCodeCompliance" required
+                                    class="h-5 w-5 text-indigo-400 rounded">
+                                <span class="text-gray-700">I hereby declare that the building complies with all fire safety norms as per National Building Code 2016 and local fire safety regulations.</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" name="equipmentCompliance" required
+                                    class="h-5 w-5 text-indigo-400 rounded">
+                                <span class="text-gray-700">All fire fighting equipment installed are ISI marked and comply with BIS standards.</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" name="documentCompliance" required
+                                    class="h-5 w-5 text-indigo-400 rounded">
+                                <span class="text-gray-700">I confirm that all submitted documents are genuine and valid as per current regulations.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Step 4: Preview -->
+                <div id="step4" class="form-step hidden">
+                    <h2 class="text-2xl font-bold mb-6">Application Preview</h2>
+                    <div id="previewContent" class="space-y-6">
+                        <!-- Preview content will be dynamically populated -->
+                    </div>
+                    
+                    <!-- Preview Actions -->
+                    <div class="mt-8 space-y-4">
+                        <button type="button" id="downloadPdfBtn" 
+                            class="w-full md:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center"
+                            onclick="downloadApplicationPdf()">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Download Application PDF
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between mt-8">
+                    <div class="flex space-x-4">
+                        <button type="button" id="prevBtn" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 hidden">
+                            Previous
+                        </button>
+                        <!-- Added Save Draft button -->
+                        <button type="button" id="saveDraftBtn" class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h-2v5.586l-1.293-1.293z" />
+                            </svg>
+                            Save Draft
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" id="nextBtn" class="px-6 py-2 bg-indigo-400 text-white rounded-lg hover:bg-indigo-500">
+                            Next
+                        </button>
+                        <button type="submit" id="submitBtn" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 hidden">
+                            Submit Application
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Add this section below the form container -->
+    <div id="draftsSection" class="container mx-auto px-4 py-8 max-w-5xl">
+        <h3 class="text-xl font-bold mb-4">Saved Drafts</h3>
+        <ul id="draftsList" class="space-y-4">
+            <!-- Drafts will be dynamically populated here -->
+        </ul>
+    </div>
+    <script src="provisionalform.js"></script>
+    <script>
+async function downloadApplicationPdf() {
+    const { jsPDF } = window.jspdf;
+
+    // Create a new PDF document
+    const doc = new jsPDF();
+
+    // Set the document title with a background
+    doc.setFillColor(0, 102, 204); // Blue background
+    doc.rect(0, 10, doc.internal.pageSize.width, 15, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(255, 255, 255); // White text
+    doc.text('NOC Application Details', doc.internal.pageSize.width / 2, 20, { align: 'center' });
+
+    // Add a subtle shadow-like effect below the title background
+    doc.setDrawColor(150, 150, 150); // Gray shadow
+    doc.setLineWidth(0.2);
+    doc.line(0, 25, doc.internal.pageSize.width, 25);
+
+    // Gather data from the form
+    const formData = new FormData(document.getElementById('nocApplicationForm'));
+    let pdfContent = [];
+
+    formData.forEach((value, key) => {
+        if (value instanceof File) {
+            pdfContent.push({ key: formatKey(key), value: 'File uploaded: ' + value.name });
+        } else {
+            pdfContent.push({ key: formatKey(key), value: value });
+        }
+    });
+
+    // Check if there is data
+    if (pdfContent.length === 0) {
+        doc.setFontSize(12);
+        doc.setTextColor(255, 0, 0); // Red for error message
+        doc.text('No data found in the form.', 10, 40);
+    } else {
+        // Add a section header for the form data
+        doc.setFontSize(16);
+        doc.setTextColor(0, 102, 204); // Blue section header
+        doc.text('Application Information', 10, 35);
+
+        // Draw a border box around the section
+        doc.setDrawColor(0, 102, 204); // Blue border
+        doc.rect(8, 30, doc.internal.pageSize.width - 16, doc.internal.pageSize.height - 40, 'S');
+
+        // Add form data in a table-like layout
+        let y = 45; // Starting Y position
+        const cellPadding = 2;
+        const col1Width = 60;
+        const col2Width = doc.internal.pageSize.width - col1Width - 20;
+
+        pdfContent.forEach((item, index) => {
+            // Draw alternating row background
+            if (index % 2 === 0) {
+                doc.setFillColor(230, 230, 255); // Light blue background
+                doc.rect(10, y - 5, doc.internal.pageSize.width - 20, 10, 'F');
+            }
+
+            // Key column
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(40, 40, 40); // Gray text
+            doc.text(`${index + 1}. ${item.key}`, 10 + cellPadding, y);
+
+            // Value column
+            doc.setFont('helvetica', 'normal');
+            doc.text(item.value, col1Width + cellPadding, y);
+
+            y += 10;
+
+            // If nearing the bottom of the page, add a new page
+            if (y > doc.internal.pageSize.height - 30) {
+                doc.addPage();
+                y = 20;
+            }
+        });
+    }
+
+    // Footer
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150); // Gray for footer
+    doc.text('Generated on: ' + new Date().toLocaleString(), 10, pageHeight - 10);
+
+    doc.text('Page 1 of 1', doc.internal.pageSize.width - 30, pageHeight - 10);
+
+    // Save the PDF
+    doc.save('NOC_Application.pdf');
+
+    // Helper function to format keys to a readable format
+    function formatKey(key) {
+        return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+    }
+}
+ </script>
+</body>
+</html>
+
+

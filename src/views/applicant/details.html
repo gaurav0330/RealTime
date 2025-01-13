@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+    <!-- Navigation Breadcrumb -->
+    <div class="max-w-6xl mx-auto mb-4">
+        <nav class="flex text-gray-600" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li><a href="/" class="hover:text-indigo-600">Dashboard</a></li>
+                <li class="flex items-center">
+                    <i class="fas fa-chevron-right mx-2"></i>
+                    <span id="buildingName">Building Details</span>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Building Header -->
+        <div class="bg-white rounded-lg shadow-md mb-6 p-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 id="headerBuildingName" class="text-3xl font-bold text-gray-800 mb-2"></h1>
+                    <p id="headerAddress" class="text-gray-600"></p>
+                </div>
+                <div class="flex space-x-3">
+                    <button onclick="printDetails()" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        <i class="fas fa-print mr-2"></i> Print
+                    </button>
+                    <button onclick="exportPDF()" class="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        <i class="fas fa-file-pdf mr-2"></i> Export PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column - Building Information -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Quick Stats -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Quick Statistics</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-indigo-50 p-4 rounded-lg">
+                            <p class="text-sm text-indigo-600">Floor Area</p>
+                            <p id="floorArea" class="text-2xl font-bold text-indigo-800">--</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <p class="text-sm text-green-600">Occupancy</p>
+                            <p id="occupancy" class="text-2xl font-bold text-green-800">--</p>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg">
+                            <p class="text-sm text-yellow-600">Fire Exits</p>
+                            <p id="fireExits" class="text-2xl font-bold text-yellow-800">--</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <p class="text-sm text-red-600">Last Inspection</p>
+                            <p id="lastInspection" class="text-2xl font-bold text-red-800">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Building Details -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Building Details</h2>
+                    <div id="buildingInfo" class="space-y-4">
+                        <!-- Building information will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Safety Features -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Safety Features</h2>
+                    <div id="safetyFeatures" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Safety features will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Documents and Contacts -->
+            <div class="space-y-6">
+                <!-- Status Card -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Compliance Status</h2>
+                    <div id="complianceStatus" class="text-center p-4">
+                        <!-- Status will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Emergency Contacts -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Emergency Contacts</h2>
+                    <div id="emergencyContacts" class="space-y-3">
+                        <!-- Contacts will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Documents</h2>
+                    <div class="space-y-4">
+                        <div class="border rounded-lg p-4">
+                            <h3 class="font-semibold flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                NOC Document
+                            </h3>
+                            <div class="mt-2">
+                                <button onclick="viewDocument('noc')" class="text-indigo-600 hover:text-indigo-800 mr-3">
+                                    <i class="fas fa-eye mr-1"></i> View
+                                </button>
+                                <button onclick="downloadDocument('noc')" class="text-green-600 hover:text-green-800">
+                                    <i class="fas fa-download mr-1"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                        <div class="border rounded-lg p-4">
+                            <h3 class="font-semibold flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                Evacuation Plan
+                            </h3>
+                            <div class="mt-2">
+                                <button onclick="viewDocument('evacuation')" class="text-indigo-600 hover:text-indigo-800 mr-3">
+                                    <i class="fas fa-eye mr-1"></i> View
+                                </button>
+                                <button onclick="downloadDocument('evacuation')" class="text-green-600 hover:text-green-800">
+                                    <i class="fas fa-download mr-1"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Viewer Modal -->
+    <div id="documentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="relative w-full h-full max-w-5xl mx-auto mt-10">
+            <div class="bg-white rounded-lg shadow-xl h-5/6 overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 id="modalTitle" class="text-lg font-bold">Document Viewer</h3>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="h-full p-4">
+                    <iframe id="documentViewer" class="w-full h-full" src=""></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize page
+        function initializePage() {
+            // Fetch user profile data
+            fetchUserProfile();
+        }
+
+        // New function to fetch user profile data
+        async function fetchUserProfile() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/static-profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming you store the token in localStorage
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user profile');
+                }
+
+                const userProfile = await response.json();
+                console.log(userProfile);
+
+                displayUserProfile(userProfile);
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                showError('Could not load user profile. Please try again later.');
+            }
+        }
+
+        // Updated function to display user profile data
+        function displayUserProfile(userData) {
+            document.getElementById('headerBuildingName').textContent = userData.name || 'N/A';
+            document.getElementById('headerAddress').textContent = userData.city || 'N/A';
+            
+            // Display additional user details
+            const detailsContainer = document.createElement('div');
+            detailsContainer.innerHTML = `
+                <p><strong>Email:</strong> ${userData.email || 'N/A'}</p>
+                <p><strong>Role:</strong> ${userData.role || 'N/A'}</p>
+                <p><strong>State:</strong> ${userData.state || 'N/A'}</p>
+                <p><strong>District:</strong> ${userData.district || 'N/A'}</p>
+                <p><strong>Division:</strong> ${userData.division || 'N/A'}</p>
+                <p><strong>NOC Number:</strong> ${userData.nocNumber || 'N/A'}</p>
+                <p><strong>Application Status:</strong> ${userData.applicationStatus || 'N/A'}</p>
+                <p><strong>Validity Period:</strong> ${userData.validityPeriod || 'N/A'}</p>
+                <p><strong>Certificate URL:</strong> <a href="${userData.certificateUrl}" target="_blank">View Certificate</a></p>
+                <p><strong>Progress:</strong> ${userData.progress || 'N/A'}</p>
+                <p><strong>Assessor Status:</strong> ${userData.assessorStatus || 'N/A'}</p>
+                <p><strong>NOC Status:</strong> ${userData.nocStatus || 'N/A'}</p>
+                <p><strong>Created At:</strong> ${new Date(userData.createdAt).toLocaleString() || 'N/A'}</p>
+                <p><strong>Issuance Date:</strong> ${new Date(userData.issuanceDate).toLocaleString() || 'N/A'}</p>
+            `;
+            
+            // Append the details to a specific section in your HTML
+            document.querySelector('.max-w-6xl.mx-auto').appendChild(detailsContainer);
+        }
+
+        // Document viewer functions
+        function viewDocument(type) {
+            const modal = document.getElementById('documentModal');
+            const viewer = document.getElementById('documentViewer');
+            const title = document.getElementById('modalTitle');
+            
+            const params = getQueryParams();
+            const building = buildingData[params.id];
+            
+            viewer.src = building.documents[type];
+            title.textContent = type === 'noc' ? 'NOC Document' : 'Evacuation Plan';
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('documentModal').classList.add('hidden');
+        }
+
+        // Utility functions
+        function getQueryParams() {
+            const params = {};
+            window.location.search.substring(1).split("&").forEach(param => {
+                const [key, value] = param.split("=");
+                params[key] = decodeURIComponent(value);
+            });
+            return params;
+        }
+
+        function showError(message) {
+            document.body.innerHTML = `
+                <div class="max-w-6xl mx-auto mt-8">
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        <strong class="font-bold">Error!</strong>
+                        <span class="block sm:inline">${message}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

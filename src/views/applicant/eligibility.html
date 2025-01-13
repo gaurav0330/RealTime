@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire NOC Eligibility Check</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white py-4 px-6 flex items-center">
+        <img src="https://via.placeholder.com/50x50" alt="Gov Logo" class="h-12 mr-4">
+        <div>
+            <h1 class="text-2xl font-semibold">Government of India</h1>
+            <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+        </div>
+    </header>
+
+    <div class="flex justify-center items-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-md p-6 w-full max-w-md">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Fire NOC Eligibility Check</h2>
+            <form id="eligibilityForm">
+                <label for="buildingType" class="block text-gray-700 mb-2">Select Building Type:</label>
+                <select id="buildingType" class="border border-gray-300 rounded p-3 w-full mb-4">
+                    <option value="">-- Select --</option>
+                    <option value="residential">Residential</option>
+                    <option value="commercial">Assembly</option>
+                    <option value="industrial">Industrial</option>
+                    <option value="educational">Educational</option>
+                    <option value="storage">Storage Buildings</option>
+                    <option value="hazardous">Hazardous Buildings</option>
+                    <option value="mercantile">Mercantile</option>
+                </select>
+                <div id="buildingTypeError" class="text-red-500 hidden">Please select a building type.</div>
+
+                <label for="buildingHeight" class="block text-gray-700 mb-2">Enter Building Height (in meters):</label>
+                <input type="number" id="buildingHeight" class="border border-gray-300 rounded p-3 w-full mb-4" placeholder="Height in meters" min="1" />
+                <div id="buildingHeightError" class="text-red-500 hidden">Please enter a valid positive building height.</div>
+
+                <label for="occupancy" class="block text-gray-700 mb-2">Select Occupancy Type:</label>
+                <select id="occupancy" class="border border-gray-300 rounded p-3 w-full mb-4">
+                    <option value="">-- Select --</option>
+                    <option value="groupA">Group A: Residential</option>
+                    <option value="groupB">Group B: Educational</option>
+                    <option value="groupC">Group C: Institutional</option>
+                    <option value="groupD">Group D: Assembly</option>
+                    <option value="groupE">Group E: Business</option>
+                    <option value="groupF">Group F: Mercantile</option>
+                    <option value="groupG">Group G: Industrial</option>
+                    <option value="groupH">Group H: Storage</option>
+                    <option value="groupJ">Group J: Hazardous</option>
+                </select>
+                <div id="occupancyError" class="text-red-500 hidden">Please select an occupancy type.</div>
+
+                <button type="button" class="bg-green-600 text-white py-2 rounded w-full hover:bg-green-700 transition" onclick="checkEligibility()">Check Eligibility</button>
+            </form>
+            <div id="result" class="mt-4 text-gray-700"></div>
+        </div>
+
+        <div id="documentsContainer" class="bg-white rounded-lg shadow-md p-6 w-full max-w-lg hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Required Documents</h2>
+            <div id="requiredDocuments" class="space-y-4">
+                <!-- Documents will be dynamically added here -->
+            </div>
+        
+            <button 
+            class="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+            onclick="redirectToDocumentsPage()">
+            Back to Documents Page
+        </button>
+        <button 
+            class="mt-4 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition ml-4"
+            onclick="downloadDocument()">
+            Download Documents 
+        </button>
+        </div>
+        
+        <script>
+        function checkEligibility() {
+            const buildingType = document.getElementById('buildingType').value;
+            const buildingHeight = parseInt(document.getElementById('buildingHeight').value, 10);
+            const occupancy = document.getElementById('occupancy').value;
+            const resultDiv = document.getElementById('result');
+            const documentsContainer = document.getElementById('documentsContainer');
+            const requiredDocumentsDiv = document.getElementById('requiredDocuments');
+            const eligibilityForm = document.getElementById('eligibilityForm').parentElement;
+        function downloadDocument() {
+    // Assuming you have a URL to the document
+            const documentUrl = "https://example.com/document.pdf";
+
+    // Create a temporary link element
+            const link = document.createElement('a');
+            link.href = documentUrl;
+            link.download = 'document.pdf'; // Set the desired filename
+
+    // Simulate a click on the link to trigger the download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+            // Clear previous error messages
+            document.getElementById('buildingTypeError').classList.add('hidden');
+            document.getElementById('buildingHeightError').classList.add('hidden');
+            document.getElementById('occupancyError').classList.add('hidden');
+        
+            let eligibilityMessage = '';
+            let requiredDocuments = '';
+        
+            // Validate inputs
+            let isValid = true;
+        
+            if (!buildingType) {
+                document.getElementById('buildingTypeError').classList.remove('hidden');
+                isValid = false;
+            }
+            if (isNaN(buildingHeight) || buildingHeight <= 0) {
+                document.getElementById('buildingHeightError').classList.remove('hidden');
+                isValid = false;
+            }
+            if (!occupancy) {
+                document.getElementById('occupancyError').classList.remove('hidden');
+                isValid = false;
+            }
+        
+            if (!isValid) {
+                resultDiv.innerHTML = 'Please correct the errors above.';
+                return;
+            }
+        
+            // Check eligibility
+            if (buildingType === 'residential' && buildingHeight > 15) {
+                eligibilityMessage = 'Eligible for Fire NOC: Residential buildings above 15 meters.';
+                requiredDocuments = getRequiredDocuments('residential');
+            } else if (buildingType === 'commercial' && buildingHeight > 15) {
+                eligibilityMessage = 'Eligible for Fire NOC: Commercial buildings above 15 meters.';
+                requiredDocuments = getRequiredDocuments('commercial');
+            } else if (buildingType === 'industrial' && buildingHeight > 30) {
+                eligibilityMessage = 'Eligible for Fire NOC: Industrial buildings above 30 meters.';
+                requiredDocuments = getRequiredDocuments('industrial');
+            } else if (buildingType === 'educational' && buildingHeight > 9) {
+                eligibilityMessage = 'Eligible for Fire NOC: Educational buildings above 9 meters.';
+                requiredDocuments = getRequiredDocuments('educational');
+            } else {
+                eligibilityMessage = 'Not eligible for Fire NOC based on the criteria.';
+            }
+        
+            resultDiv.innerHTML = eligibilityMessage;
+        
+            // If eligible, display required documents
+            if (requiredDocuments) {
+                eligibilityForm.classList.add('hidden');
+                documentsContainer.classList.remove('hidden');
+                requiredDocumentsDiv.innerHTML = requiredDocuments;
+            }
+        }
+        
+        function getRequiredDocuments(buildingType) {
+            const documents = {
+                residential: [
+                    { name: 'Application Form', description: 'Properly filled application for Fire NOC.' },
+                    { name: 'Site Plan', description: 'Detailed site plan approved by the authorities.' },
+                    { name: 'Ownership Proof', description: 'Document verifying ownership of the property.' },
+                    { name: 'Previous NOC', description: 'Copy of the previous NOC, if available.' },
+                ],
+                commercial: [
+                    { name: 'Application Form', description: 'Properly filled application for Fire NOC.' },
+                    { name: 'Site Plan', description: 'Detailed site plan approved by the authorities.' },
+                    { name: 'Fire Safety Compliance', description: 'Compliance report from a certified agency.' },
+                    { name: 'Previous NOC', description: 'Copy of the previous NOC, if available.' },
+                ],
+                // Add similar objects for 'industrial' and 'educational' as needed
+                industrial: [
+    { name: 'Application Form', description: 'Properly filled application for Fire NOC.' },
+    { name: 'Site Plan', description: 'Detailed site plan approved by the authorities.' },
+    { name: 'Fire Safety Compliance', description: 'Compliance report from a certified agency.' },
+    { name: 'Proof of Ownership', description: 'Document verifying ownership of the property.' },
+    { name: 'Identity Proof', description: 'Identity proof of the applicant (e.g., Aadhar Card, Passport).' },
+    { name: 'Fire Safety Equipment Certificate', description: 'Certificate for installation and compliance of fire safety equipment.' },
+    { name: 'Fire Risk Assessment', description: 'Fire risk assessment document conducted by a certified agency.' },
+    { name: 'No Objection Certificate', description: 'No Objection Certificate from neighbors (if applicable).' },
+    { name: 'Previous NOC', description: 'Copy of the previous NOC, if available.' },
+],
+
+educational: [
+    { name: 'Application Form', description: 'Properly filled application for Fire NOC.' },
+    { name: 'Site Plan', description: 'Detailed site plan approved by the authorities.' },
+    { name: 'Fire Safety Compliance', description: 'Compliance report from a certified agency.' },
+    { name: 'Proof of Ownership', description: 'Document verifying ownership of the property.' },
+    { name: 'Identity Proof', description: 'Identity proof of the applicant (e.g., Aadhar Card, Passport).' },
+    { name: 'Fire Safety Equipment Certificate', description: 'Certificate for installation and compliance of fire safety equipment.' },
+    { name: 'Occupancy Certificate', description: 'Occupancy certificate issued by local authorities.' },
+    { name: 'Fire Drills Certification', description: 'Certification for periodic fire drills conducted in the building.' },
+    { name: 'Previous NOC', description: 'Copy of the previous NOC, if available.' },
+],
+
+            };
+        
+            return documents[buildingType]
+                .map(
+                    (doc) => `
+                    <div class="p-4 bg-gray-50 border rounded shadow-sm">
+                        <h3 class="text-lg font-semibold text-gray-800">${doc.name}</h3>
+                        <p class="text-sm text-gray-600">${doc.description}</p>
+                    </div>`
+                )
+                .join('');
+        }
+        
+        function redirectToDocumentsPage() {
+            window.location.href = 'documents.html';
+        }
+        </script>
+        
+        
+
+</body>
+</html>

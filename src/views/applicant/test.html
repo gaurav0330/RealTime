@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fire Department Document Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      background-color: #1a1a1a;
+      color: #ffffff;
+    }
+    .header {
+      background-color: #cc0000;
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: #2c2c2c;
+      padding: 20px;
+      border: 1px solid #cc0000;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      margin-bottom: 15px;
+      text-align: center;
+      color: #ffffff;
+    }
+    input[type="file"] {
+      display: block;
+      margin: 10px auto 20px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      background-color: #cc0000;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #990000;
+    }
+    #output {
+      white-space: pre-wrap;
+      background: #333333;
+      color: #ffffff;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      border: 1px solid #cc0000;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Fire Department Document Verification</h1>
+  </div>
+  <div class="container">
+    <h2>Upload Your DECLARATION Form</h2>
+    <input type="file" id="imageInput" accept="image/jpeg">
+    <button onclick="processImage()">Verify Document</button>
+    <pre id="output"></pre>
+  </div>
+
+
+  <script>
+    async function processImage() {
+      const predefinedKey = "DECLARATION"; // Hardcoded key to check
+      const imageInput = document.getElementById('imageInput');
+
+
+      if (!imageInput.files[0]) {
+        alert('Please select a JPEG document first!');
+        return;
+      }
+
+
+      const reader = new FileReader();
+      reader.onloadend = async function () {
+        const base64Image = reader.result.split(',')[1];
+        const visionApiKey = 'AIzaSyA6s3pD0N7CVqZVQP_zvhFLlJ2mSNvV4FA';
+
+
+        // Google Cloud Vision API payload
+        const visionPayload = {
+          requests: [
+            {
+              image: {
+                content: base64Image
+              },
+              features: [
+                {
+                  type: 'TEXT_DETECTION'
+                }
+              ]
+            }
+          ]
+        };
+
+
+        try {
+          // Call Vision API
+          const visionResponse = await fetch(`https://vision.googleapis.com/v1/images:annotate?key=${visionApiKey}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(visionPayload)
+          });
+
+
+          const visionData = await visionResponse.json();
+          if (!visionData.responses || !visionData.responses[0].textAnnotations) {
+            throw new Error('No text detected');
+          }
+
+
+          const detectedText = visionData.responses[0].textAnnotations[0].description;
+
+
+          // Check if the detected text contains the predefined key
+          const isMatch = detectedText.includes(predefinedKey);
+          const outputElement = document.getElementById('output');
+
+
+          if (isMatch) {
+            outputElement.textContent = `Document Verified!`;
+            outputElement.style.backgroundColor = '#28a745'; // Light green
+          } else {
+            outputElement.textContent = `Document Not As per Standard Reupload. Re-upload the document.`;
+            outputElement.style.backgroundColor = '#dc3545'; // Light red
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          document.getElementById('output').textContent = 'Error: ' + error.message;
+        }
+      };
+      reader.readAsDataURL(imageInput.files[0]); // Read the selected image
+    }
+  </script>
+</body>
+</html>

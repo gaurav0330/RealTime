@@ -36,146 +36,209 @@
           </p>
         </div>
 
-        <!-- Form -->
         <form id="signupForm" class="space-y-6">
           <!-- Role Selection -->
           <div>
-            <label for="role" class="block text-sm font-medium text-gray-700"
-              >Select Role</label
-            >
+            <label for="role" class="block text-sm font-medium text-gray-700">Select Role</label>
             <select
               id="role"
+              name="role"
               required
+              autocomplete="off"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
             >
               <option value="">Choose your role</option>
               <option value="citizen">Citizen</option>
-              <option value="officer">Officer</option>
-              <option value="other">Other</option>
+              <option value="assessor">Assessor</option>
+              <option value="chief-fire-officer">Chief Fire Officer</option>
+              <option value="agency">Agency</option>
+              <option value="station-officer">Station Officer</option>
+              <option value="assistant-divisional-officer">Assistant Divisional Officer</option>
+              <option value="divisional-officer">Divisional Officer</option>
+              <option value="local-authority">local-authority</option>
+              
+           
             </select>
           </div>
-
-          <!-- Dynamic form fields will be controlled by role selection -->
-          <div id="citizenFields" style="display: none">
-            <!-- Citizen-specific fields -->
+        
+          <!-- Pincode Search -->
+          <div class="space-y-6">
             <div>
-              <label
-                for="nationalId"
-                class="block text-sm font-medium text-gray-700"
-                >National ID</label
-              >
+              <label for="pincode" class="block text-sm font-medium text-gray-700">Pincode</label>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <input
+                    type="text"
+                    name="pincode"
+                    id="pincode"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
+                    placeholder="Enter pincode"
+                    maxlength="6"
+                />
+                <button
+                    type="button"
+                    id="searchPincode"
+                    class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+
+            <!-- Location Fields (Read-only) -->
+            <div>
+              <label for="state" class="block text-sm font-medium text-gray-700">State</label>
+              <input
+                type="text"
+                id="state"
+                name="state"
+                readonly
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50"
+              />
+            </div>
+
+            <div>
+              <label for="division" class="block text-sm font-medium text-gray-700">Division</label>
+              <input
+                type="text"
+                id="division"
+                name="division"
+                readonly
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50"
+              />
+            </div>
+
+            <div>
+              <label for="district" class="block text-sm font-medium text-gray-700">District</label>
+              <input
+                type="text"
+                id="district"
+                name="district"
+                readonly
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50"
+              />
+            </div>
+
+            <div>
+              <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                readonly
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50"
+              />
+            </div>
+          </div>
+        
+          <!-- Dynamic fields based on role selection -->
+          <div id="citizenFields" style="display: none">
+            <div>
+              <label for="nationalId" class="block text-sm font-medium text-gray-700">National ID</label>
               <input
                 type="text"
                 id="nationalId"
+                name="nationalId"
+                autocomplete="off"
                 placeholder="Enter your National ID"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
             </div>
           </div>
-
+        
           <div id="officerFields" style="display: none">
-            <!-- Officer-specific fields -->
             <div>
-              <label
-                for="badgeNumber"
-                class="block text-sm font-medium text-gray-700"
-                >Badge Number</label
-              >
+              <label for="badgeNumber" class="block text-sm font-medium text-gray-700">Badge Number</label>
               <input
                 type="text"
                 id="badgeNumber"
+                name="badgeNumber"
+                autocomplete="off"
                 placeholder="Enter your Badge Number"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
             </div>
             <div>
-              <label
-                for="department"
-                class="block text-sm font-medium text-gray-700"
-                >Department</label
-              >
+              <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
               <input
                 type="text"
                 id="department"
+                name="department"
+                autocomplete="organization-title"
                 placeholder="Enter your Department"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
             </div>
           </div>
-
+        
           <!-- Name Input -->
           <div>
-            <label for="name" class="block text-sm font-medium text-gray-700"
-              >Full Name</label
-            >
+            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
             <input
               type="text"
               id="name"
-              placeholder="Enter your full name"
+              name="name"
               required
+              autocomplete="name"
+              placeholder="Enter your full name"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
           </div>
-
+        
           <!-- Email Input -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Email Address</label
-            >
+            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
             <input
               type="email"
               id="email"
-              placeholder="Enter your email"
+              name="email"
               required
+              autocomplete="email"
+              placeholder="Enter your email"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
           </div>
-
+        
           <!-- Company Name Input -->
           <div>
-            <label for="company" class="block text-sm font-medium text-gray-700"
-              >Company Name</label
-            >
+            <label for="company" class="block text-sm font-medium text-gray-700">Company Name</label>
             <input
               type="text"
               id="company"
+              name="company"
+              autocomplete="organization"
               placeholder="Enter company name"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
           </div>
-
+        
           <!-- Password Input -->
           <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-gray-700"
-              >Password</label
-            >
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
               id="password"
-              placeholder="Enter password"
+              name="password"
               required
+              autocomplete="new-password"
+              placeholder="Enter password"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
           </div>
-
+        
           <!-- Confirm Password Input -->
           <div>
-            <label
-              for="confirmPassword"
-              class="block text-sm font-medium text-gray-700"
-              >Confirm Password</label
-            >
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
             <input
               type="password"
               id="confirmPassword"
-              placeholder="Confirm password"
+              name="confirmPassword"
               required
+              autocomplete="new-password"
+              placeholder="Confirm password"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
           </div>
-
+        
           <!-- Submit Button -->
           <div>
             <button
@@ -185,80 +248,160 @@
               Sign Up
             </button>
           </div>
-
+        
           <!-- Login Link -->
           <div class="text-center text-sm">
             <p class="text-gray-600">
               Already have an account?
-              <a
-                href="login.html"
-                class="font-medium text-red-600 hover:text-red-500"
-                >Login here</a
-              >
+              <a href="login.html" class="font-medium text-red-600 hover:text-red-500">Login here</a>
             </p>
           </div>
         </form>
+        
       </div>
     </div>
 
-    <!-- Add this script before closing body tag -->
+    <!-- Add this script before the existing script tag -->
+    <script>
+
+    async function validateAdharNumber(adharNumber) {
+        try {
+            return validator.isValidNumber(adharNumber);
+        } catch (error) {
+            console.error('Aadhaar validation error:', error);
+            return false;
+        }
+    }
+
+    // Function to handle pincode search
+    async function handlePincodeSearch() {
+        const pincode = document.getElementById('pincode').value;
+        if (!pincode || pincode.length !== 6) {
+            alert('Please enter a valid 6-digit pincode');
+            return;
+        }
+
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/auth/locations/pincode/${pincode}`);
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.message || 'Failed to fetch location data');
+            }
+
+
+            // Fill in the location fields
+            document.getElementById('state').value = data.data.state;
+            document.getElementById('division').value = data.data.division;
+            document.getElementById('district').value = data.data.district;
+            document.getElementById('city').value = data.data.city;
+
+        } catch (error) {
+            console.error('Error fetching location by pincode:', error);
+            alert('Error finding location. Please check the pincode and try again.');
+            
+            // Clear the fields on error
+            document.getElementById('state').value = '';
+            document.getElementById('division').value = '';
+            document.getElementById('district').value = '';
+            document.getElementById('city').value = '';
+        }
+    }
+
+    // Add event listener for pincode search button
+    document.getElementById('searchPincode').addEventListener('click', handlePincodeSearch);
+
+    // Add event listener for Enter key on pincode input
+    document.getElementById('pincode').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission
+            handlePincodeSearch();
+        }
+    });
+
+    // Update form submission handler
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Validate location fields
+        const state = document.getElementById('state').value;
+        if (!state) {
+            alert('Please enter a valid pincode to fetch location details');
+            return;
+        }
+
+        // Collect form data
+        const formData = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+            role: document.getElementById("role").value,
+            state: document.getElementById("state").value,
+            division: document.getElementById("division").value,
+            district: document.getElementById("district").value,
+            city: document.getElementById("city").value,
+            pincode: document.getElementById("pincode").value,
+        };
+
+        // Add role-specific data
+        if (formData.role === "agency") {
+            formData.companyName = document.getElementById("company").value;
+        } else if (formData.role === "assessor" || formData.role === "chief-fire-officer") {
+            formData.badgeNumber = document.getElementById("badgeNumber").value;
+            formData.department = document.getElementById("department").value;
+        } else if (formData.role === "citizen") {
+            formData.nationalId = document.getElementById("nationalId").value;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert("Signup successful!");
+                window.location.href = "login.html";
+            } else {
+                alert(`Signup failed: ${data.message}`);
+            }
+        } catch (error) {
+            alert("Error signing up: " + error.message);
+        }
+    });
+    </script>
+
+    <!-- Update the existing script -->
     <script type="module">
- 
-      // Role change handler
-      document.getElementById("role").addEventListener("change", function () {
+    // Role change handler
+    document.getElementById("role").addEventListener("change", function () {
         const citizenFields = document.getElementById("citizenFields");
         const officerFields = document.getElementById("officerFields");
-        const companyField =
-          document.querySelector('[for="company"]').parentElement;
-
+        const companyField = document.querySelector('[for="company"]').parentElement;
+    
         // Hide all role-specific fields first
         citizenFields.style.display = "none";
         officerFields.style.display = "none";
         companyField.style.display = "none";
-
+    
         // Show fields based on selected role
         switch (this.value) {
           case "citizen":
             citizenFields.style.display = "block";
             break;
-          case "officer":
+          case "assessor":
+          case "chief-fire-officer":
             officerFields.style.display = "block";
             break;
-          case "other":
+          case "agency":
             companyField.style.display = "block";
             break;
         }
-      });
-
-      // Update form submission handler
-      document
-        .getElementById("signupForm")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
-
-          const name = document.getElementById("name").value;
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-          const role = document.getElementById("role").value;
-
-          try {
-            const response = await fetch("http://localhost:5000/auth/signup", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name, email, password, role }),
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-              alert("Signup successful!");
-              window.location.href = "login.html";
-            } else {
-              alert(`Signup failed: ${data.message}`);
-            }
-          } catch (error) {
-            alert("Error signing up: " + error.message);
-          }
-        });
+    });
     </script>
+    
   </body>
 </html>

@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>NOC Application - Fire Department</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
+   
+    <style>
+        /* Set the height of the map */
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <header class="bg-red-700 text-white">
@@ -35,6 +48,8 @@
       </header>
 
     <div class="container mx-auto px-4 py-8 max-w-5xl">
+       
+
         <!-- Progress Bar -->
         <div class="mb-8">
             <div class="flex justify-between mb-4">
@@ -67,6 +82,13 @@
             <form id="nocApplicationForm" class="space-y-6">
                 <!-- Step 1: Applicant and Building Details -->
                 <div id="step1" class="form-step">
+                     <!-- Added Map Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Select Building Location on Map</h2>
+            <div id="map"></div>
+            <button id="setLocationBtn" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Set Location</button>
+            <input type="hidden" name="buildingLocation" id="buildingLocation">
+        </div>
                     <h2 class="text-2xl font-bold mb-6">Applicant and Building Details</h2>
                     
                     <!-- Applicant Details -->
@@ -89,9 +111,64 @@
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Address for Correspondence *</label>
-                                <textarea name="correspondenceAddress" required
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                                <select name="state"  id="state" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                    <option value="">Select State</option>
+                                    <option value="AN">Andaman and Nicobar Islands</option>
+                                    <option value="AP">Andhra Pradesh</option>
+                                    <option value="AR">Arunachal Pradesh</option>
+                                    <option value="AS">Assam</option>
+                                    <option value="BR">Bihar</option>
+                                    <option value="CH">Chandigarh</option>
+                                    <option value="CT">Chhattisgarh</option>
+                                    <option value="DN">Dadra and Nagar Haveli</option>
+                                    <option value="DD">Daman and Diu</option>
+                                    <option value="DL">Delhi</option>
+                                    <option value="GA">Goa</option>
+                                    <option value="GJ">Gujarat</option>
+                                    <option value="HR">Haryana</option>
+                                    <option value="HP">Himachal Pradesh</option>
+                                    <option value="JK">Jammu and Kashmir</option>
+                                    <option value="JH">Jharkhand</option>
+                                    <option value="KA">Karnataka</option>
+                                    <option value="KL">Kerala</option>
+                                    <option value="LA">Ladakh</option>
+                                    <option value="LD">Lakshadweep</option>
+                                    <option value="MP">Madhya Pradesh</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="MN">Manipur</option>
+                                    <option value="ML">Meghalaya</option>
+                                    <option value="MZ">Mizoram</option>
+                                    <option value="NL">Nagaland</option>
+                                    <option value="OR">Odisha</option>
+                                    <option value="PY">Puducherry</option>
+                                    <option value="PB">Punjab</option>
+                                    <option value="RJ">Rajasthan</option>
+                                    <option value="SK">Sikkim</option>
+                                    <option value="TN">Tamil Nadu</option>
+                                    <option value="TG">Telangana</option>
+                                    <option value="TR">Tripura</option>
+                                    <option value="UP">Uttar Pradesh</option>
+                                    <option value="UT">Uttarakhand</option>
+                                    <option value="WB">West Bengal</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                                <input type="text" name="city" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Applicant Type *</label>
+                                <select name="applicantType" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                    <option value="">Select Type</option>
+                                    <option value="owner">Building Owner</option>
+                                    <option value="tenant">Tenant</option>
+                                    <option value="developer">Developer</option>
+                                    <option value="authorized">Authorized Representative</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -101,224 +178,1205 @@
                         <h3 class="text-lg font-semibold mb-4 text-indigo-500">Building Details</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Building Name *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Building/Premises Name *</label>
                                 <input type="text" name="buildingName" required
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Building Address *</label>
-                                <textarea name="buildingAddress" required
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Plot Number *</label>
+                                <input type="text" name="plotNumber" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Complete Address *</label>
+                                <textarea name="buildingAddress" required rows="2"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"></textarea>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Type of Building *</label>
-                                <select name="buildingType" required
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                                    <option value="">Select Building Type</option>
-                                    <option value="residential">Residential</option>
-                                    <option value="commercial">Commercial</option>
-                                    <option value="industrial">Industrial</option>
-                                    <option value="institutional">Institutional</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Total Area (sq. ft.) *</label>
-                                <input type="number" name="totalArea" required
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Floors *</label>
-                                <input type="number" name="numFloors" required
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Year of Construction *</label>
-                                <input type="number" name="constructionYear" required min="1900" max="2024"
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Landmark</label>
+                                <input type="text" name="landmark"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Documents Upload -->
+                    <!-- Building Specifications -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Required Documents</h3>
-                        <div class="space-y-4">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Building Specifications</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Ownership Proof *</label>
-                                <input type="file" name="ownershipProof" required accept=".pdf,.jpg,.jpeg,.png"
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Type of Building *</label>
+                                <select name="buildingType" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                    <option value="">Select Type</option>
+                                    <option value="residential">Residential</option>
+                                    <option value="commercial">Commercial</option>
+                                    <option value="industrial">Industrial</option>
+                                    <option value="institutional">Institutional</option>
+                                    <option value="mixed">Mixed Use</option>
+                                    <option value="storage">Storage/Warehouse</option>
+                                    <option value="assembly">Assembly</option>
+                                    <option value="hazardous">Hazardous</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Building Height (meters) *</label>
+                                <input type="number" name="buildingHeight" required min="0" step="0.01"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Identity Proof *</label>
-                                <input type="file" name="identityProof" required accept=".pdf,.jpg,.jpeg,.png"
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Total Built-up Area (sq. meters) *</label>
+                                <input type="number" name="builtUpArea" required min="0" step="0.01"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Approved Building Plan *</label>
-                                <input type="file" name="buildingPlan" required accept=".pdf,.jpg,.jpeg,.png"
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Basements *</label>
+                                <input type="number" name="numBasements" required min="0"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Floors *</label>
+                                <input type="number" name="numFloors" required min="1"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Occupancy (persons) *</label>
+                                <input type="number" name="maxOccupancy" required min="1"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Step 2: Fire Safety Measures -->
+                <!-- Step 2: Fire Safety -->
                 <div id="step2" class="form-step hidden">
-                    <!-- Fire Equipment Section -->
+                    <h2 class="text-2xl font-bold mb-6">Fire Safety Details</h2>
+                    
+                    <!-- Basic Building Information -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Fire Safety Equipment</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Basic Building Information</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="col-span-2">
-                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
-                                        <input type="checkbox" name="fireExtinguishers" class="h-5 w-5 text-indigo-400 rounded">
-                                        <span class="ml-2 text-gray-700">Fire Extinguishers</span>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Division <span class="text-red-500">*</span>
+                                </label>
+                                <select name="division" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                    <option value="">Select Division</option>
+                                    <option value="div1">Division 1</option>
+                                    <option value="div2">Division 2</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Type of Occupancy <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="occupancyType" required maxlength="16" 
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                <small class="text-gray-500">As per clause 1.4.75 of UBBL 2016</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Building Measurements -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Building Measurements</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          
+                           
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Ground Floor Covered Area (sq mt) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="groundFloorArea" required max="9999999"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Typical Floor Area (sq mt) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="typicalFloorArea" required step="0.01" max="9999999"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Basement Floor Area (sq mt) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="basementArea" required step="0.01" max="9999999"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Exits and Staircases (Updated) -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">
+                            Number, Width, Type & Arrangement of Exits
+                            <span class="text-sm font-normal">(As per clause 7.8 of UBBL 2016)</span>
+                        </h3>
+                        
+                        <!-- Travel Distances -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Travel Distance (meters) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="travelDistance" required 
+                                       max="9999" step="0.01"
+                                       class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Dead End Travel Distance (meters) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="deadEndDistance" required max="9999" step="0.01"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                        </div>
+
+                        <!-- Staircase Details -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Upper Floor Staircases Count <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="upperFloorStaircases" required max="9999"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Upper Floor Staircase Width (meters) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="upperFloorStaircaseWidth" required max="9999" step="0.01"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Fire Protection Systems -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Fire Protection Systems</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Fire Check Door <span class="text-red-500">*</span>
+                                </label>
+                                <div class="space-x-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="fireCheckDoor" value="yes" required
+                                            class="form-radio text-indigo-400">
+                                        <span class="ml-2">Yes</span>
                                     </label>
-                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
-                                        <input type="checkbox" name="smokeDetectors" class="h-5 w-5 text-indigo-400 rounded">
-                                        <span class="ml-2 text-gray-700">Smoke Detectors</span>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="fireCheckDoor" value="no" required
+                                            class="form-radio text-indigo-400">
+                                        <span class="ml-2">No</span>
                                     </label>
-                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
-                                        <input type="checkbox" name="fireAlarms" class="h-5 w-5 text-indigo-400 rounded">
-                                        <span class="ml-2 text-gray-700">Fire Alarms</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Pressurization System <span class="text-red-500">*</span>
+                                </label>
+                                <div class="space-x-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="pressurization" value="yes" required
+                                            class="form-radio text-indigo-400">
+                                        <span class="ml-2">Yes</span>
                                     </label>
-                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
-                                        <input type="checkbox" name="fireSprinklers" class="h-5 w-5 text-indigo-400 rounded">
-                                        <span class="ml-2 text-gray-700">Fire Sprinklers</span>
-                                    </label>
-                                    <label class="flex items-center p-4 border rounded-lg hover:bg-indigo-50">
-                                        <input type="checkbox" name="emergencyExitLights" class="h-5 w-5 text-indigo-400 rounded">
-                                        <span class="ml-2 text-gray-700">Emergency Exit Lights</span>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="pressurization" value="no" required
+                                            class="form-radio text-indigo-400">
+                                        <span class="ml-2">No</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Emergency Provisions Section -->
+                    <!-- Water Storage and Pumping -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Emergency Provisions</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Water Storage and Pumping Systems</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Fire Exits *</label>
-                                <input type="number" name="fireExits" required min="1"
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Underground Tank Capacity (Liters) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="undergroundCapacity" required max="99999999"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Staircases *</label>
-                                <input type="number" name="staircases" required min="1"
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Overhead Tank Capacity (Liters) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="overheadCapacity" required max="99999999"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Width of Staircases (meters) *</label>
-                                <input type="number" name="staircaseWidth" required step="0.1" min="0.5"
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Overhead Water Tank Capacity (liters) *</label>
-                                <input type="number" name="overheadTankCapacity" required min="1000"
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Underground Water Tank Capacity (liters) *</label>
-                                <input type="number" name="undergroundTankCapacity" required min="1000"
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Fire Service Inlet <span class="text-red-500">*</span>
+                                </label>
+                                <div class="space-x-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="fireServiceInlet" value="yes" required
+                                            class="form-radio text-indigo-400">
+                                        <span class="ml-2">Yes</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="fireServiceInlet" value="no" required
+                                            class="form-radio text-indigo-400">
+                                        <span class="ml-2">No</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Access for Firefighters Section -->
+                    <!-- Special Fire Protection Systems -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Access for Firefighters</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Distance from Main Road (meters) *</label>
-                                <input type="number" name="distanceFromRoad" required min="0" step="0.1"
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Open Spaces Around Building *</label>
-                                <select name="openSpaces" required
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                                    <option value="">Select Availability</option>
-                                    <option value="all">Available on All Sides</option>
-                                    <option value="three">Available on Three Sides</option>
-                                    <option value="two">Available on Two Sides</option>
-                                    <option value="one">Available on One Side</option>
-                                </select>
-                            </div>
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Special Fire Protection Systems</h3>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Special Risks Protection Details <span class="text-red-500">*</span>
+                                <span class="text-sm text-gray-500">(For transformer, electrical panel, petroleum products, boiler room etc.)</span>
+                            </label>
+                            <textarea name="specialProtectionDetails" required maxlength="200" rows="3"
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"></textarea>
                         </div>
                     </div>
 
-                    <!-- Fire Safety Documents -->
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Fire Safety Documentation</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Fire System Installation Certificate *</label>
-                                <input type="file" name="installationCertificate" required accept=".pdf,.jpg,.jpeg,.png"
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Maintenance Certificates (if applicable)</label>
-                                <input type="file" name="maintenanceCertificates" accept=".pdf,.jpg,.jpeg,.png" multiple
-                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                            </div>
-                        </div>
+                    <!-- Section: Compartmentation -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Compartmentation
+                <span class="text-sm font-normal">(As per clause 8.4.6 of UBBL 2016)</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Compartment Size (sq mt) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="compartmentSize" required 
+                           max="9999"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Fire Compartments (Upper Floor) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="upperFloorCompartments" required 
+                           max="9999"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Fire Compartments (Basement) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="basementFloorCompartments" required 
+                           max="9999"
+                           class="w-full border rounded-md p-2">
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- Fire Extinguishers -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Fire Extinguishers
+                <span class="text-sm font-normal">(As per clause 9.3.9 of UBBL 2016 & IS 2190)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Total Numbers on Each Floor <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="fireExtinguishersCount" required 
+                           max="9999"
+                           class="w-full border rounded-md p-2">
+                </div>
+            </div>
+        </div>
+
+        <!-- First-aid Hose Reels -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                First-aid Hose Reels
+                <span class="text-sm font-normal">(As per clause 9.3.9 of UBBL 2016)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Location Near Stairs <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="hoseReelLocation" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="hoseReelLocation" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
                     </div>
                 </div>
 
-                <!-- Step 3: Declaration and Payment -->
-                <div id="step3" class="form-step hidden">
-                    <!-- Declaration Section -->
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Declaration</h3>
-                        <div class="p-4 border rounded-lg mb-6">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" name="declaration" required
-                                    class="h-5 w-5 text-indigo-400 rounded">
-                                <span class="text-gray-700">I hereby declare that the information provided in this application is true and accurate.</span>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Total Number on Each Floor <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="hoseReelCount" required 
+                           max="9999"
+                           class="w-full border rounded-md p-2">
+                </div>
+            </div>
+        </div>
+
+        <!-- Automatic Fire Detection and Alarming System -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Automatic Fire Detection and Alarming System
+                <span class="text-sm font-normal">(As per clause 9.3.9 of UBBL 2016 & IS 2189)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Type of Detectors -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Type of Detectors <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="detectorType" required 
+                           maxlength="10"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <!-- Detector above false ceiling -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Detector above False Ceiling <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="detectorAboveCeiling" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="detectorAboveCeiling" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Provision of detectors in duct -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Provision of Detectors in Duct, Shaft etc. <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="detectorInDuct" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="detectorInDuct" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOEFA -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Manually Operated Electric Fire Alarm (MOEFA)
+                <span class="text-sm font-normal">(As per clause 9.3.9 of UBBL 2016)</span>
+            </h2>
+
+            <div class="space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="moefa" value="yes" required
+                           class="form-radio text-blue-600">
+                    <span class="ml-2">Yes</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="moefa" value="no" required
+                           class="form-radio text-blue-600">
+                    <span class="ml-2">No</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Public Address System -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Public Address System
+                <span class="text-sm font-normal">(As per clause 9.3.9 of UBBL 2016)</span>
+            </h2>
+
+            <div class="space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="publicAddress" value="yes" required
+                           class="form-radio text-blue-600">
+                    <span class="ml-2">Yes</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="publicAddress" value="no" required
+                           class="form-radio text-blue-600">
+                    <span class="ml-2">No</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Automatic Sprinkler System -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Automatic Sprinkler System
+                <span class="text-sm font-normal">(As per clause 9.3.9 of UBBL 2016 & IS 15105)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Basement Sprinklers -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Total Sprinklers in Basement <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="basementSprinklers" required 
+                           max="9999"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <!-- Upper Floor Sprinklers -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Total Sprinklers in Upper Floor <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="upperFloorSprinklers" required 
+                           max="9999"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <!-- Sprinkler above false ceiling -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Sprinkler above False Ceiling <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="sprinklerAboveCeiling" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="sprinklerAboveCeiling" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Calculations with Drawings -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Calculation as per IS 15105 with Drawings <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="sprinklerCalculations" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="sprinklerCalculations" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Internal Hydrants -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Internal Hydrants
+                <span class="text-sm font-normal">(As per IS 3844)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Size of riser -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Size of Riser/Down Comer (mm) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="riserSize" required 
+                           max="999"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <!-- Number of hydrants -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Number of Hydrants per Floor <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="hydrantsPerFloor" required 
+                           max="999"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <!-- Location near staircase -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Location Near to Staircase <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="hydrantLocation" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="hydrantLocation" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Hose boxes -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Hose Boxes Near Each Landing Valve <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="hoseBoxes" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="hoseBoxes" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yard Hydrants -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Yard Hydrants
+                <span class="text-sm font-normal">(As per IS 13039)</span>
+            </h2>
+        </div>
+
+        <!-- Pumping Arrangements -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Pumping Arrangements
+                <span class="text-sm font-normal">(As per clause 9.3.9 of UBBL 2016)</span>
+            </h2>
+
+            <!-- Ground Level -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">Ground Level</h3>
+                <div class="space-y-4">
+                    <!-- Location -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Location of Pump Room <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="pumpRoomLocation" required 
+                               maxlength="10"
+                               class="w-full border rounded-md p-2">
+                    </div>
+
+                    <!-- Main Pump Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Discharge of Main Pump (LPM) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="mainPumpDischarge" required 
+                                   max="9999"
+                                   class="w-full border rounded-md p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Head of Main Pump (meters) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="mainPumpHead" required 
+                                   max="9999"
+                                   class="w-full border rounded-md p-2">
+                        </div>
+                    </div>
+
+                    <!-- Number of Main Pumps -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Number of Main Pumps <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="mainPumpCount" required 
+                               max="9999"
+                               class="w-full border rounded-md p-2">
+                    </div>
+
+                    <!-- Jockey Pump Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Jockey Pump Output (LPM) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="jockeyPumpOutput" required 
+                                   max="9999"
+                                   class="w-full border rounded-md p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Jockey Pump Head (meters) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="jockeyPumpHead" required 
+                                   max="9999"
+                                   class="w-full border rounded-md p-2">
+                        </div>
+                    </div>
+
+                    <!-- Number of Jockey Pumps -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Number of Jockey Pumps <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="jockeyPumpCount" required 
+                               max="9999"
+                               class="w-full border rounded-md p-2">
+                    </div>
+
+                    <!-- Standby Pump Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Standby Pump Output (LPM) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="standbyPumpOutput" required 
+                                   max="9999"
+                                   class="w-full border rounded-md p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Standby Pump Head (meters) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="standbyPumpHead" required 
+                                   max="9999"
+                                   class="w-full border rounded-md p-2">
+                        </div>
+                    </div>
+
+                    <!-- Direct Access -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Direct Access to Pump House from Ground Level <span class="text-red-500">*</span>
+                        </label>
+                        <div class="space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="pumpHouseAccess" value="yes" required
+                                       class="form-radio text-blue-600">
+                                <span class="ml-2">Yes</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="pumpHouseAccess" value="no" required
+                                       class="form-radio text-blue-600">
+                                <span class="ml-2">No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terrace Level -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">Terrace Level</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Discharge of Pump (LPM) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="terracePumpDischarge" required 
+                               max="9999"
+                               class="w-full border rounded-md p-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Head of Pump (meters) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="terracePumpHead" required 
+                               max="9999"
+                               class="w-full border rounded-md p-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Water Storage -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Captive Water Storage for Firefighting
+                <span class="text-sm font-normal">(As per clause 9.3.9 of UBBL 2016 & IS 15105)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Location -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Location of Underground Tank <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="tankLocation" required 
+                           maxlength="10"
+                           class="w-full border rounded-md p-2">
+                </div>
+                <!-- Fire Service Inlet -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Fire Service Inlet <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="waterStorageFireInlet" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="waterStorageFireInlet" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Access to Tank -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Access to Tank <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="tankAccess" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="tankAccess" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+                 <!-- Ladder for Inspection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Ladder for Inspection <span class="text-red-500">*</span>
+                        <span class="text-sm font-normal">(As per clause 7.10.3 of UBBL 2016)</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="inspectionLadder" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="inspectionLadder" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Cross Section Drawing -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Cross Section Drawing of Tanks <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="crossSectionDrawing" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="crossSectionDrawing" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exit Signage -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Exit Signage
+                <span class="text-sm font-normal">(As per clause 7.11 (r) of UBBL 2016)</span>
+            </h2>
+            <div class="space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="exitSignage" value="yes" required
+                           class="form-radio text-blue-600">
+                    <span class="ml-2">Yes</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="exitSignage" value="no" required
+                           class="form-radio text-blue-600">
+                    <span class="ml-2">No</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Provision of Lifts -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Provision of Lifts
+                <span class="text-sm font-normal">(As per clause 8.4.4/9.3.3 of UBBL 2016)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Number of Lifts -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            No. of Passenger Lifts <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="passengerLiftCount" required 
+                               max="9999"
+                               class="w-full border rounded-md p-2">
+                    </div>
+                </div>
+
+                <!-- Fireman's Switch -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Fireman's Grounding Switch <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="firemanSwitch" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="firemanSwitch" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Pressurization -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Pressurization of Lift Shaft <span class="text-red-500">*</span>
+                            <span class="text-sm font-normal">(As per clause 8.4.4 m of UBBL 2016)</span>
+                        </label>
+                        <div class="space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="liftShaftPressure" value="yes" required
+                                       class="form-radio text-blue-600">
+                                <span class="ml-2">Yes</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="liftShaftPressure" value="no" required
+                                       class="form-radio text-blue-600">
+                                <span class="ml-2">No</span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- Payment Section -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Pressurization of Lift Lobby <span class="text-red-500">*</span>
+                            <span class="text-sm font-normal">(As per clause 8.4.4 m of UBBL 2016)</span>
+                        </label>
+                        <div class="space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="liftLobbyPressure" value="yes" required
+                                       class="form-radio text-blue-600">
+                                <span class="ml-2">Yes</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="liftLobbyPressure" value="no" required
+                                       class="form-radio text-blue-600">
+                                <span class="ml-2">No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Standby Power Supply -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Standby Power Supply
+                <span class="text-sm font-normal">(As per clause 8.5.3 of UBBL 2016)</span>
+            </h2>
+            <div class="space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="standbyPower" value="yes" required
+                           class="form-radio text-blue-600">
+                    <span class="ml-2">Yes</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="standbyPower" value="no" required
+                           class="form-radio text-blue-600">
+                    <span class="ml-2">No</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Refuge Area -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Refuge Area
+                <span class="text-sm font-normal">(As per clause 9.3.6/9.3.7 of UBBL 2016)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Levels/Floors <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="refugeLevels" required 
+                           maxlength="50"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Area at Each Level (sq mt.) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="refugeArea" required 
+                           maxlength="50"
+                           class="w-full border rounded-md p-2">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Direct Access to Nearest Staircase <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="refugeStaircaseAccess" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="refugeStaircaseAccess" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Fire Check Floor <span class="text-red-500">*</span>
+                        <span class="text-sm font-normal">(As per clause 9.3.8 of UBBL 2016)</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="fireCheckFloor" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="fireCheckFloor" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fire Control Room -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-500 border-b pb-2">
+                Fire Control Room
+                <span class="text-sm font-normal">(As per clause 9.3.10/9.3.14 of UBBL 2016)</span>
+            </h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Location Near Main Entrance at Ground Floor <span class="text-red-500">*</span>
+                    </label>
+                    <div class="space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="controlRoomLocation" value="yes" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="controlRoomLocation" value="no" required
+                                   class="form-radio text-blue-600">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+                </div>
+                </div>
+
+                <!-- Step 3: Declaration and Compliance -->
+                <div id="step3" class="form-step hidden">
+                    <!-- Required Documents -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Payment</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Required Documents</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Identity and Property Documents -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method *</label>
-                                <select name="paymentMethod" required
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ID Proof/Address Proof *</label>
+                                <input type="file" name="idProof" required accept=".pdf,.jpg,.jpeg,.png"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-                                    <option value="">Select Payment Method</option>
-                                    <option value="cash">Cash</option>
-                                    <option value="cheque">Cheque</option>
-                                    <option value="online">Online</option>
-                                </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Amount *</label>
-                                <input type="number" name="paymentAmount" required
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Ownership Proof *</label>
+                                <input type="file" name="ownershipProof" required accept=".pdf,.jpg,.jpeg,.png"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+
+                            <!-- Building Related Documents -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Building Plans (Blueprint) *</label>
+                                <input type="file" name="buildingBlueprint" required accept=".pdf"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Building Plan Approval Certificate *</label>
+                                <input type="file" name="planApprovalCert" required accept=".pdf"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                           
+                           
+
+                            <!-- Fire Safety Related Documents -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Fire Safety System Plan *</label>
+                                <input type="file" name="fireSafetyPlan" required accept=".pdf"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Equipment Bills *</label>
+                                <input type="file" name="equipmentBills" required accept=".pdf"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                            </div>
+
+                            <!-- Conditional Documents -->
+                           
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Local Authority Approval Letter (if applicable)</label>
+                                <input type="file" name="localAuthorityApproval" accept=".pdf"
                                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
                             </div>
                         </div>
                     </div>
+
+                    <!-- Fire Safety Certification -->
+                  
+                    <!-- Fire Safety Compliance Declaration -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-500">Compliance Declaration</h3>
+                        <div class="space-y-4">
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" name="buildingCodeCompliance" required
+                                    class="h-5 w-5 text-indigo-400 rounded">
+                                <span class="text-gray-700">I hereby declare that the building complies with all fire safety norms as per National Building Code 2016 and local fire safety regulations.</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" name="equipmentCompliance" required
+                                    class="h-5 w-5 text-indigo-400 rounded">
+                                <span class="text-gray-700">All fire fighting equipment installed are ISI marked and comply with BIS standards.</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" name="documentCompliance" required
+                                    class="h-5 w-5 text-indigo-400 rounded">
+                                <span class="text-gray-700">I confirm that all submitted documents are genuine and valid as per current regulations.</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- NOC Fee Details -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-indigo-500 text-center">NOC Fee Details</h3>
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                            <div class="flex justify-between items-center mb-6">
+                                <span class="text-gray-700 font-medium text-lg">NOC Application Fee:</span>
+                                <span class="text-xl font-semibold text-indigo-600">₹1,199.00</span>
+                            </div>
+                            <div class="border-t border-gray-200 pt-4">
+                                   <!-- Payment Mode -->
+                                   <div class="text-center mb-8">
+                                    <button id="payNowButton" class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700 transition">
+                                        Pay Now
+                                    </button>
+                                </div>
+                                  
+                                    <!-- Payment Reference -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Payment Reference Number *</label>
+                                        <input type="text" name="paymentReference" id="paymentReference" readonly
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                                            placeholder="Will be generated after payment">
+                                    </div>
+                                </div>
+                                <div class="mt-6 text-sm text-gray-500">
+                                    <p class="flex items-center">
+                                        <svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Payment is required to process your NOC application.
+                                    </p>
+                                </div>
+                                <!-- <div class="success-message" id="successMessage">
+                                    Payment Successful! Reference Verified. ✅
+                                </div> -->
+                            </div>
+                        </div>
                 </div>
 
                 <!-- Step 4: Preview -->
                 <div id="step4" class="form-step hidden">
-                    <h3 class="text-lg font-semibold mb-4 text-indigo-500">Application Preview</h3>
+                    <h2 class="text-2xl font-bold mb-6">Application Preview</h2>
                     <div id="previewContent" class="space-y-6">
                         <!-- Preview content will be dynamically populated -->
                     </div>
                     
-                    <!-- Added Download PDF button -->
-                    <div class="mt-6">
-                        <button type="button" id="downloadPdfBtn" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    <!-- Preview Actions -->
+                    <div class="mt-8 space-y-4">
+                        <button type="button" id="downloadPdfBtn" 
+                            class="w-full md:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
-                            Download PDF
+                            Download Application PDF
                         </button>
                     </div>
                 </div>
@@ -350,7 +1408,122 @@
         </div>
     </div>
 
+    <!-- Add this section below the form container -->
+    <div id="draftsSection" class="container mx-auto px-4 py-8 max-w-5xl">
+        <h3 class="text-xl font-bold mb-4">Saved Drafts</h3>
+        <ul id="draftsList" class="space-y-4">
+            <!-- Drafts will be dynamically populated here -->
+        </ul>
+    </div>
+
     <script src="noc-application.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        let map;
+        let marker;
+
+        function initMap() {
+            // Initialize the map with Tamil Nadu's coordinates
+            map = L.map('map').setView([11.1271, 78.6569], 6); // Default center (Tamil Nadu)
+
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            // Add a marker on map click
+            map.on('click', (event) => {
+                placeMarker(event.latlng);
+            });
+        }
+
+        function placeMarker(location) {
+            if (marker) {
+                marker.remove(); // Remove the previous marker
+            }
+            marker = L.marker(location).addTo(map);
+            document.getElementById("buildingLocation").value = `${location.lat},${location.lng}`; // Store location
+            
+            // Log latitude and longitude
+            console.log("Latitude:", location.lat, "Longitude:", location.lng);
+        }
+
+        document.getElementById("setLocationBtn").addEventListener("click", () => {
+            if (marker) {
+                alert("Location set: " + document.getElementById("buildingLocation").value);
+            } else {
+                alert("Please select a location on the map.");
+            }
+        });
+
+        // Initialize the map when the page loads
+        window.onload = initMap;
+
+
+        document.getElementById('payNowButton').addEventListener('click', function () {
+            const options = {
+                key: 'rzp_test_DYt2dQG5OdKG5W', // Replace with your Razorpay Test Key ID
+                amount: 119900, // Amount in paise (₹1,199.00 = 119900 paise)
+                currency: 'INR',
+                name: 'Your Business Name',
+                description: 'NOC Application Fee Payment',
+                image: 'https://yourlogo.com/logo.png', // Optional: Business logo
+                handler: function (response) {
+                    // Simulate success without backend verification
+                    console.log('Simulated payment success!');
+                    const paymentReferenceInput = document.getElementById('paymentReference');
+                    const successMessage = document.getElementById('successMessage');
+                    
+                    // Generate and display reference number
+                    const referenceNumber = `REF${Math.floor(Math.random() * 1000000000)}`;
+                    paymentReferenceInput.value = referenceNumber;
+                    
+                    // Show success message
+                    successMessage.style.display = 'block';
+                },
+                prefill: {
+                    name: 'Customer Name',
+                    email: 'customer@example.com',
+                    contact: '9999999999'
+                },
+                notes: {
+                    address: 'Customer Address'
+                },
+                theme: {
+                    color: '#3399cc'
+                }
+            };
+
+            const rzp = new Razorpay(options);
+
+            // Override the `onClose` function to simulate success
+            rzp.on('payment.failed', function () {
+                console.log('Simulated payment success after failure!');
+                const paymentReferenceInput = document.getElementById('paymentReference');
+                const successMessage = document.getElementById('successMessage');
+                
+                // Generate and display reference number
+                const referenceNumber = `REF${Math.floor(Math.random() * 1000000000)}`;
+                paymentReferenceInput.value = referenceNumber;
+                
+                // Show success message
+                successMessage.style.display = 'block';
+            });
+
+            rzp.open();
+
+            // Immediately trigger the success callback for simulation purposes
+            setTimeout(() => {
+                options.handler({
+                    razorpay_payment_id: 'SIMULATED_PAYMENT_ID',
+                    razorpay_order_id: 'SIMULATED_ORDER_ID',
+                    razorpay_signature: 'SIMULATED_SIGNATURE'
+                });
+            }, 1000); // Simulate a delay to mimic real payment behavior
+        });
+    </script>
+    
 </body>
-</html> 
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Alarm System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-bold mb-4">Fire Alarm System Data</h1>
+        <div id="sensorData" class="bg-white p-4 rounded-lg shadow-md">
+            Loading data...
+        </div>
+    </div>
+
+    <a href="./page1.html"> NEXT</a>
+
+    <script>
+        function fetchSensorDataInRealTime() {
+            // Create a new EventSource to listen for real-time updates
+            const eventSource = new EventSource('http://localhost:5000/api/firebase-data');
+
+            eventSource.onmessage = (event) => {
+                // Parse the incoming data and update the UI
+                const data = JSON.parse(event.data);
+                displaySensorData(data);
+            };
+
+            eventSource.onerror = (error) => {
+                console.error('Error in real-time data connection:', error);
+                document.getElementById('sensorData').innerText = 'Error loading real-time data';
+            };
+        }
+
+        function displaySensorData(data) {
+            const sensorDataDiv = document.getElementById('sensorData');
+            
+            // Determine conditions
+            let gasCondition = data.gasSensor > 300 ? "Warning: High Gas Level!" : "Gas levels normal";
+            let humidityCondition = data.humidity > 70 ? "High Humidity Alert!" : "Humidity normal";
+            let temperatureCondition = data.temperature > 30 ? "High Temperature!" : "Temperature normal";
+            let irCondition = data.irSensor > 0 ? "Motion Detected!" : "No Motion";
+
+            // Choose colors based on conditions
+            const getAlertClass = (condition) => condition.includes('Warning') || condition.includes('Alert') ? 'text-red-500 font-semibold' : 'text-green-600';
+
+            sensorDataDiv.innerHTML = `
+                <div class="space-y-2">
+                    <div><strong>Gas Sensor:</strong> ${data.gasSensor} ppm - <span class="${getAlertClass(gasCondition)}">${gasCondition}</span></div>
+                    <div><strong>Humidity:</strong> ${data.humidity}% - <span class="${getAlertClass(humidityCondition)}">${humidityCondition}</span></div>
+                    <div><strong>Temperature:</strong> ${data.temperature}°C - <span class="${getAlertClass(temperatureCondition)}">${temperatureCondition}</span></div>
+                    <div><strong>IR Sensor:</strong> ${data.irSensor} - <span class="${getAlertClass(irCondition)}">${irCondition}</span></div>
+                </div>
+            `;
+        }
+
+        // Fetch data in real time when the page loads
+        document.addEventListener('DOMContentLoaded', fetchSensorDataInRealTime);
+       
+    </script>
+</body>
+
+</html>

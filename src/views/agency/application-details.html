@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Application Details - Fire Department</title>
+    </head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-800 text-white py-4 px-6 flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="../images/logo.jpg" alt="Gov Logo" class="h-12 mr-4">
+            <div>
+                <h1 class="text-2xl font-semibold">Government of India</h1>
+                <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center space-x-6">
+            <p class="text-lg font-semibold">Agency's  Dashboard</p>
+            <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" 
+                    onclick="window.location.href='login.html'">
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-white"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden max-w-4xl mx-auto px-4 py-8">
+        <!-- Back Button -->
+        <div class="mb-6">
+            <button onclick="history.back()" 
+                    class="flex items-center text-red-600 hover:text-red-800">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Dashboard
+            </button>
+        </div>
+
+        <!-- Application Form Display -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-6">NOC Application Details</h2>
+            
+            <div class="space-y-6">
+                <!-- Application Status -->
+                <div class="flex justify-between items-center pb-4 border-b">
+                    <span class="text-sm text-gray-600">Application Status</span>
+                    <span id="applicationStatus" class="px-3 py-1 rounded-full text-sm font-semibold"></span>
+                </div>
+
+                <!-- Application Details -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Application ID</label>
+                        <p id="applicationId" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Submission Date</label>
+                        <p id="submissionDate" class="mt-1"></p>
+                    </div>
+                </div>
+
+                <!-- Applicant Information -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Applicant Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <p id="applicantName" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Email</label>
+                            <p id="email" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Contact Number</label>
+                            <p id="contactNumber" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Correspondence Address</label>
+                            <p id="correspondenceAddress" class="mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- After Applicant Information section -->
+                <div class="mt-4 flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="applicantInfoVerified" 
+                               class="h-4 w-4 text-red-600 rounded border-gray-300 focus:ring-red-500">
+                        <label for="applicantInfoVerified" class="ml-2 text-sm text-gray-700 flex items-center">
+                            I verify that the applicant information is correct
+                        </label>
+                    </div>
+                    <div class="verification-status"></div>
+                </div>
+
+                <!-- Building Details -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Building Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Building Name</label>
+                            <p id="buildingName" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Building Type</label>
+                            <p id="buildingType" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Total Area</label>
+                            <p id="totalArea" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Number of Floors</label>
+                            <p id="numFloors" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Construction Year</label>
+                            <p id="constructionYear" class="mt-1"></p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700">Building Address</label>
+                            <p id="buildingAddress" class="mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- After Building Details section -->
+                <div class="mt-4 flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="buildingDetailsVerified" 
+                               class="h-4 w-4 text-red-600 rounded border-gray-300 focus:ring-red-500">
+                        <label for="buildingDetailsVerified" class="ml-2 text-sm text-gray-700 flex items-center">
+                            I verify that the building details are correct
+                        </label>
+                    </div>
+                    <div class="verification-status"></div>
+                </div>
+
+                <!-- Step 2 Details -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Additional Building Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Division</label>
+                            <p id="division" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Travel Distance</label>
+                            <p id="travelDistance" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Dead End Distance</label>
+                            <p id="deadEndDistance" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Upper Floor Staircases</label>
+                            <p id="upperFloorStaircases" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Pressurization</label>
+                            <p id="pressurization" class="mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fire Safety Systems -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Fire Safety Systems</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Fire Detection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Detector Type</label>
+                            <p id="detectorType" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Detector Above Ceiling</label>
+                            <p id="detectorAboveCeiling" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Detector In Duct</label>
+                            <p id="detectorInDuct" class="mt-1"></p>
+                        </div>
+                        <!-- Sprinkler Systems -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Basement Sprinklers</label>
+                            <p id="basementSprinklers" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Upper Floor Sprinklers</label>
+                            <p id="upperFloorSprinklers" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Sprinkler Above Ceiling</label>
+                            <p id="sprinklerAboveCeiling" class="mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pump Systems -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Pump Systems</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Main Pump -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Main Pump Count</label>
+                            <p id="mainPumpCount" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Main Pump Head</label>
+                            <p id="mainPumpHead" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Main Pump Discharge</label>
+                            <p id="mainPumpDischarge" class="mt-1"></p>
+                        </div>
+                        <!-- Jockey Pump -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Jockey Pump Count</label>
+                            <p id="jockeyPumpCount" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Jockey Pump Head</label>
+                            <p id="jockeyPumpHead" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Jockey Pump Output</label>
+                            <p id="jockeyPumpOutput" class="mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Water Storage -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Water Storage Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Underground Capacity</label>
+                            <p id="undergroundCapacity" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Overhead Capacity</label>
+                            <p id="overheadCapacity" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tank Location</label>
+                            <p id="tankLocation" class="mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Required Documents -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Required Documents</h3>
+                    
+                    <!-- Image Documents -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- ID Proof -->
+                        <div class="border rounded-lg p-4">
+                            <h4 class="font-medium mb-2">ID Proof</h4>
+                            <div id="idProofContainer" class="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
+                                <img id="idProof" class="w-full h-full object-contain hidden" alt="ID Proof">
+                                <div class="loading-text absolute inset-0 flex items-center justify-center">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ownership Proof -->
+                        <div class="border rounded-lg p-4">
+                            <h4 class="font-medium mb-2">Ownership Proof</h4>
+                            <div id="ownershipProofContainer" class="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
+                                <img id="ownershipProof" class="w-full h-full object-contain hidden" alt="Ownership Proof">
+                                <div class="loading-text absolute inset-0 flex items-center justify-center">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PDF Documents -->
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="viewDocument('buildingBlueprint')" 
+                                class="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M4 18h12a2 2 0 002-2V6.414l-3.293-3.293A1 1 0 0014.414 3H4a2 2 0 00-2 2v11a2 2 0 002 2z"/>
+                            </svg>
+                            Building Blueprint
+                        </button>
+
+                        <button onclick="viewDocument('planApprovalCert')" 
+                                class="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M4 18h12a2 2 0 002-2V6.414l-3.293-3.293A1 1 0 0014.414 3H4a2 2 0 00-2 2v11a2 2 0 002 2z"/>
+                            </svg>
+                            Plan Approval Certificate
+                        </button>
+
+                        <button onclick="viewDocument('fireSafetyPlan')" 
+                                class="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M4 18h12a2 2 0 002-2V6.414l-3.293-3.293A1 1 0 0014.414 3H4a2 2 0 00-2 2v11a2 2 0 002 2z"/>
+                            </svg>
+                            Fire Safety Plan
+                        </button>
+
+                        <button onclick="viewDocument('equipmentBills')" 
+                                class="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M4 18h12a2 2 0 002-2V6.414l-3.293-3.293A1 1 0 0014.414 3H4a2 2 0 00-2 2v11a2 2 0 002 2z"/>
+                            </svg>
+                            Equipment Bills
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add this at the bottom of the form -->
+                <div class="mt-8 border-t pt-6">
+                    <h3 class="text-lg font-semibold mb-4">Assessment Decision</h3>
+                    
+                    <!-- Remarks -->
+                    <div class="mb-4">
+                        <label for="agencyRemarks" class="block text-sm font-medium text-gray-700 mb-2">
+                            Remarks/Comments
+                        </label>
+                        <textarea id="agencyRemarks" rows="4" 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+                                  placeholder="Enter your assessment remarks here..."></textarea>
+                    </div>
+
+                    <!-- Decision -->
+                    <div class="mb-6">
+                        <label for="agencyStatus" class="block text-sm font-medium text-gray-700 mb-2">
+                            Decision
+                        </label>
+                        <select id="agencyStatus" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                            <option value="">Select decision</option>
+                            <option value="Accepted">Accept Application</option>
+                            <option value="Rejected">Reject Application</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button onclick="submitAssessment()" 
+                                class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition disabled:opacity-50"
+                                id="submitButton" disabled>
+                            Submit Assessment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this button after your application details sections -->
+    <div class="mt-6 flex justify-end">
+        <button onclick="showTrackingModal()" 
+                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Track Progress
+        </button>
+    </div>
+
+    <!-- Tracking Modal -->
+    <div id="trackingModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-4/5 lg:w-3/5 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-semibold">Application Progress</h3>
+                <button onclick="closeTrackingModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="mt-6">
+                <div class="flex items-center">
+                    <div class="flex items-center relative">
+                        <!-- Progress Steps -->
+                        <div class="flex items-center relative">
+                            <div class="step-item flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                                    <span class="step-number text-white">1</span>
+                                    <svg class="step-check w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-sm mt-2">Submitted</span>
+                            </div>
+                            <div class="flex-1 h-1 mx-4 bg-gray-200">
+                                <div id="progressBar" class="h-full bg-blue-500 transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <div class="step-item flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                    <span class="step-number text-white">2</span>
+                                    <svg class="step-check w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-sm mt-2">Agency Review</span>
+                            </div>
+                            <div class="flex-1 h-1 mx-4 bg-gray-200">
+                                <div class="h-full bg-blue-500" style="width: 0%"></div>
+                            </div>
+                            <div class="step-item flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                    <span class="step-number text-white">3</span>
+                                    <svg class="step-check w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-sm mt-2">Inspection</span>
+                            </div>
+                            <div class="flex-1 h-1 mx-4 bg-gray-200">
+                                <div class="h-full bg-blue-500" style="width: 0%"></div>
+                            </div>
+                            <div class="step-item flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                    <span class="step-number text-white">4</span>
+                                    <svg class="step-check w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <span class="text-sm mt-2">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Details -->
+                <div class="mt-8">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">Current Status:</h4>
+                        <p id="currentStatus" class="text-gray-700"></p>
+                        <div class="mt-4">
+                            <p class="text-sm text-gray-600">Last Updated: <span id="lastUpdated"></span></p>
+                            <p class="text-sm text-gray-600 mt-2">Remarks: <span id="statusRemarks"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const applicationId = urlParams.get('id');
+
+    if (!applicationId) {
+        console.error('Application ID is missing in the URL');
+        alert('Invalid application ID.');
+        return;
+    }
+
+    loadApplicationDetails(applicationId);
+});
+
+// Load application details
+async function loadApplicationDetails(applicationId) {
+    try {
+        toggleLoading(true);
+        
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/agency/login.html';
+            return;
+        }
+
+        // Use the correct API endpoint from agencyRoutes.js
+        const response = await fetch(`/api/agency/applications/${applicationId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 401) {
+            localStorage.removeItem('token');
+            window.location.href = '/agency/login.html';
+            return;
+        }
+
+        const data = await response.json();
+        
+        if (!data.success || !data.data) {
+            throw new Error(data.message || 'Failed to load application details');
+        }
+
+        updateUI(data.data);
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message);
+    } finally {
+        toggleLoading(false);
+    }
+}
+
+// Toggle loading spinner visibility
+function toggleLoading(show) {
+    document.getElementById('loadingState')?.classList.toggle('hidden', !show);
+    document.getElementById('mainContent')?.classList.toggle('hidden', show);
+}
+
+// Add this after your existing functions
+let applicationData = null; // Store application data globally
+
+// Update your updateUI function to store the application data
+function updateUI(application) {
+    try {
+        applicationData = application; // Store the application data globally
+        
+        // Status badge update
+        const statusElement = document.getElementById('applicationStatus');
+        if (statusElement) {
+            statusElement.textContent = application.status;
+            statusElement.className = `px-3 py-1 rounded-full text-sm font-semibold ${getStatusBadgeClass(application.status)}`;
+        }
+
+        // Update basic details
+        updateField('applicationId', application.id);
+        updateField('submissionDate', formatDate(application.createdAt));
+        
+        // Applicant Information
+        updateField('applicantName', application.applicantName);
+        updateField('email', application.email);
+        updateField('contactNumber', application.contactNumber);
+        updateField('correspondenceAddress', application.correspondenceAddress);
+
+        // Building Details
+        updateField('buildingName', application.buildingName);
+        updateField('buildingType', application.buildingType);
+        updateField('totalArea', application.totalArea);
+        updateField('numFloors', application.numFloors);
+        updateField('constructionYear', application.constructionYear);
+        updateField('buildingAddress', application.buildingAddress);
+
+        // Load image documents
+        if (application.documents) {
+            if (application.documents.idProof) {
+                loadDocument('idProof', application.documents.idProof);
+            }
+            if (application.documents.ownershipProof) {
+                loadDocument('ownershipProof', application.documents.ownershipProof);
+            }
+        }
+
+        // Make images clickable to view in full size
+        const containers = ['idProofContainer', 'ownershipProofContainer'];
+        containers.forEach(containerId => {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.style.cursor = 'pointer';
+                container.onclick = () => {
+                    const img = container.querySelector('img');
+                    if (img && img.src) {
+                        window.open(img.src, '_blank', 'noopener,noreferrer');
+                    }
+                };
+            }
+        });
+
+    } catch (error) {
+        console.error('UI Update Error:', error);
+        alert('Error updating the application interface.');
+    }
+}
+
+// Utility function to update fields safely
+function updateField(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = value || 'N/A';
+    }
+}
+
+// Format date to readable format
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString() || 'N/A';
+}
+
+// Simplified badge class retrieval
+function getStatusBadgeClass(status) {
+    const statusClasses = {
+        'Pending': 'bg-yellow-100 text-yellow-800',
+        'Under Review': 'bg-blue-100 text-blue-800',
+        'Accepted': 'bg-green-100 text-green-800',
+        'Rejected': 'bg-red-100 text-red-800'
+    };
+    return statusClasses[status] || 'bg-gray-100 text-gray-800';
+}
+
+// Update the loadDocument function to handle direct URLs
+async function loadDocument(id, url) {
+    const container = document.getElementById(`${id}Container`);
+    if (!container) return; // Skip if container doesn't exist
+
+    if (!url) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-8">No document uploaded</p>';
+        return;
+    }
+
+    try {
+        // Show loading state
+        const loadingText = container.querySelector('.loading-text');
+        if (loadingText) {
+            loadingText.classList.remove('hidden');
+        }
+
+        // Create and load the image directly from URL
+        const img = document.createElement('img');
+        img.className = 'w-full h-full object-contain hidden';
+        img.alt = id;
+        img.src = url;
+
+        // Handle image load success
+        img.onload = () => {
+            loadingText?.classList.add('hidden');
+            img.classList.remove('hidden');
+            // Remove any existing images
+            const existingImg = container.querySelector('img');
+            if (existingImg) {
+                existingImg.remove();
+            }
+            container.appendChild(img);
+        };
+
+        // Handle image load error
+        img.onerror = () => {
+            container.innerHTML = '<p class="text-red-500 text-center py-8">Error loading document</p>';
+        };
+
+    } catch (error) {
+        console.error('Error loading document:', error);
+        container.innerHTML = '<p class="text-red-500 text-center py-8">Error loading document</p>';
+    }
+}
+
+// Update the submitAssessment function to handle application submission
+async function submitAssessment() {
+    const submitButton = document.getElementById('submitButton');
+    const originalButtonText = submitButton.innerHTML;
+
+    try {
+        // Validate token
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/agency/login.html';
+            return;
+        }
+
+        // Get form values
+        const status = document.getElementById('agencyStatus').value;
+        const remarks = document.getElementById('agencyRemarks').value;
+        const applicationId = new URLSearchParams(window.location.search).get('id');
+
+        // Validate required fields
+        if (!status || !remarks.trim() || !applicationId) {
+            throw new Error('Please fill in all required fields');
+        }
+
+        // Validate checkboxes
+        const applicantInfoVerified = document.getElementById('applicantInfoVerified').checked;
+        const buildingDetailsVerified = document.getElementById('buildingDetailsVerified').checked;
+
+        if (!applicantInfoVerified || !buildingDetailsVerified) {
+            throw new Error('Please verify both applicant information and building details');
+        }
+
+        // Show loading state
+        submitButton.innerHTML = `
+            <div class="flex items-center">
+                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Submitting...
+            </div>
+        `;
+        submitButton.disabled = true;
+
+        // Make API request
+        const response = await fetch('/api/agency/applications/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                id: applicationId,
+                status,
+                remarks
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to submit assessment');
+        }
+
+        // Show success message
+        const successMessage = status === 'Accepted' 
+            ? 'Application has been approved and moved to inspection phase.'
+            : 'Application has been rejected successfully.';
+            
+        alert(successMessage);
+
+        // Redirect to dashboard
+        window.location.href = '/agency/dashboard.html';
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message);
+    } finally {
+        // Reset button state
+        submitButton.innerHTML = originalButtonText;
+        submitButton.disabled = false;
+    }
+}
+
+// Add event listeners for checkboxes to update submit button state
+function updateSubmitButton() {
+    const assessorStatus = document.getElementById('agencyStatus').value;
+    const assessorRemarks = document.getElementById('agencyRemarks').value;
+    const applicantInfoVerified = document.getElementById('applicantInfoVerified').checked;
+    const buildingDetailsVerified = document.getElementById('buildingDetailsVerified').checked;
+    const submitButton = document.getElementById('submitButton');
+    
+    submitButton.disabled = !assessorStatus || 
+                           !assessorRemarks.trim() || 
+                           !applicantInfoVerified || 
+                           !buildingDetailsVerified;
+}
+
+// Add event listeners for all form controls
+document.addEventListener('DOMContentLoaded', () => {
+    const assessorStatus = document.getElementById('assessorStatus');
+    const assessorRemarks = document.getElementById('assessorRemarks');
+    const applicantInfoVerified = document.getElementById('applicantInfoVerified');
+    const buildingDetailsVerified = document.getElementById('buildingDetailsVerified');
+    
+    // Add change listeners to all form controls
+    assessorStatus?.addEventListener('change', updateSubmitButton);
+    assessorRemarks?.addEventListener('input', updateSubmitButton);
+    applicantInfoVerified?.addEventListener('change', updateSubmitButton);
+    buildingDetailsVerified?.addEventListener('change', updateSubmitButton);
+});
+
+// Update the viewDocument function to handle document viewing
+async function viewDocument(documentType) {
+    try {
+        if (!applicationData) {
+            throw new Error('Application data not loaded');
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Please login again');
+        }
+
+        // Map document types to their URL properties
+        const documentUrlMap = {
+            buildingBlueprint: applicationData.buildingBlueprintUrl,
+            planApprovalCert: applicationData.planApprovalCertUrl,
+            fireSafetyPlan: applicationData.fireSafetyPlanUrl,
+            equipmentBills: applicationData.equipmentBillsUrl
+        };
+
+        const url = documentUrlMap[documentType];
+        if (!url) {
+            throw new Error('Document not available');
+        }
+
+        // Open the document in a new tab
+        window.open(url, '_blank', 'noopener,noreferrer');
+
+    } catch (error) {
+        console.error('Error viewing document:', error);
+        alert(error.message);
+    }
+}
+
+function showTrackingModal() {
+    document.getElementById('trackingModal').classList.remove('hidden');
+    updateTrackingProgress(applicationData);
+}
+
+function closeTrackingModal() {
+    document.getElementById('trackingModal').classList.add('hidden');
+}
+
+function updateTrackingProgress(statusData) {
+    const steps = document.querySelectorAll('.step-item');
+    const progressBar = document.getElementById('progressBar');
+    const currentStatus = document.getElementById('currentStatus');
+    const lastUpdated = document.getElementById('lastUpdated');
+    const statusRemarks = document.getElementById('statusRemarks');
+
+    // Reset all steps
+    steps.forEach(step => {
+        step.classList.remove('completed', 'active');
+        const number = step.querySelector('.step-number');
+        const check = step.querySelector('.step-check');
+        if (number && check) {
+            number.classList.remove('hidden');
+            check.classList.add('hidden');
+        }
+    });
+
+    // Get the progress number based on status
+    let progress = 1;
+    switch(statusData.applicationStatus) {
+        case 'submitted':
+            progress = 1;
+            break;
+        case 'In Review':
+            progress = 2;
+            break;
+        case 'In Inspection Phase':
+            progress = 3;
+            break;
+        case 'Completed':
+            progress = 4;
+            break;
+    }
+
+    // Update progress bar and steps
+    for (let i = 0; i < progress; i++) {
+        if (steps[i]) {
+            steps[i].classList.add('completed');
+            steps[i].querySelector('.step-number')?.classList.add('hidden');
+            steps[i].querySelector('.step-check')?.classList.remove('hidden');
+        }
+    }
+
+    // Mark current active step
+    if (steps[progress - 1]) {
+        steps[progress - 1].classList.add('active');
+    }
+
+    // Update progress bar
+    const progressWidth = ((progress - 1) / 3) * 100;
+    progressBar.style.width = `${progressWidth}%`;
+
+    // Update status text and details
+    currentStatus.innerHTML = getStatusText(statusData.applicationStatus);
+    lastUpdated.textContent = new Date(statusData.updatedAt || statusData.createdAt).toLocaleString();
+    statusRemarks.textContent = statusData.remarks || 'No remarks available';
+}
+
+function getStatusText(status) {
+    switch(status) {
+        case 'submitted':
+            return '<span class="text-blue-600">Application Submitted Successfully</span>';
+        case 'In Review':
+            return '<span class="text-yellow-600">Under Agency Review</span>';
+        case 'In Inspection Phase':
+            return '<span class="text-yellow-600">Inspection Scheduled</span>';
+        case 'Completed':
+            return '<span class="text-green-600">Application Process Completed</span>';
+        default:
+            return '<span class="text-gray-600">Status Unknown</span>';
+    }
+}
+
+   </script>
+</body>
+</html>

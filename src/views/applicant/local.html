@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Plan Approval Form</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h1 class="text-3xl font-bold text-center text-indigo-700 mb-6">Building Plan Approval Form</h1>
+        <form id="buildingPlanForm" action="/submit-building-plan" method="post" enctype="multipart/form-data" class="space-y-6" onsubmit="submitForm(event)">
+            <!-- Applicant Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col">
+                    <label for="applicantName" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-user text-indigo-600 mr-2"></i> Applicant's Name *
+                    </label>
+                    <input type="text" id="applicantName" name="applicantName" placeholder="Enter your full name"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                <div class="flex flex-col">
+                    <label for="contactNumber" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-phone text-indigo-600 mr-2"></i> Contact Number *
+                    </label>
+                    <input type="text" id="contactNumber" name="contactNumber" placeholder="Enter your contact number"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+            </div>
+
+            <div class="flex flex-col">
+                <label for="emailAddress" class="text-gray-700 font-semibold flex items-center">
+                    <i class="fas fa-envelope text-indigo-600 mr-2"></i> Email Address *
+                </label>
+                <input type="emailAddress" id="emailAddress" name="emailAddress" placeholder="Enter your email address"
+                    class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+            </div>
+
+            <!-- Property Details -->
+            <div class="flex flex-col">
+                <label for="propertyAddress" class="text-gray-700 font-semibold flex items-center">
+                    <i class="fas fa-map-marker-alt text-indigo-600 mr-2"></i> Property Address *
+                </label>
+                <textarea id="propertyAddress" name="propertyAddress" rows="3" placeholder="Enter the property address"
+                    class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col">
+                    <label for="plotSize" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-ruler-combined text-indigo-600 mr-2"></i> Plot Size (in sq.ft) *
+                    </label>
+                    <input type="number" id="plotSize" name="plotSize" placeholder="Enter the plot size"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                <div class="flex flex-col">
+                    <label for="zoneClassification" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-building text-indigo-600 mr-2"></i> Zone Classification *
+                    </label>
+                    <select id="zoneClassification" name="zoneClassification"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        <option value="">Select Zone</option>
+                        <option value="residential">Residential</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="mixedUse">Mixed Use</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Proposed Plan Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col">
+                    <label for="buildingType" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-home text-indigo-600 mr-2"></i> Building Type *
+                    </label>
+                    <select id="buildingType" name="buildingType"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        <option value="">Select Building Type</option>
+                        <option value="individualHouse">Individual House</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="commercialBuilding">Commercial Building</option>
+                        <option value="industrialStructure">Industrial Structure</option>
+                    </select>
+                </div>
+                <div class="flex flex-col">
+                    <label for="numberOfFloors" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-layer-group text-indigo-600 mr-2"></i> Number of Floors *
+                    </label>
+                    <input type="number" id="numberOfFloors" name="numberOfFloors" placeholder="Enter the number of floors"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Upload Plot Map -->
+                <div class="flex flex-col">
+                    <label for="plotMap" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-map text-indigo-600 mr-2"></i> Upload Plot Map *
+                    </label>
+                    <input type="file" id="plotMap" name="plotMap"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    <p class="text-sm text-gray-500 mt-1">Accepted file types: .pdf, .jpg, .png. Max size: 5MB.</p>
+                </div>
+            
+                <!-- Upload Design Plans -->
+                <div class="flex flex-col">
+                    <label for="designPlan" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-drafting-compass text-indigo-600 mr-2"></i> Upload Design Plans *
+                    </label>
+                    <input type="file" id="designPlan" name="designPlan"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    <p class="text-sm text-gray-500 mt-1">Accepted file types: .pdf, .jpg, .png. Max size: 5MB.</p>
+                </div>
+            
+                <!-- Upload Ownership Documents -->
+                <div class="flex flex-col">
+                    <label for="ownership" class="text-gray-700 font-semibold flex items-center">
+                        <i class="fas fa-file-alt text-indigo-600 mr-2"></i> Upload Ownership Documents *
+                    </label>
+                    <input type="file" id="ownership" name="ownership"
+                        class="mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    <p class="text-sm text-gray-500 mt-1">Accepted file types: .pdf, .jpg, .png. Max size: 5MB.</p>
+                </div>
+            </div>
+            
+            <!-- Declaration -->
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="declaration" name="declaration"
+                    class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 focus:ring-2 border-gray-300 rounded" required>
+                <label for="declaration" class="text-gray-700 text-sm">
+                    I hereby declare that the information provided is accurate to the best of my knowledge.
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-center">
+                <button type="submit"
+                    class="bg-indigo-600 text-white py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="submitBtn">
+                    Submit Application
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Function to gather form data and handle file uploads
+        
+// Form Submission Logic
+async function submitForm(event) {
+    event.preventDefault();
+    console.log("Form submission initiated");
+
+    // Validate all steps before submission
+    
+    try {
+        // Handle file uploads first
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        const uploadedFiles = {};
+        
+        for (const input of fileInputs) {
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                console.log(`Uploading file: ${file.name}`);
+                
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await fetch('/api/noc-application/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    console.log(`File uploaded successfully: ${data.fileUrl}`);
+                    const urlKey = input.name + 'Url';
+                    uploadedFiles[urlKey] = data.fileUrl;
+                } else {
+                    throw new Error(`Failed to upload ${input.name}`);
+                }
+            }
+        }
+
+        // Collect form data
+        const form = document.getElementById('buildingPlanForm');
+        const formData = new FormData(form);
+        
+        // Create application data object
+        // Create application data object
+        const applicationData = {
+                // Applicant Details
+                
+                applicantName: formData.get('applicantName'),
+                contactNumber: formData.get('contactNumber'),
+                emailAddress: formData.get('emailAddress'),
+                propertyAddress: formData.get('propertyAddress'),
+                // Building Specifications
+                plotSize: formData.get('plotSize'),
+                zoneClassification: formData.get('zoneClassification'),
+                plotNumber: formData.get('plotNumber'),
+                buildingType: formData.get('buildingType'),
+                priority: formData.get('priority'),
+                numberOfFloors: formData.get('numberOfFloors'),
+                plotMapUrl: formData.get('plotMapUrl'),
+                ownershipDocsUrl: formData.get('ownershipUrl'),
+                designPlanUrl: formData.get('designPlanUrl'),
+                // Document URLs from uploaded files
+                ...uploadedFiles,
+              };
+        console.log("Application data:", applicationData);
+
+        // Submit to backend
+        const response = await fetch('/api/noc-application/submit-local-authority', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(applicationData)
+        });
+
+        const data = await response.json();
+        console.log("Server response:", data);
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to submit application');
+        }
+
+        console.log('Application submitted successfully!', 'success');
+        setTimeout(() => {
+            window.location.href = '/applicant/dashboard.html';
+        }, 2000);
+
+    } catch (error) {
+        console.error('Submission error:', error);
+        console.log(error.message || 'Failed to submit application', 'error');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Application';
+    }
+}
+
+           
+        
+    </script>
+</body>
+</html>

@@ -4,320 +4,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-  <title>Fire Department Monitoring System</title>
-  <style>
-    .hero-section {
-      position: relative;
-      height: 600px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-
-    .hero-background::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6));
-      z-index: 1;
-    }
-
-    .hero-background img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-      animation: imageSlide 15s infinite;
-    }
-
-    .hero-background img:nth-child(1) { animation-delay: 0s; }
-    .hero-background img:nth-child(2) { animation-delay: 5s; }
-    .hero-background img:nth-child(3) { animation-delay: 10s; }
-
-    @keyframes imageSlide {
-      0%, 27% { opacity: 1; }
-      33%, 94% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 0 20px;
-      max-width: 800px;
-    }
-
-    /* Dropdown styles */
-    .noc-dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      margin-top: 8px;
-      overflow: hidden;
-    }
-
-    .dropdown-content.show {
-      display: block;
-    }
-  </style>
+  <title>Fire Department Login</title>
 </head>
 <body class="bg-yellow-50">
-
-  <!-- Simplified Header -->
-  <header class="bg-red-700 text-white">
-    <div class="container mx-auto flex justify-between items-center p-4">
-      <div class="flex items-center space-x-4">
-        <img src="../images/logo.jpg" alt="Fire Department Logo" class="h-12">
-        <div>
-          <h1 class="text-2xl font-bold">Fire Department</h1>
-          <h2 class="text-sm">Government of India</h2>
+  <!-- Login Section -->
+  <section id="loginSection" class="hidden bg-white min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-sm p-6 bg-red-50 rounded-lg shadow-lg">
+      <h1 class="text-2xl font-bold text-red-700 mb-4 text-center">Login</h1>
+      <form id="loginForm">
+        <div class="mb-4">
+          <label for="email" class="block text-sm text-red-700 mb-2">Email</label>
+          <input type="email" id="email" required 
+                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600">
         </div>
-      </div>
-      <div class="space-x-4">
-        <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick=window.location.href='login.html'>Login</button>
-        <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" onclick=window.location.href='signup.html'>Register</button>
-      </div>
-    </div>
-    
-    <!-- Simplified Navigation -->
-    <nav class="bg-red-800 text-white py-3">
-      <div class="container mx-auto flex justify-center space-x-8">
-        <a href="#home" class="hover:text-yellow-400 transition">Home</a>
-        <a href="about.html" class="hover:text-yellow-400 transition">About</a>
-        <a href="#services" class="hover:text-yellow-400 transition">Services</a>
-        <a href="#contact" class="hover:text-yellow-400 transition">Contact</a>
-        <a href="#apply-noc" class="hover:text-yellow-400 transition">Apply for NOC</a>
-      </div>
-    </nav>
-  </header>
-
-  <!-- Simplified Hero Section -->
-  <section class="hero-section">
-    <div class="hero-background">
-      <img src="../images/hero2.jpg" alt="Fire station">
-      <img src="../images/hero3.jpg" alt="Firefighters in action">
-      <img src="../images/hero1.jpg" alt="Emergency response">
-    </div>
-    
-    <div class="hero-content">
-      <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
-        Fire Safety Management
-      </h1>
-      <p class="text-xl text-white mb-8">
-        Ensuring safety through modern monitoring and quick response systems
-      </p>
-      <div class="noc-dropdown">
-        <button 
-          onclick="toggleDropdown()"
-          class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors duration-300">
-          Apply for NOC
-        </button>
-        <div id="nocDropdown" class="dropdown-content">
-          <a href="#renewal" class="block px-4 py-3 text-red-700 hover:bg-red-50 transition-colors duration-200">
-            Renewal NOC
-          </a>
-          <a href="#provisional" class="block px-4 py-3 text-red-700 hover:bg-red-50 transition-colors duration-200">
-            Provisional NOC
-          </a>
-          <a href="#final" class="block px-4 py-3 text-red-700 hover:bg-red-50 transition-colors duration-200">
-            Final NOC
-          </a>
+        <div class="mb-6">
+          <label for="password" class="block text-sm text-red-700 mb-2">Password</label>
+          <input type="password" id="password" required 
+                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600">
         </div>
-      </div>
+        <button type="submit" class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700">Login</button>
+      </form>
     </div>
   </section>
 
-  <!-- Important Links & Notices Section (After Hero Section) -->
-  <section class="py-8 bg-white">
-    <div class="container mx-auto px-4">
-      <div class="grid md:grid-cols-3 gap-8">
-        <!-- Important Links -->
-        <div class="bg-red-50 p-6 rounded-lg">
-          <h3 class="text-xl font-bold text-red-700 mb-4 border-b-2 border-red-200 pb-2">Important Links</h3>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-gray-700 hover:text-red-600 flex items-center">
-              <span class="mr-2">►</span> Fire Safety Guidelines
-            </a></li>
-            <li><a href="#" class="text-gray-700 hover:text-red-600 flex items-center">
-              <span class="mr-2">►</span> Download Forms
-            </a></li>
-            <li><a href="#" class="text-gray-700 hover:text-red-600 flex items-center">
-              <span class="mr-2">►</span> Emergency Contact Numbers
-            </a></li>
-            <li><a href="#" class="text-gray-700 hover:text-red-600 flex items-center">
-              <span class="mr-2">►</span> Training Programs
-            </a></li>
-          </ul>
-        </div>
-
-        <!-- Latest Updates -->
-        <div class="bg-yellow-50 p-6 rounded-lg">
-          <h3 class="text-xl font-bold text-red-700 mb-4 border-b-2 border-yellow-200 pb-2">Latest Updates</h3>
-          <div class="space-y-3">
-            <div class="flex items-start">
-              <span class="text-red-600 font-bold mr-2">NEW</span>
-              <p class="text-sm">Revised Fire Safety Regulations for Commercial Buildings 2024</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-red-600 font-bold mr-2">NEW</span>
-              <p class="text-sm">Online NOC Application System Maintenance on 25th March</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-red-600 font-bold mr-2">NEW</span>
-              <p class="text-sm">Fire Safety Awareness Workshop - Registration Open</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Emergency Contacts -->
-        <div class="bg-red-50 p-6 rounded-lg">
-          <h3 class="text-xl font-bold text-red-700 mb-4 border-b-2 border-red-200 pb-2">Emergency Contacts</h3>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="font-semibold">Fire Emergency:</span>
-              <span class="text-red-600 font-bold">101</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="font-semibold">Control Room:</span>
-              <span class="text-red-600">1800-XXX-XXXX</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="font-semibold">Helpdesk:</span>
-              <span class="text-red-600">080-XXXX-XXXX</span>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- Dashboard Section -->
+  <section id="dashboardSection" class="hidden bg-yellow-50 min-h-screen">
+    <header class="bg-red-700 text-white py-4 px-6 flex justify-between items-center">
+      <h1 class="text-xl font-bold">Fire Department Dashboard</h1>
+      <button onclick="handleLogout()" class="bg-yellow-400 text-red-700 px-4 py-2 rounded-lg hover:bg-yellow-300">
+        Logout
+      </button>
+    </header>
+    <div class="container mx-auto py-8">
+      <h2 class="text-2xl font-bold text-red-700 mb-4">Welcome, Citizen!</h2>
+      <p class="text-lg text-gray-700">This is your dashboard where you can apply for NOCs, track applications, and more.</p>
     </div>
   </section>
 
-  <!-- Statistics Section -->
-  <section class="py-12 bg-gray-100">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-red-700 text-center mb-12">Department Statistics</h2>
-      <div class="grid md:grid-cols-4 gap-8 text-center">
-        <div class="bg-white p-6 rounded-lg shadow">
-          <div class="text-3xl font-bold text-red-700 mb-2">1000+</div>
-          <div class="text-gray-600">Fire Stations</div>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-          <div class="text-3xl font-bold text-red-700 mb-2">5000+</div>
-          <div class="text-gray-600">Personnel</div>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-          <div class="text-3xl font-bold text-red-700 mb-2">24/7</div>
-          <div class="text-gray-600">Emergency Response</div>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-          <div class="text-3xl font-bold text-red-700 mb-2">10K+</div>
-          <div class="text-gray-600">NOCs Issued</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Quick Links Section -->
-  <section class="py-12 bg-white">
-    <div class="container mx-auto px-4">
-      <div class="grid md:grid-cols-4 gap-8">
-        <div class="p-4">
-          <h3 class="text-lg font-bold text-red-700 mb-4">Public Services</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Apply for NOC</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Track Application</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Download Forms</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Safety Guidelines</a></li>
-          </ul>
-        </div>
-        <div class="p-4">
-          <h3 class="text-lg font-bold text-red-700 mb-4">Information</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="text-gray-600 hover:text-red-600">About Department</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">RTI</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Tenders</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Careers</a></li>
-          </ul>
-        </div>
-        <div class="p-4">
-          <h3 class="text-lg font-bold text-red-700 mb-4">Resources</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Training Materials</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Safety Videos</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Publications</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">FAQs</a></li>
-          </ul>
-        </div>
-        <div class="p-4">
-          <h3 class="text-lg font-bold text-red-700 mb-4">Connect With Us</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Contact Us</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Feedback</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Grievance</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-red-600">Social Media</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Simplified Footer -->
-  <footer class="bg-red-700 text-white py-8">
-    <div class="container mx-auto px-4 text-center">
-      <p>&copy; 2024 Fire Department, Government of India</p>
-      <div class="mt-4">
-        <a href="#" class="hover:text-yellow-400 mx-2">Privacy Policy</a>
-        <a href="#" class="hover:text-yellow-400 mx-2">Terms of Service</a>
-        <a href="#" class="hover:text-yellow-400 mx-2">Contact Us</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Add this script at the end of body -->
   <script>
-    function toggleDropdown() {
-      const dropdown = document.getElementById('nocDropdown');
-      dropdown.classList.toggle('show');
-    }
+   function renderPage() {
+  const loggedIn = checkLoginStatus();
+  const loginSection = document.getElementById('loginSection');
+  const dashboardSection = document.getElementById('dashboardSection');
 
-    // Close dropdown when clicking outside
-    window.addEventListener('click', function(event) {
-      if (!event.target.matches('.noc-dropdown button')) {
-        const dropdowns = document.getElementsByClassName('dropdown-content');
-        for (const dropdown of dropdowns) {
-          if (dropdown.classList.contains('show')) {
-            dropdown.classList.remove('show');
-          }
-        }
-      }
-    });
+  if (loggedIn) {
+    dashboardSection.classList.remove('hidden'); // Show dashboard
+    loginSection.classList.add('hidden');       // Hide login form
+  } else {
+    loginSection.classList.remove('hidden');    // Show login form
+    dashboardSection.classList.add('hidden');  // Hide dashboard
+  }
+}
+
+function checkLoginStatus() {
+  return localStorage.getItem('loggedIn') === 'true';
+}
+
   </script>
 </body>
 </html>

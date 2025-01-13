@@ -4,13 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <!-- Updated Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
   <body>
-    <div
-      class="min-h-screen bg-red-600 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
-    >
+    <div class="min-h-screen bg-red-600 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
         <!-- Header -->
         <div class="text-center mb-8">
@@ -22,48 +21,66 @@
         <form id="loginForm" class="space-y-6">
           <!-- User Role Selection -->
           <div>
-            <label for="role" class="block text-sm font-medium text-gray-700"
-              >Select Role</label
-            >
+            <label for="role" class="block text-sm font-medium text-gray-700">Select Role</label>
             <select
               id="role"
               name="role"
+              autocomplete="off"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Select your role</option>
-              <option value="architect">Architect</option>
-              <option value="fire-officer">Fire Officer</option>
-              <option value="agency">Agency</option>
               <option value="citizen">Citizen</option>
+              <option value="assessor">Assessor</option>
+              <option value="chief-fire-officer">Chief Fire Officer</option>
+              <option value="agency">Agency</option>
+              <option value="station-officer">Station Officer</option>
+              <option value="assistant-divisional-officer">Assistant Divisional Officer</option>
+              <option value="divisional-officer">Divisional Officer</option>
+              <option value="local-authority">local-authority</option>
+            </select>
+          </div>
+
+          <!-- State Selection -->
+          <div>
+            <label for="state" class="block text-sm font-medium text-gray-700">Select State</label>
+            <select
+              id="state"
+              name="state"
+              required
+              autocomplete="address-level1"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Choose your state</option>
+             
+              <option value="DL">Delhi</option>
+              <option value="MH">Maharashtra</option>
+              <option value="TN">Tamil Nadu</option>
+              
             </select>
           </div>
 
           <!-- Email Input -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Email address</label
-            >
+            <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
             <input
               type="email"
               id="email"
               name="email"
               required
+              autocomplete="email"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
           <!-- Password Input -->
           <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-gray-700"
-              >Password</label
-            >
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               required
+              autocomplete="current-password"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -77,20 +94,16 @@
                 name="remember-me"
                 class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-700"
-                >Remember me</label
-              >
+              <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
             </div>
-            <a href="#" class="text-sm text-blue-600 hover:text-blue-500"
-              >Forgot password?</a
-            >
+            <a href="#" class="text-sm text-blue-600 hover:text-blue-500">Forgot password?</a>
           </div>
 
           <!-- Login Button -->
           <div>
             <button
               type="submit"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-610 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               Sign in
             </button>
@@ -101,51 +114,98 @@
         <div class="text-center mt-6">
           <p class="text-sm text-gray-600">
             Don't have an account?
-            <a
-              href="signup.html"
-              class="font-medium text-red-600 hover:text-red-500"
-              >Sign up</a
-            >
+            <a href="signup.html" class="font-medium text-red-600 hover:text-red-500">Sign up</a>
           </p>
         </div>
       </div>
     </div>
 
     <script type="module">
-      // Adding event listener for the login form
       document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const role = document.getElementById("role").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const role = document.getElementById("role").value;
+        const state = document.getElementById("state").value;
 
-    if (!role || !email || !password) {
-        alert("Please fill in all fields.");
-        return;
-    }
-
-    try {
-        // Make a POST request to the login API
-        const response = await fetch("http://localhost:5000/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password, role }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            alert("Login successful!");
-            // Redirect to home.html after successful login
-            window.location.href = "/home.html";
-        } else {
-            alert(`Login failed: ${data.message || "Unknown error"}`);
+        if (!role || !email || !password || !state) {
+          alert("Please fill in all fields.");
+          return;
         }
-    } catch (error) {
-        alert("Error logging in: " + error.message);
-    }
-});
 
+        try {
+          const response = await fetch("http://localhost:5000/api/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: 'include',
+            body: JSON.stringify({ email, password, role, state }),
+          });
+
+          const data = await response.json();
+          if (response.ok) {
+            // Store the token and state in localStorage
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('state', state);
+
+            // Send login notification email
+            try {
+              const notificationResponse = await fetch("http://localhost:5000/api/auth/send-login-notification", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${data.token}`
+                },
+                body: JSON.stringify({ 
+                  email,
+                  role,
+                  state,
+                  timestamp: new Date().toISOString()
+                })
+              });
+
+              const notificationData = await notificationResponse.json();
+              
+              if (!notificationResponse.ok) {
+                console.error("Login notification failed:", notificationData);
+                // Don't block the login process, just log the error
+              }
+            } catch (emailError) {
+              console.error("Error sending login notification:", emailError);
+              // Continue with login even if email fails
+            }
+
+            alert("Login successful!");
+            // Redirect based on user role
+            switch (role) {
+              case "citizen":
+                window.location.href = "/views/applicant/dashboard.html";
+                break;
+              case "assessor":
+                window.location.href = "/views/assessor/dashboard.html";
+                break;
+              case "chief-fire-officer":
+                window.location.href = "/views/seniorOfficer/cfodashboard.html";
+                break;
+              case "agency":
+                window.location.href = "/views/agency/agency.html";
+                break;
+              case "local-authority":
+                window.location.href = "/views/local-authority/localdashboard.html";
+              default:
+                alert("Invalid role selected");
+            }
+          } else {
+            alert(`Login failed: ${data.message || "Invalid credentials"}`);
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+          alert("Server connection error. Please check if the server is running.");
+        }
+      });
     </script>
   </body>
 </html>

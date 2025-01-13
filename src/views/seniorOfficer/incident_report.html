@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Report - Wardha Emergency System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <a href="page1.html" class="text-gray-600 hover:text-indigo-600">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Map
+                    </a>
+                    <h1 class="text-xl font-bold text-gray-800">Emergency Incident Report</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <select id="timeFilter" class="border rounded-lg px-3 py-2">
+                        <option value="24h">Last 24 Hours</option>
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d">Last 30 Days</option>
+                    </select>
+                    <button onclick="printReport()" class="btn-secondary">
+                        <i class="fas fa-print mr-2"></i>Print
+                    </button>
+                    <button onclick="exportPDF()" class="btn-primary">
+                        <i class="fas fa-file-pdf mr-2"></i>Export PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-sm font-medium text-gray-500">Total Incidents</h3>
+                <p id="totalIncidents" class="text-2xl font-bold text-gray-800">0</p>
+                <p class="text-sm text-gray-500">In selected period</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-sm font-medium text-gray-500">Active Emergencies</h3>
+                <p id="activeEmergencies" class="text-2xl font-bold text-red-600">0</p>
+                <p class="text-sm text-gray-500">Currently ongoing</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-sm font-medium text-gray-500">Average Response Time</h3>
+                <p id="avgResponseTime" class="text-2xl font-bold text-indigo-600">0 min</p>
+                <p class="text-sm text-gray-500">From alert to response</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-sm font-medium text-gray-500">Critical Areas</h3>
+                <p id="criticalAreas" class="text-2xl font-bold text-yellow-600">0</p>
+                <p class="text-sm text-gray-500">High-risk locations</p>
+            </div>
+        </div>
+       
+        
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-semibold mb-4">Incident Types Distribution</h2>
+                <canvas id="incidentTypesChart"></canvas>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-semibold mb-4">Response Time Trend</h2>
+                <canvas id="responseTimeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Incidents Table -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Recent Incidents</h2>
+                <input type="text" 
+                       placeholder="Search incidents..." 
+                       class="border rounded-lg px-3 py-2"
+                       id="searchIncidents">
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">
+                                Time
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">
+                                Location
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">
+                                Type
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">
+                                Status
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="incidentTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Incidents will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-lg font-semibold mb-4">Incident Distribution Map</h2>
+            <div id="reportMap" class="h-96 rounded-lg"></div>
+        </div>
+
+        <!-- Action Tracking Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Timeline -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-semibold mb-4">Emergency Response Timeline</h2>
+                <div class="space-y-4" id="actionTimeline">
+                    <!-- Timeline items will be populated dynamically -->
+                </div>
+            </div>
+           
+            <!-- Response Team Status -->
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-semibold mb-4">Response Team Status</h2>
+                <div class="space-y-3" id="responseTeamStatus">
+                    <!-- Team status will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Details Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Emergency Response Activities</h2>
+                <div class="flex gap-2">
+                    <button onclick="toggleAllActivities()" class="text-sm text-indigo-600 hover:text-indigo-900">
+                        Expand All
+                    </button>
+                </div>
+            </div>
+            <div id="activityContainer" class="space-y-4">
+                <!-- Activities will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data from page1.html
+        const incidents = [
+            {
+                id: 1,
+                timestamp: "2024-03-20 10:30:00",
+                location: "Cotton Mill, MIDC Area",
+                coordinates: [20.745319, 78.602386],
+                type: "Fire Emergency",
+                status: "Active",
+                responseTime: "4 minutes",
+                description: "Fire outbreak in main processing unit",
+                buildingId: 1,
+                buildingDetails: {
+                    name: "Cotton Mill",
+                    address: "MIDC Area, Wardha",
+                    type: "Industrial",
+                    safetyStatus: "Critical",
+                    emergencyContacts: ["+91-1234567890", "+91-9876543210"]
+                }
+            },
+            {
+                id: 2,
+                timestamp: "2024-03-19 15:45:00",
+                location: "Central Hospital",
+                coordinates: [20.735319, 78.592386],
+                type: "Medical Emergency",
+                status: "Resolved",
+                responseTime: "3 minutes",
+                description: "Power backup system failure",
+                buildingId: 2,
+                buildingDetails: {
+                    name: "Central Hospital",
+                    address: "Civil Lines, Wardha",
+                    type: "Healthcare",
+                    safetyStatus: "Normal",
+                    emergencyContacts: ["+91-9876543210", "+91-1234567890"]
+                }
+            },
+            {
+                id: 3,
+                timestamp: "2024-03-20 09:15:00",
+                location: "Shopping Complex",
+                coordinates: [20.755319, 78.612386],
+                type: "Security Alert",
+                status: "Active",
+                responseTime: "5 minutes",
+                description: "Suspicious package reported",
+                buildingId: 3,
+                buildingDetails: {
+                    name: "City Mall",
+                    address: "Main Road, Wardha",
+                    type: "Commercial",
+                    safetyStatus: "Alert",
+                    emergencyContacts: ["+91-8765432109", "+91-9876543210"]
+                }
+            }
+        ];
+
+        // Add this after your incidents array
+        const incidentActivities = {
+            1: [ // Activities for Fire Emergency
+                {
+                    id: 'act1',
+                    time: '10:30:00',
+                    type: 'Initial Alert',
+                    status: 'completed',
+                    details: {
+                        alertSource: 'Fire Alarm System',
+                        location: 'Processing Unit 2',
+                        initialReport: 'Smoke detected in main processing area'
+                    },
+                    actions: [
+                        'Fire alarm activated',
+                        'Emergency protocols initiated',
+                        'Control room notified'
+                    ]
+                },
+                {
+                    id: 'act2',
+                    time: '10:32:00',
+                    type: 'Response Dispatch',
+                    status: 'completed',
+                    details: {
+                        units: ['Fire Engine 1', 'Fire Engine 2', 'Ambulance 1'],
+                        personnel: '12 firefighters, 2 paramedics',
+                        equipment: 'Full fire suppression gear, Medical equipment'
+                    },
+                    actions: [
+                        'Emergency response teams mobilized',
+                        'Route optimization activated',
+                        'Backup units placed on standby'
+                    ]
+                },
+                {
+                    id: 'act3',
+                    time: '10:34:00',
+                    type: 'On-site Assessment',
+                    status: 'completed',
+                    details: {
+                        fireType: 'Class B - Chemical',
+                        severity: 'High',
+                        risks: ['Chemical exposure', 'Structural damage', 'Smoke inhalation']
+                    },
+                    actions: [
+                        'Perimeter established',
+                        'Evacuation initiated',
+                        'Water supply secured'
+                    ]
+                }
+            ]
+        };
+
+        // Initialize charts with the incident data
+        function initializeCharts() {
+            // Incident Types Chart
+            const incidentTypes = incidents.reduce((acc, inc) => {
+                acc[inc.type] = (acc[inc.type] || 0) + 1;
+                return acc;
+            }, {});
+
+            new Chart(document.getElementById('incidentTypesChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(incidentTypes),
+                    datasets: [{
+                        data: Object.values(incidentTypes),
+                        backgroundColor: [
+                            '#EF4444', // red
+                            '#3B82F6', // blue
+                            '#F59E0B', // yellow
+                            '#10B981'  // green
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Response Time Trend Chart
+            new Chart(document.getElementById('responseTimeChart'), {
+                type: 'line',
+                data: {
+                    labels: incidents.map(inc => new Date(inc.timestamp).toLocaleDateString()),
+                    datasets: [{
+                        label: 'Response Time (minutes)',
+                        data: incidents.map(inc => parseInt(inc.responseTime)),
+                        borderColor: '#6366F1',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Minutes'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateSummaryStats() {
+            const activeCount = incidents.filter(inc => inc.status === 'Active').length;
+            document.getElementById('totalIncidents').textContent = incidents.length;
+            document.getElementById('activeEmergencies').textContent = activeCount;
+            document.getElementById('avgResponseTime').textContent = '4.5 min';
+            document.getElementById('criticalAreas').textContent = '3';
+        }
+
+        function populateIncidentsTable() {
+            const tableBody = document.getElementById('incidentTableBody');
+            tableBody.innerHTML = incidents.map(incident => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        ${new Date(incident.timestamp).toLocaleString()}
+                    </td>
+                    <td class="px-6 py-4">${incident.location}</td>
+                    <td class="px-6 py-4">${incident.type}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                            ${incident.status === 'Active' ? 'bg-red-100 text-red-800' : 
+                            'bg-green-100 text-green-800'}">
+                            ${incident.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <button onclick="viewIncidentDetails(${incident.id})" 
+                                class="text-indigo-600 hover:text-indigo-900">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function initializeMap() {
+            const map = L.map('reportMap').setView([20.745319, 78.602386], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            // Add area circles first (clustering of incidents)
+            const areas = {
+                'MIDC': {
+                    center: [20.745319, 78.602386],
+                    radius: 1500,
+                    severity: 'high',
+                    incidents: []
+                },
+                'City Center': {
+                    center: [20.735319, 78.592386],
+                    radius: 1200,
+                    severity: 'medium',
+                    incidents: []
+                }
+            };
+
+            // Group incidents by area
+            incidents.forEach(incident => {
+                for (let areaName in areas) {
+                    const area = areas[areaName];
+                    const distance = L.latLng(area.center).distanceTo(L.latLng(incident.coordinates));
+                    if (distance <= area.radius) {
+                        area.incidents.push(incident);
+                    }
+                }
+            });
+
+            // Add area circles with severity indication
+            for (let areaName in areas) {
+                const area = areas[areaName];
+                L.circle(area.center, {
+                    color: getSeverityColor(area.severity),
+                    fillColor: getSeverityColor(area.severity),
+                    fillOpacity: 0.1,
+                    radius: area.radius,
+                    weight: 2
+                }).addTo(map);
+            }
+
+            // Add incident markers with enhanced styling
+            incidents.forEach(incident => {
+                // Create pulsing marker for active incidents
+                const markerHtml = `
+                    <div class="custom-marker ${incident.status.toLowerCase()}">
+                        <div class="marker-icon ${incident.type.toLowerCase().replace(' ', '-')}">
+                            <i class="${getIncidentIcon(incident.type)}"></i>
+                        </div>
+                        ${incident.status === 'Active' ? '<div class="pulse-ring"></div>' : ''}
+                    </div>
+                `;
+
+                const icon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: markerHtml,
+                    iconSize: [40, 40]
+                });
+
+                const marker = L.marker(incident.coordinates, { icon }).addTo(map);
+
+                // Enhanced popup with action timeline
+                const popupContent = `
+                    <div class="incident-popup">
+                        <div class="popup-header ${incident.status.toLowerCase()}-header">
+                            <h3 class="font-bold">${incident.type}</h3>
+                            <span class="status-badge">${incident.status}</span>
+                        </div>
+                        <div class="popup-content">
+                            <p><i class="fas fa-map-marker-alt"></i> ${incident.location}</p>
+                            <p><i class="fas fa-clock"></i> Response: ${incident.responseTime}</p>
+                            <p><i class="fas fa-info-circle"></i> ${incident.description}</p>
+                            
+                            <div class="action-timeline mt-3">
+                                <h4 class="font-semibold">Action Timeline:</h4>
+                                ${getActionTimeline(incident)}
+                            </div>
+                            
+                            <div class="resources-deployed mt-3">
+                                <h4 class="font-semibold">Resources Deployed:</h4>
+                                ${getResourcesList(incident)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent);
+            });
+        }
+
+        // Helper function for action timeline
+        function getActionTimeline(incident) {
+            const actions = [
+                { time: '0m', action: 'Alert Received' },
+                { time: '2m', action: 'Team Dispatched' },
+                { time: '4m', action: 'On-site Arrival' },
+                { time: '5m', action: 'Initial Assessment' },
+                { time: '7m', action: 'Action Initiated' }
+            ];
+
+            return `
+                <div class="timeline-container">
+                    ${actions.map(action => `
+                        <div class="timeline-item">
+                            <span class="time-badge">${action.time}</span>
+                            <span class="action-text">${action.action}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Helper function for resources list
+        function getResourcesList(incident) {
+            const resources = [
+                { type: 'Fire Trucks', count: 2 },
+                { type: 'Ambulances', count: 1 },
+                { type: 'Police Units', count: 2 },
+                { type: 'Medical Team', count: 1 }
+            ];
+
+            return `
+                <div class="resources-list">
+                    ${resources.map(resource => `
+                        <div class="resource-item">
+                            <i class="${getResourceIcon(resource.type)}"></i>
+                            <span>${resource.type}: ${resource.count}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function viewIncidentDetails(id) {
+            window.location.href = `incident_details.html?id=${id}`;
+        }
+
+        // Event Listeners
+        document.getElementById('timeFilter').addEventListener('change', function() {
+            // Implement time filter functionality
+            updateSummaryStats();
+            populateIncidentsTable();
+        });
+
+        document.getElementById('searchIncidents').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredIncidents = incidents.filter(inc => 
+                inc.location.toLowerCase().includes(searchTerm) ||
+                inc.type.toLowerCase().includes(searchTerm)
+            );
+            // Update table with filtered incidents
+            populateIncidentsTable(filteredIncidents);
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCharts();
+            updateSummaryStats();
+            populateIncidentsTable();
+            initializeMap();
+        });
+
+        // Export functions
+        function printReport() {
+            window.print();
+        }
+
+        function exportPDF() {
+            // Implement PDF export
+            alert('PDF export functionality will be implemented');
+        }
+
+        function getIncidentIcon(type) {
+            const icons = {
+                'Fire Emergency': 'fas fa-fire',
+                'Medical Emergency': 'fas fa-ambulance',
+                'Security Alert': 'fas fa-shield-alt',
+                'Natural Disaster': 'fas fa-cloud-showers-heavy',
+                'Chemical Spill': 'fas fa-biohazard',
+                'default': 'fas fa-exclamation-triangle'
+            };
+            return icons[type] || icons.default;
+        }
+
+        // Helper function to get color based on incident type
+        function getIncidentColor(type) {
+            const colors = {
+                'Fire Emergency': '#EF4444',      // Red
+                'Medical Emergency': '#3B82F6',   // Blue
+                'Security Alert': '#F59E0B',      // Yellow
+                'Natural Disaster': '#10B981',    // Green
+                'Chemical Spill': '#8B5CF6',      // Purple
+                'default': '#6B7280'              // Gray
+            };
+            return colors[type] || colors.default;
+        }
+
+        // Helper function to get color based on severity
+        function getSeverityColor(severity) {
+            const colors = {
+                'high': '#EF4444',      // Red
+                'medium': '#F59E0B',     // Yellow
+                'low': '#10B981'         // Green
+            };
+            return colors[severity] || colors.low;
+        }
+
+        // Helper function to get resource icon
+        function getResourceIcon(type) {
+            const icons = {
+                'Fire Trucks': 'fas fa-fire-extinguisher',
+                'Ambulances': 'fas fa-ambulance',
+                'Police Units': 'fas fa-police-car',
+                'Medical Team': 'fas fa-user-nurse'
+            };
+            return icons[type] || icons.default;
+        }
+
+        function populateActivities(incidentId) {
+            const activities = incidentActivities[incidentId] || [];
+            const container = document.getElementById('activityContainer');
+            
+            container.innerHTML = activities.map(activity => `
+                <div class="activity-card border rounded-lg overflow-hidden">
+                    <div class="activity-header p-4 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                         onclick="toggleActivity('${activity.id}')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="activity-icon ${getActivityTypeClass(activity.type)}">
+                                    <i class="${getActivityIcon(activity.type)}"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">${activity.type}</h3>
+                                    <p class="text-sm text-gray-600">${activity.time}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-badge ${activity.status}">
+                                    ${activity.status}
+                                </span>
+                                <i class="fas fa-chevron-down transition-transform" 
+                                   id="chevron-${activity.id}"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-details hidden" id="details-${activity.id}">
+                        <div class="p-4 border-t">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-3">
+                                    <h4 class="font-semibold">Details</h4>
+                                    ${renderActivityDetails(activity)}
+                                </div>
+                                <div class="space-y-3">
+                                    <h4 class="font-semibold">Actions Taken</h4>
+                                    <ul class="list-disc pl-4 space-y-1">
+                                        ${activity.actions.map(action => `
+                                            <li class="text-gray-700">${action}</li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleActivity(activityId) {
+            const detailsElement = document.getElementById(`details-${activityId}`);
+            const chevronElement = document.getElementById(`chevron-${activityId}`);
+            
+            detailsElement.classList.toggle('hidden');
+            chevronElement.style.transform = detailsElement.classList.contains('hidden') 
+                ? 'rotate(0deg)' 
+                : 'rotate(180deg)';
+        }
+
+        function renderActivityDetails(activity) {
+            const details = activity.details;
+            return Object.entries(details).map(([key, value]) => `
+                <div class="detail-item">
+                    <span class="text-gray-600">${key.charAt(0).toUpperCase() + key.slice(1)}:</span>
+                    ${Array.isArray(value) 
+                        ? `<div class="flex flex-wrap gap-1">
+                            ${value.map(v => `
+                                <span class="px-2 py-1 bg-gray-100 rounded-full text-sm">
+                                    ${v}
+                                </span>
+                            `).join('')}
+                           </div>`
+                        : `<span class="font-medium">${value}</span>`
+                    }
+                </div>
+            `).join('');
+        }
+    </script>
+
+    <style>
+        .btn-primary {
+            padding: 0.5rem 1rem;  /* px-4 py-2 */
+            background-color: #4F46E5;  /* bg-indigo-600 */
+            color: white;
+            border-radius: 0.5rem;  /* rounded-lg */
+            transition: background-color 0.3s;  /* transition-colors */
+        }
+        
+        .btn-primary:hover {
+            background-color: #4338CA;  /* hover:bg-indigo-700 */
+        }
+        
+        .btn-secondary {
+            padding: 0.5rem 1rem;  /* px-4 py-2 */
+            background-color: #E5E7EB;  /* bg-gray-200 */
+            color: #374151;  /* text-gray-700 */
+            border-radius: 0.5rem;  /* rounded-lg */
+            transition: background-color 0.3s;  /* transition-colors */
+        }
+        
+        .btn-secondary:hover {
+            background-color: #D1D5DB;  /* hover:bg-gray-300 */
+        }
+
+        .emergency-marker {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .emergency-circle {
+            animation: pulse-circle 2s infinite;
+        }
+
+        @keyframes pulse-circle {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.4;
+            }
+            100% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+        }
+
+        .incident-popup {
+            padding: 10px;
+            min-width: 200px;
+        }
+
+        /* Different colored markers for different incident types */
+        .marker-fire {
+            filter: hue-rotate(0deg);
+        }
+
+        .marker-medical {
+            filter: hue-rotate(220deg);
+        }
+
+        .marker-security {
+            filter: hue-rotate(60deg);
+        }
+
+        .marker-natural {
+            filter: hue-rotate(120deg);
+        }
+
+        .marker-chemical {
+            filter: hue-rotate(280deg);
+        }
+
+        /* Blinking animation for active incidents */
+        .blink-marker {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        
+        }
+
+        /* Hover effect for markers */
+        .leaflet-marker-icon:hover {
+            transform: scale(1.2);
+            transition: transform 0.3s ease;
+        }
+
+        /* Custom popup styles */
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .leaflet-popup-content {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media print {
+            .btn-primary, 
+            .btn-secondary, 
+            #timeFilter, 
+            #searchIncidents {
+                display: none;
+            }
+        }
+
+        /* Map Markers and Animations */
+        .custom-marker {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .marker-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+        }
+
+        .marker-icon.fire-emergency { background-color: #EF4444; }
+        .marker-icon.medical-emergency { background-color: #3B82F6; }
+        .marker-icon.security-alert { background-color: #F59E0B; }
+
+        .active .marker-icon {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Popup Styles */
+        .incident-popup {
+            min-width: 250px;
+        }
+
+        .popup-header {
+            padding: 8px;
+            border-radius: 4px 4px 0 0;
+            margin: -10px -10px 10px -10px;
+        }
+
+        .active-header {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .resolved-header {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+
+        .popup-content {
+            padding: 10px 0;
+        }
+
+        .popup-content p {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .popup-button {
+            width: 100%;
+            padding: 8px;
+            background-color: #4F46E5;
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            float: right;
+        }
+
+        /* Enhanced Map Styling */
+        .custom-marker {
+            position: relative;
+            width: 40px;
+            height: 40px;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            animation: pulse-ring 1.5s infinite;
+            background-color: rgba(239, 68, 68, 0.5);
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.7);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(2);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+        }
+
+        .timeline-container {
+            margin-top: 8px;
+            border-left: 2px solid #E5E7EB;
+            padding-left: 12px;
+        }
+
+        .timeline-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-badge {
+            background-color: #E5E7EB;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+
+        .resources-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        /* Severity colors for area circles */
+        .severity-high {
+            border-color: rgba(239, 68, 68, 0.8);
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .severity-medium {
+            border-color: rgba(245, 158, 11, 0.8);
+            background-color: rgba(245, 158, 11, 0.1);
+        }
+
+        .severity-low {
+            border-color: rgba(16, 185, 129, 0.8);
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+
+        .activity-card {
+            transition: all 0.3s ease;
+        }
+
+        .activity-card:hover .activity-header {
+            background-color: #F3F4F6;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .activity-icon.alert { background-color: #EF4444; }
+        .activity-icon.dispatch { background-color: #3B82F6; }
+        .activity-icon.assessment { background-color: #F59E0B; }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .status-badge.completed {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-badge.in-progress {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+
+        .activity-details {
+            transition: all 0.3s ease;
+        }
+    </style>
+</body>
+</html

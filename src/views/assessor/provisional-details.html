@@ -1,0 +1,640 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Application Details - Fire Department</title>
+    </head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-red-800 text-white py-4 px-6 flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="../images/logo.jpg" alt="Gov Logo" class="h-12 mr-4">
+            <div>
+                <h1 class="text-2xl font-semibold">Government of India</h1>
+                <p class="text-sm font-medium">Ministry of Fire Department Services</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center space-x-6">
+            <p class="text-lg font-semibold">Assessor's Dashboard</p>
+            <button class="bg-yellow-400 text-red-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition" 
+                    onclick="window.location.href='login.html'">
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-white"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden max-w-4xl mx-auto px-4 py-8">
+        <!-- Back Button -->
+        <div class="mb-6">
+            <button onclick="history.back()" 
+                    class="flex items-center text-red-600 hover:text-red-800">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Dashboard
+            </button>
+        </div>
+
+        <!-- Application Form Display -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-6">NOC Application Details</h2>
+            
+            <div class="space-y-6">
+                <!-- Application Status -->
+                <div class="flex justify-between items-center pb-4 border-b">
+                    <span class="text-sm text-gray-600">Application Status</span>
+                    <span id="applicationStatus" class="px-3 py-1 rounded-full text-sm font-semibold"></span>
+                </div>
+        
+                <!-- Application Details -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Application ID</label>
+                        <p id="applicationId" class="mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Submission Date</label>
+                        <p id="submissionDate" class="mt-1"></p>
+                    </div>
+                </div>
+        
+                <!-- Applicant Information -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Applicant Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <p id="applicantName" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Email</label>
+                            <p id="email" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Contact Number</label>
+                            <p id="contactNumber" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Correspondence Address</label>
+                            <p id="correspondenceAddress" class="mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Applicant Info Verification -->
+                <div class="mt-4 flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="applicantInfoVerified" class="h-4 w-4 text-red-600 rounded border-gray-300 focus:ring-red-500">
+                        <label for="applicantInfoVerified" class="ml-2 text-sm text-gray-700 flex items-center">
+                            I verify that the applicant information is correct
+                        </label>
+                    </div>
+                    <div class="verification-status"></div>
+                </div>
+        
+                <!-- Building Details -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Building Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Building Name</label>
+                            <p id="buildingName" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Building Type</label>
+                            <p id="buildingType" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Total Area</label>
+                            <p id="totalArea" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Number of Floors</label>
+                            <p id="numFloors" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Construction Year</label>
+                            <p id="constructionYear" class="mt-1"></p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700">Building Address</label>
+                            <p id="buildingAddress" class="mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Building Info Verification -->
+                <div class="mt-4 flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="buildingDetailsVerified" class="h-4 w-4 text-red-600 rounded border-gray-300 focus:ring-red-500">
+                        <label for="buildingDetailsVerified" class="ml-2 text-sm text-gray-700 flex items-center">
+                            I verify that the building details are correct
+                        </label>
+                    </div>
+                    <div class="verification-status"></div>
+                </div>
+        
+                <!-- Required Documents Section -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Required Documents</h3>
+        
+                    <!-- Image Documents -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- ID Proof -->
+                        <div class="border rounded-lg p-4">
+                            <h4 class="font-medium mb-2">ID Proof</h4>
+                            <div id="idProofContainer" class="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
+                                <img id="idProof" class="w-full h-full object-contain hidden" alt="ID Proof">
+                                <div class="loading-text absolute inset-0 flex items-center justify-center">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Ownership Proof -->
+                        <div class="border rounded-lg p-4">
+                            <h4 class="font-medium mb-2">Ownership Proof</h4>
+                            <div id="ownershipProofContainer" class="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
+                                <img id="ownershipProof" class="w-full h-full object-contain hidden" alt="Ownership Proof">
+                                <div class="loading-text absolute inset-0 flex items-center justify-center">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- PDF Documents -->
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="viewDocument('buildingBlueprint')" class="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M4 18h12a2 2 0 002-2V6.414l-3.293-3.293A1 1 0 0014.414 3H4a2 2 0 00-2 2v11a2 2 0 002 2z"/>
+                            </svg>
+                            Building Blueprint
+                        </button>
+        
+                        
+                        <button onclick="viewDocument('fireSafetyPlan')" class="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M4 18h12a2 2 0 002-2V6.414l-3.293-3.293A1 1 0 0014.414 3H4a2 2 0 00-2 2v11a2 2 0 002 2z"/>
+                            </svg>
+                            Fire Safety Plan
+                        </button>
+        
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+                <!-- Add this at the bottom of the form -->
+                <div class="mt-8 border-t pt-6">
+                    <h3 class="text-lg font-semibold mb-4">Assessment Decision</h3>
+                    
+                    <!-- Remarks -->
+                    <div class="mb-4">
+                        <label for="assessorRemarks" class="block text-sm font-medium text-gray-700 mb-2">
+                            Remarks/Comments
+                        </label>
+                        <textarea id="assessorRemarks" rows="4" 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+                                  placeholder="Enter your assessment remarks here..."></textarea>
+                    </div>
+
+                    <!-- Decision -->
+                    <div class="mb-6">
+                        <label for="assessorStatus" class="block text-sm font-medium text-gray-700 mb-2">
+                            Decision
+                        </label>
+                        <select id="assessorStatus" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                            <option value="">Select decision</option>
+                            <option value="Accepted">Accept Application</option>
+                            <option value="Rejected">Reject Application</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button onclick="submitAssessment()" 
+                                class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition disabled:opacity-50"
+                                id="submitButton" disabled>
+                            Submit Assessment
+                        </button>
+                    </div>
+
+                    <div class="mt-4">
+                        <button id="generateNocButton" 
+                                class="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 ">
+                            Generate NOC
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const applicationId = urlParams.get('id');
+
+    if (!applicationId) {
+        console.error('Application ID is missing in the URL');
+        alert('Invalid application ID.');
+        return;
+    }
+
+    loadApplicationDetails(applicationId);
+});
+
+
+    //functions
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusSelect = document.getElementById('assessorStatus');
+            const remarksTextarea = document.getElementById('assessorRemarks');
+
+              generateNocButton.addEventListener('click', function() {
+                    const applicationId = new URLSearchParams(window.location.search).get('id');
+                    window.location.href = `generate-provisional-noc.html?id=${applicationId}`;
+                });
+            
+
+        });
+
+// Load application details
+async function loadApplicationDetails(applicationId) {
+    try {
+        toggleLoading(true); // Show loading spinner
+
+        const response = await fetch(`/api/assessor/provisional-applications/${applicationId}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch application data: ${response.status}`);
+        }
+
+        const { application } = await response.json();
+        if (!application) {
+            throw new Error('Application data not found.');
+        }
+
+        updateUI(application); // Update UI with fetched data
+    } catch (error) {
+        console.error('Error:', error);
+        alert(`Error loading application: ${error.message}`);
+    } finally {
+        toggleLoading(false); // Hide loading spinner
+    }
+}
+
+// Toggle loading spinner visibility
+function toggleLoading(show) {
+    document.getElementById('loadingState')?.classList.toggle('hidden', !show);
+    document.getElementById('mainContent')?.classList.toggle('hidden', show);
+}
+
+// Add this after your existing functions
+let applicationData = null; // Store application data globally
+
+// Update your updateUI function to store the application data
+function updateUI(application) {
+    try {
+        applicationData = application;
+        // Basic Application Details
+        updateField('applicationId', application.id);
+        updateField('submissionDate', formatDate(application.createdAt));
+        updateField('applicantName', application.applicantName);
+        updateField('email', application.email);
+        updateField('contactNumber', application.contactNumber);
+        updateField('buildingAddress', `${application.buildingAddress}, ${application.city}, ${application.state}`);
+        updateField('landmark', application.landmark);
+        updateField('plotNumber', application.plotNumber);
+
+        // Building Details
+        updateField('buildingName', application.buildingName);
+        updateField('buildingType', application.buildingType);
+        updateField('buildingHeight', application.buildingHeight);
+        updateField('numFloors', application.numFloors);
+        updateField('numBasements', application.numBasements);
+        updateField('builtUpArea', application.builtUpArea);
+
+        // Fire Safety Details
+        updateField('firePumpCapacity', application.firePumpCapacity);
+        updateField('undergroundTankCapacity', application.undergroundTankCapacity);
+        updateField('terraceWaterTank', application.terraceWaterTank);
+        updateField('hydrantPoints', application.hydrantPoints);
+        updateField('assemblyPoint', application.assemblyPoint);
+        updateField('emergencyExits', application.emergencyExits);
+        updateField('maxOccupancy', application.maxOccupancy);
+
+        // Safety Systems
+        updateField('smokeDetectors', application.smokeDetectors ? 'Yes' : 'No');
+        updateField('fireHydrants', application.fireHydrants ? 'Yes' : 'No');
+        updateField('fireExtinguishers', application.fireExtinguishers ? 'Yes' : 'No');
+        updateField('fireAlarmSystem', application.fireAlarmSystem ? 'Yes' : 'No');
+        updateField('sprinklerSystem', application.sprinklerSystem ? 'Yes' : 'No');
+        updateField('emergencyLights', application.emergencyLights ? 'Yes' : 'No');
+
+        // Compliance Details
+        updateField('buildingCodeCompliance', application.buildingCodeCompliance ? 'Yes' : 'No');
+        updateField('equipmentCompliance', application.equipmentCompliance ? 'Yes' : 'No');
+        updateField('documentCompliance', application.documentCompliance ? 'Yes' : 'No');
+
+        // Update status badge
+        const statusElement = document.getElementById('applicationStatus');
+        if (statusElement) {
+            statusElement.textContent = application.status;
+            statusElement.className = `px-3 py-1 rounded-full text-sm font-semibold ${getStatusBadgeClass(application.status)}`;
+        }
+
+        // Load Documents
+        const documents = {
+            idProof: application.idProofUrl,
+            ownershipProof: application.ownershipProofUrl,
+            buildingBlueprint: application.buildingBlueprintUrl,
+            fireSafetyPlan: application.fireSafetyPlanUrl
+        };
+
+        Object.entries(documents).forEach(([id, url]) => {
+            loadDocument(id, url);
+        });
+
+    } catch (error) {
+        console.error('UI Update Error:', error);
+        alert('Error updating the application interface.');
+    }
+}
+
+// Helper function to format boolean values for display
+function formatBoolean(value) {
+    if (typeof value === 'boolean') {
+        return value ? 'Yes' : 'No';
+    }
+    return value === 'yes' ? 'Yes' : value === 'no' ? 'No' : value;
+}
+
+// Update the updateField function to handle different data types
+function updateField(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        if (typeof value === 'boolean' || value === 'yes' || value === 'no') {
+            element.textContent = formatBoolean(value);
+        } else {
+            element.textContent = value || 'N/A';
+        }
+    }
+}
+
+// Format date to readable format
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString() || 'N/A';
+}
+
+
+//validate
+function validateForm() {
+            const statusSelect = document.getElementById('assessorStatus');
+            const remarksTextarea = document.getElementById('assessorRemarks');
+            const submitButton = document.getElementById('submitButton');
+
+            if (statusSelect && remarksTextarea && submitButton) {
+                const isValid = statusSelect.value && remarksTextarea.value.trim();
+                submitButton.disabled = !isValid;
+            }
+        }
+
+
+// Simplified badge class retrieval
+function getStatusBadgeClass(status) {
+    const statusClasses = {
+        'Pending': 'bg-yellow-100 text-yellow-800',
+        'Under Review': 'bg-blue-100 text-blue-800',
+        'Accepted': 'bg-green-100 text-green-800',
+        'Rejected': 'bg-red-100 text-red-800'
+    };
+    return statusClasses[status] || 'bg-gray-100 text-gray-800';
+}
+
+// Update the loadDocument function to fetch images from API
+async function loadDocument(id, url) {
+    const container = document.getElementById(`${id}Container`);
+    if (!container) return; // Skip if container doesn't exist
+
+    if (!url) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-8">No document uploaded</p>';
+        return;
+    }
+
+    try {
+        // Show loading state
+        const loadingText = container.querySelector('.loading-text');
+        if (loadingText) {
+            loadingText.classList.remove('hidden');
+        }
+
+        // Try to fetch from API first
+        const response = await fetch(`/api/assessor/provisional-applications/${applicationData.id}/documents/${id}`);
+        if (!response.ok) {
+            throw new Error('API fetch failed');
+        }
+        const data = await response.json();
+        const imageUrl = data.url || url; // Use API URL if available, fallback to stored URL
+
+        // Create and load the image
+        const img = document.createElement('img');
+        img.className = 'w-full h-full object-contain hidden';
+        img.alt = id;
+        img.src = imageUrl;
+
+        // Handle image load success
+        img.onload = () => {
+            loadingText?.classList.add('hidden');
+            img.classList.remove('hidden');
+            // Remove any existing images
+            const existingImg = container.querySelector('img');
+            if (existingImg) {
+                existingImg.remove();
+            }
+            container.appendChild(img);
+        };
+
+        // Handle image load error
+        img.onerror = () => {
+            container.innerHTML = '<p class="text-red-500 text-center py-8">Error loading document</p>';
+        };
+
+    } catch (error) {
+        console.error('Error loading document:', error);
+        // Fallback to direct URL if API fails
+        const img = document.createElement('img');
+        img.className = 'w-full h-full object-contain hidden';
+        img.alt = id;
+        img.src = url;
+
+        img.onload = () => {
+            container.querySelector('.loading-text')?.classList.add('hidden');
+            img.classList.remove('hidden');
+            const existingImg = container.querySelector('img');
+            if (existingImg) {
+                existingImg.remove();
+            }
+            container.appendChild(img);
+        };
+
+        img.onerror = () => {
+            container.innerHTML = '<p class="text-red-500 text-center py-8">Error loading document</p>';
+        };
+    }
+}
+
+// Add this new function to handle document viewing
+async function viewDocument(documentType) {
+    try {
+        if (!applicationData) {
+            alert('Application data not loaded');
+            return;
+        }
+       
+        // Map document types to their URL properties
+        const documentUrlMap = {
+            buildingBlueprint: applicationData.buildingBlueprintUrl,
+            fireSafetyPlan: applicationData.fireSafetyPlanUrl,
+            };
+
+        const url = documentUrlMap[documentType];
+
+        if (!url) {
+            alert('Document not available');
+            return;
+        }
+
+        // Open the PDF in a new tab without forcing a download
+        window.open(url, '_blank', 'noopener,noreferrer');
+
+    } catch (error) {
+        console.error('Error viewing document:', error);
+        alert('Error loading document. Please try again.');
+    }
+}
+
+// Add this function to handle form submission
+async function submitAssessment() {
+    // Store original button state
+    const submitButton = document.getElementById('submitButton');
+    const originalButtonText = submitButton.innerHTML;
+
+    try {
+        // Get token
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login again');
+            window.location.href = '../auth/login.html';
+            return;
+        }
+
+        // Get form values
+        const assessorStatus = document.getElementById('assessorStatus').value;
+        const assessorRemarks = document.getElementById('assessorRemarks').value;
+
+        // Validate inputs
+        if (!assessorStatus) {
+            alert('Please select a decision');
+            return;
+        }
+        if (!assessorRemarks.trim()) {
+            alert('Please enter remarks');
+            return;
+        }
+
+        // Show loading state
+        submitButton.innerHTML = `
+            <div class="flex items-center">
+                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Submitting...
+            </div>
+        `;
+        submitButton.disabled = true;
+
+        // Get application ID from URL or stored data
+        const applicationId = new URLSearchParams(window.location.search).get('id');
+        if (!applicationId) {
+            throw new Error('Application ID not found');
+        }
+
+        // Make API call
+        const response = await fetch('http://localhost:5000/api/assessor/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                id: applicationId,
+                assessorStatus,
+                assessorRemarks
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to submit assessment');
+        }
+
+        alert('Assessment submitted successfully!');
+        window.location.href = 'dashboard.html';
+
+    } catch (error) {
+        console.error('Error submitting assessment:', error);
+        alert(error.message || 'Error submitting assessment. Please try again.');
+        
+        // Restore button state
+        submitButton.innerHTML = originalButtonText;
+        submitButton.disabled = false;
+    }
+}
+
+// Add this function to enable/disable submit button based on form completion
+function updateSubmitButton() {
+    const assessorStatus = document.getElementById('assessorStatus').value;
+    const assessorRemarks = document.getElementById('assessorRemarks').value;
+    const submitButton = document.getElementById('submitButton');
+    
+    submitButton.disabled = !assessorStatus || !assessorRemarks.trim();
+}
+
+// Add event listeners for form fields
+document.addEventListener('DOMContentLoaded', () => {
+    const assessorStatus = document.getElementById('assessorStatus');
+    const assessorRemarks = document.getElementById('assessorRemarks');
+    
+    assessorStatus?.addEventListener('change', updateSubmitButton);
+    assessorRemarks?.addEventListener('input', updateSubmitButton);
+});
+
+//toggle noc button
+function toggleGenerateNocButton() {
+            const statusSelect = document.getElementById('assessorStatus');
+            const generateNocButton = document.getElementById('generateNocButton');
+
+            if (statusSelect && generateNocButton) {
+                if (statusSelect.value === 'Accepted') {
+                    generateNocButton.classList.remove('hidden');
+                } else {
+                    generateNocButton.classList.add('hidden');
+                }
+            }
+        }
+  
+   </script>
+</body>
+</html>
