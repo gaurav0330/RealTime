@@ -135,7 +135,7 @@
         }
 
         try {
-          const response = await fetch("http://localhost:5000/api/auth/login", {
+          const response = await fetch("https://realtime-nv23.onrender.com/api/auth/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -153,7 +153,7 @@
 
             // Send login notification email
             try {
-              const notificationResponse = await fetch("http://localhost:5000/api/auth/send-login-notification", {
+              const notificationResponse = await fetch("https://realtime-nv23.onrender.com/api/auth/send-login-notification", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
