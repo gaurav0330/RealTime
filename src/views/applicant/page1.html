@@ -129,7 +129,7 @@
             });
 
             // Connect to the backend using Server-Sent Events (SSE)
-            const eventSource = new EventSource('http://localhost:5000/api/firebase-data');
+            const eventSource = new EventSource('https://realtime-nv23.onrender.com/api/firebase-data');
 
             eventSource.onmessage = (event) => {
                 try {

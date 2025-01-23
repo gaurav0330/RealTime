@@ -317,7 +317,7 @@
                 return;
             }
 
-            const response = await fetch("http://localhost:5000/api/auth/profile", {
+            const response = await fetch("https://realtime-nv23.onrender.com/api/auth/profile", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -414,7 +414,7 @@
           return;
         }
 
-        const response = await fetch('http://localhost:5000/api/auth/my-applications', {
+        const response = await fetch('https://realtime-nv23.onrender.com/api/auth/my-applications', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -501,7 +501,7 @@
             document.getElementById('statusRemarks').textContent = 'Loading...';
 
             // Fetch user profile to get progress
-            const profileResponse = await fetch('http://localhost:5000/api/auth/profile', {
+            const profileResponse = await fetch('https://realtime-nv23.onrender.com/api/auth/profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -650,7 +650,7 @@
             }
         });
 
-        const response = await fetch('http://localhost:5000/api/auth/check-noc-application', {
+        const response = await fetch('https://realtime-nv23.onrender.com/api/auth/check-noc-application', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -701,7 +701,7 @@
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/api/auth/status', {
+            const response = await fetch('https://realtime-nv23.onrender.com/api/auth/status', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -827,7 +827,7 @@
             }
 
             // Get the status which includes the certificate URL
-            const response = await fetch('http://localhost:5000/api/auth/status', {
+            const response = await fetch('https://realtime-nv23.onrender.com/api/auth/status', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -914,7 +914,7 @@
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const response = await fetch('http://localhost:5000/api/auth/refresh-token', {
+                const response = await fetch('https://realtime-nv23.onrender.com/api/auth/refresh-token', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -950,7 +950,7 @@
     async function fetchUserProfile() {
         try {
             const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
-            const response = await fetch('http://localhost:5000/api/auth/profile', {
+            const response = await fetch('https://realtime-nv23.onrender.com/api/auth/profile', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -1047,7 +1047,7 @@
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/api/auth/check-renewal', {
+            const response = await fetch('https://realtime-nv23.onrender.com/api/auth/check-renewal', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -1082,7 +1082,7 @@
             window.location.href = '../applicant/noc-renewal.html';
         } else {
             try {
-                const response = await fetch('http://localhost:5000/api/noc-application/renew', {
+                const response = await fetch('https://realtime-nv23.onrender.com/api/noc-application/renew', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

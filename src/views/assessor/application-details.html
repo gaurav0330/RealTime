@@ -736,7 +736,7 @@ async function submitAssessment() {
         }
 
         // Make API call
-        const response = await fetch('http://localhost:5000/api/assessor/update', {
+        const response = await fetch('https://realtime-nv23.onrender.com/api/assessor/update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -283,7 +283,7 @@
 
 
         try {
-            const response = await fetch(`http://localhost:5000/api/auth/locations/pincode/${pincode}`);
+            const response = await fetch(`https://realtime-nv23.onrender.com/api/auth/locations/pincode/${pincode}`);
             const data = await response.json();
 
             if (!data.success) {
@@ -355,7 +355,7 @@
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/auth/signup", {
+            const response = await fetch("https://realtime-nv23.onrender.com/api/auth/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

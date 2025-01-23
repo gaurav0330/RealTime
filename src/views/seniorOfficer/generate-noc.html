@@ -131,7 +131,7 @@
                     throw new Error('Application ID is missing');
                 }
 
-                const response = await fetch(`http://localhost:5000/api/cfo/application/${applicationId}`, {
+                const response = await fetch(`https://realtime-nv23.onrender.com/api/cfo/application/${applicationId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -379,7 +379,7 @@
                 formData.append('issuanceDate', issuanceDate);
 
                 // Upload to server
-                const response = await fetch('http://localhost:5000/api/cfo/generate-noc', {
+                const response = await fetch('https://realtime-nv23.onrender.com/api/cfo/generate-noc', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`

@@ -21,7 +21,7 @@
     <script>
         function fetchSensorDataInRealTime() {
             // Create a new EventSource to listen for real-time updates
-            const eventSource = new EventSource('http://localhost:5000/api/firebase-data');
+            const eventSource = new EventSource('https://realtime-nv23.onrender.com/api/firebase-data');
 
             eventSource.onmessage = (event) => {
                 // Parse the incoming data and update the UI

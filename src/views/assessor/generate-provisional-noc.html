@@ -131,7 +131,7 @@
                     throw new Error('Application ID is missing');
                 }
 
-                const response = await fetch(`http://localhost:5000/api/assessor/provisional-applications/${applicationId}`, {
+                const response = await fetch(`https://realtime-nv23.onrender.com/api/assessor/provisional-applications/${applicationId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -381,7 +381,7 @@
 
                 console.log(applicationData.application.userId);
                 // Upload to server
-                const response = await fetch('http://localhost:5000/api/assessor/updateProvisional', {
+                const response = await fetch('https://realtime-nv23.onrender.com/api/assessor/updateProvisional', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
