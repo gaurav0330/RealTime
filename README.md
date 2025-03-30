@@ -162,7 +162,7 @@ This project is licensed under the [MIT License](LICENSE).
 For any queries or support, please reach out:  
 - **Name**: Gaurav Jikar 
 - **Email**: gauravjikar070806@gmail.com  
-- **GitHub**: [https://github.com/AyushWaghale](https://github.com/AyushWaghale)  
+- **GitHub**: [https://github.com/gaurav0330](https://github.com/gaurav0330)  
 
 ---
 
